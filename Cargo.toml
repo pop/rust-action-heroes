@@ -1,0 +1,18 @@
+[package]
+name = "evg1"
+version = "0.1.0"
+authors = []
+edition = "2018"
+
+[dependencies]
+amethyst = { version = "0.15.0", features = ["test-support"] }
+amethyst_test = "*"
+amethyst_input = "*"
+
+[dev-dependencies]
+
+[features]
+default = ["vulkan"]
+empty = ["amethyst/empty"]
+metal = ["amethyst/metal"]
+vulkan = ["amethyst/vulkan"]
