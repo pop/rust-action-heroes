@@ -3,7 +3,7 @@ extern crate amethyst_test;
 use amethyst::{
     core::{bundle::SystemBundle, transform::TransformBundle, SystemDesc},
     derive::SystemDesc,
-    ecs::{DispatcherBuilder, Read, System, SystemData, World, Write},
+    ecs::{DispatcherBuilder, Read, System, SystemData, World, Write, WriteExpect, prelude::{Component, DenseVecStorage}},
     input::{InputBundle, InputHandler, StringBindings, VirtualKeyCode},
     prelude::*,
     renderer::{
@@ -31,7 +31,16 @@ struct GameState;
 /// ...
 ///
 impl SimpleState for GameState {
-    fn on_start(&mut self, _data: StateData<'_, GameData<'_, '_>>) {}
+    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+        let world = data.world;
+
+        println!(";;; Creating Movable entitiy");
+
+        world
+            .create_entity()
+            .with(Movable::new())
+            .build();
+    }
 }
 
 ///
@@ -287,6 +296,62 @@ mod tests {
 }
 
 ///
+/// Movable Component
+///
+#[derive(Clone, Copy)]
+struct Movable {
+    pos: (u8, u8),
+}
+
+impl Component for Movable {
+    type Storage = DenseVecStorage<Self>;
+}
+
+impl Movable {
+    fn get_pos(self) -> (u8, u8) {
+        self.pos
+    }
+
+    fn move_up(&mut self) {
+        println!("⬆️  {:?}", self.get_pos());
+        self.pos.0 = self.pos.0 + 1;
+    }
+
+    fn move_down(&mut self) {
+        println!("⬇️  {:?}", self.get_pos());
+        match self.pos.0.checked_sub(1) {
+            Some(res) => self.pos.0 = res,
+            None => (),
+        }
+    }
+
+    fn move_right(&mut self) {
+        println!("➡️  {:?}", self.get_pos());
+        self.pos.1 = self.pos.1 + 1;
+    }
+
+    fn move_left(&mut self) {
+        println!("⬅️  {:?}", self.get_pos());
+        match self.pos.1.checked_sub(1) {
+            Some(res) => self.pos.1 = res,
+            None => (),
+        }
+    }
+
+    fn interact(self) {
+        println!("🎯 {:?}", self.get_pos());
+    }
+
+    fn new() -> Self {
+        Movable { pos: (0,0) }
+    }
+}
+
+impl Default for Movable {
+    fn default() -> Self { Movable::new() }
+}
+
+///
 /// Movement System
 ///
 #[derive(SystemDesc)]
@@ -306,19 +371,25 @@ impl MovementSystem {
 /// Reader system for input
 ///
 impl<'a> System<'a> for MovementSystem {
-    type SystemData = Read<'a, EventChannel<MyInputEvent>>;
+    type SystemData = (
+        Read<'a, EventChannel<MyInputEvent>>,
+        WriteExpect<'a, Movable>,
+        // TODO: The reason we're getting an error here is that no entities exist with both a listener
+        // and a movable struct.
+        // we need to make each entity a listener.
+    );
 
     ///
     /// ...
     ///
-    fn run(&mut self, input_event_channel: Self::SystemData) {
+    fn run(&mut self, (input_event_channel, mut movable): Self::SystemData) {
         for event in input_event_channel.read(&mut self.reader) {
             match event {
-                MyInputEvent::Up => "⬆️ ",
-                MyInputEvent::Down => "⬇️ ",
-                MyInputEvent::Left => "⬅️ ",
-                MyInputEvent::Right => "➡️ ",
-                MyInputEvent::Interact => "🎯"
+                MyInputEvent::Up => movable.move_up(),
+                MyInputEvent::Down => movable.move_down(),
+                MyInputEvent::Right => movable.move_right(),
+                MyInputEvent::Left => movable.move_left(),
+                MyInputEvent::Interact => movable.interact(),
             };
         }
     }
@@ -364,11 +435,21 @@ fn main() -> amethyst::Result<()> {
                 )
                 .with_plugin(RenderFlat2D::default()),
         )?
-        .with_bundle(TransformBundle::new())?
-        .with_bundle(InputBundle::<StringBindings>::new())?
-        .with_bundle(EVG1Bundle)?;
+        .with_bundle(
+            TransformBundle::new()
+        )?
+        .with_bundle(
+            InputBundle::<StringBindings>::new()
+        )?
+        .with_bundle(
+            EVG1Bundle
+        )?;
 
-    let mut game = Application::new(assets_dir, GameState, game_data)?;
+    let mut game = Application::new(
+        assets_dir,
+        GameState,
+        game_data,
+    )?;
 
     game.run();
 
