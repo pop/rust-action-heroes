@@ -1,11 +1,11 @@
 use amethyst::{
     derive::SystemDesc,
-    ecs::{ System, SystemData, Read, WriteStorage, Join},
+    ecs::{ System, SystemData, Read, ReadStorage, WriteStorage, Join},
     shrev::{ReaderId, EventChannel},
 };
 
 use crate::lib::TransformedInputEvent;
-use crate::component::Movable;
+use crate::component::{Movable, Named, Name};
 
 ///
 /// ...
@@ -25,19 +25,44 @@ impl<'s> System<'s> for MovementSystem {
     type SystemData = (
         Read<'s, EventChannel<TransformedInputEvent>>,
         WriteStorage<'s, Movable>,
+        ReadStorage<'s, Named>,
     );
 
-    fn run(&mut self, (channel, mut movables): Self::SystemData) {
+    fn run(&mut self, (channel, mut movables, names): Self::SystemData) {
         for event in channel.read(&mut self.reader) {
             println!("Reading {:?}", event);
-            for movable in (&mut movables).join() {
-                println!("Movable {:?}", movable);
+            for (movable, name) in (&mut movables, &names).join() {
                 match event {
-                    TransformedInputEvent::Up =>  movable.move_up(),
-                    TransformedInputEvent::Down => movable.move_down(),
-                    TransformedInputEvent::Left => movable.move_right(),
-                    TransformedInputEvent::Right => movable.move_left(),
-                    TransformedInputEvent::Interact => movable.interact(),
+                    TransformedInputEvent::Up => {
+                        if name.is(Name::Vertical) {
+                            println!("Movable {:?} {:?}", name, movable);
+                            movable.move_up()
+                        }
+                    },
+                    TransformedInputEvent::Down => {
+                        if name.is(Name::Vertical) {
+                            println!("Movable {:?} {:?}", name, movable);
+                            movable.move_down()
+                        }
+                    },
+                    TransformedInputEvent::Left => {
+                        if name.is(Name::Horizontal) {
+                            println!("Movable {:?} {:?}", name, movable);
+                            movable.move_right()
+                        }
+                    },
+                    TransformedInputEvent::Right => {
+                        if name.is(Name::Horizontal) {
+                            println!("Movable {:?} {:?}", name, movable);
+                            movable.move_left()
+                        }
+                    },
+                    TransformedInputEvent::Interact => {
+                        if name.is(Name::Interact) {
+                            println!("Movable {:?} {:?}", name, movable);
+                            movable.interact()
+                        }
+                    },
                 }
             }
         }

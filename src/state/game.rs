@@ -1,7 +1,7 @@
 use amethyst::{
     prelude::*,
 };
-use crate::component::Movable;
+use crate::component::{Movable, Named, Name};
 
 ///
 /// ...
@@ -14,8 +14,18 @@ impl SimpleState for GameState {
 
         world
             .create_entity()
-            .with(
-                Movable::new()
-            ).build();
+            .with(Movable::new())
+            .with(Named::new(Name::Horizontal))
+            .build();
+        world
+            .create_entity()
+            .with(Movable::new())
+            .with(Named::new(Name::Vertical))
+            .build();
+        world
+            .create_entity()
+            .with(Movable::new())
+            .with(Named::new(Name::Interact))
+            .build();
     }
 }
