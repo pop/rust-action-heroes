@@ -41,9 +41,7 @@ impl Movable {
         }
     }
 
-    pub(crate) fn interact(&self) {
-        println!("🎯 interact at ({:?})", self.get_pos());
-    }
+    pub(crate) fn interact(&self) { }
 
     pub(crate) fn new() -> Self {
         Movable { pos: (0,0) }

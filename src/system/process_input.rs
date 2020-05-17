@@ -65,7 +65,7 @@ impl<'s> System<'s> for ProcessInputSystem {
         // Send the message for the movement service to listen
         match movement {
             Some(m) => {
-                println!("Writing {:?}", movement);
+                println!("WriteEvent {:?}", movement);
                 input_event_channel.single_write(m)
             },
             None => (),

@@ -3,6 +3,7 @@ use amethyst::{
     ecs::{ System, SystemData, Read, ReadStorage, WriteStorage, Join},
     shrev::{ReaderId, EventChannel},
 };
+use std::collections::HashMap;
 
 use crate::lib::TransformedInputEvent;
 use crate::component::{Movable, Named, Name};
@@ -31,39 +32,79 @@ impl<'s> System<'s> for MovementSystem {
     fn run(&mut self, (channel, mut movables, names): Self::SystemData) {
         for event in channel.read(&mut self.reader) {
             println!("Reading {:?}", event);
+
+            let mut others = HashMap::new();
+            for (movable, name) in (&movables, &names).join() {
+                others.insert(name, movable.get_pos());
+            }
+            // println!("{:?}", others);
+
             for (movable, name) in (&mut movables, &names).join() {
-                match event {
-                    TransformedInputEvent::Up => {
-                        if name.is(Name::Vertical) {
-                            println!("Movable {:?} {:?}", name, movable);
+                // Get the other movables and their names
+                // Decide what directions we cannot go in
+                match (event, name.get()) {
+                    (TransformedInputEvent::Up, Name::Vertical) => {
+                        // println!("Moving up");
+                        let mut safe = true;
+                        for (_k, v) in &others {
+                            // println!("Checking {:?} + 1 against {:?}", movable.get_pos().0, v.0);
+                            if movable.get_pos().0 + 1 == v.0 {
+                                safe = false;
+                            }
+                        }
+                        // println!("{:?}", safe);
+                        if safe {
                             movable.move_up()
                         }
                     },
-                    TransformedInputEvent::Down => {
-                        if name.is(Name::Vertical) {
-                            println!("Movable {:?} {:?}", name, movable);
+                    (TransformedInputEvent::Down, Name::Vertical) => {
+                        // println!("Moving down");
+                        let mut safe = true;
+                        for (_k, v) in &others {
+                            // println!("Checking {:?} - 1 against {:?}", movable.get_pos().0, v.0);
+                            if movable.get_pos().0 > 0 && movable.get_pos().0 - 1 == v.0 {
+                                safe = false;
+                            }
+                        }
+                        if safe {
                             movable.move_down()
                         }
                     },
-                    TransformedInputEvent::Left => {
-                        if name.is(Name::Horizontal) {
-                            println!("Movable {:?} {:?}", name, movable);
+                    (TransformedInputEvent::Left, Name::Horizontal) => {
+                        // println!("moving left");
+                        let mut safe = true;
+                        for (_k, v) in &others {
+                            // println!("Checking {:?} + 1 against {:?}", movable.get_pos().1, v.1);
+                            if movable.get_pos().1 + 1 == v.1 {
+                                safe = false;
+                            }
+                        }
+                        // println!("{:?}", safe);
+                        if safe {
                             movable.move_right()
                         }
                     },
-                    TransformedInputEvent::Right => {
-                        if name.is(Name::Horizontal) {
-                            println!("Movable {:?} {:?}", name, movable);
+                    (TransformedInputEvent::Right, Name::Horizontal) => {
+                        // println!("moving right");
+                        let mut safe = true;
+                        for (_k, v) in &others {
+                            // println!("Checking {:?} - 1 against {:?}", movable.get_pos().1, v.1);
+                            if movable.get_pos().1 > 0 && movable.get_pos().1 - 1 == v.1 {
+                                safe = false;
+                            }
+                        }
+                        // println!("{:?}", safe);
+                        if safe {
                             movable.move_left()
                         }
                     },
-                    TransformedInputEvent::Interact => {
-                        if name.is(Name::Interact) {
-                            println!("Movable {:?} {:?}", name, movable);
-                            movable.interact()
-                        }
+                    (TransformedInputEvent::Interact, Name::Interact) => {
+                        movable.interact()
                     },
+                    (_, _) => ()
                 }
+
+                println!("{}@{:?}", name, movable.get_pos());
             }
         }
     }
