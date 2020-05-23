@@ -31,38 +31,32 @@ impl<'s> System<'s> for MovementSystem {
 
     fn run(&mut self, (channel, mut movables, names): Self::SystemData) {
         for event in channel.read(&mut self.reader) {
-            println!("Reading {:?}", event);
-
             let mut others = HashMap::new();
             for (movable, name) in (&movables, &names).join() {
                 others.insert(name, movable.get_pos());
             }
-            // println!("{:?}", others);
 
             for (movable, name) in (&mut movables, &names).join() {
                 // Get the other movables and their names
                 // Decide what directions we cannot go in
                 match (event, name.get()) {
                     (TransformedInputEvent::Up, Name::Vertical) => {
-                        // println!("Moving up");
                         let mut safe = true;
                         for (_k, v) in &others {
-                            // println!("Checking {:?} + 1 against {:?}", movable.get_pos().0, v.0);
-                            if movable.get_pos().0 + 1 == v.0 {
+                            let next = &(movable.x_add(1), movable.get_y());
+                            if collision(next, v) {
                                 safe = false;
                             }
                         }
-                        // println!("{:?}", safe);
                         if safe {
                             movable.move_up()
                         }
                     }
                     (TransformedInputEvent::Down, Name::Vertical) => {
-                        // println!("Moving down");
                         let mut safe = true;
                         for (_k, v) in &others {
-                            // println!("Checking {:?} - 1 against {:?}", movable.get_pos().0, v.0);
-                            if movable.get_pos().0 > 0 && movable.get_pos().0 - 1 == v.0 {
+                            let next = &(movable.x_sub(1), movable.get_y());
+                            if collision(next, v) {
                                 safe = false;
                             }
                         }
@@ -71,29 +65,25 @@ impl<'s> System<'s> for MovementSystem {
                         }
                     }
                     (TransformedInputEvent::Left, Name::Horizontal) => {
-                        // println!("moving left");
                         let mut safe = true;
                         for (_k, v) in &others {
-                            // println!("Checking {:?} + 1 against {:?}", movable.get_pos().1, v.1);
-                            if movable.get_pos().1 + 1 == v.1 {
+                            let next = &(movable.get_x(), movable.y_add(1));
+                            if collision(next, v) {
                                 safe = false;
                             }
                         }
-                        // println!("{:?}", safe);
                         if safe {
                             movable.move_right()
                         }
                     }
                     (TransformedInputEvent::Right, Name::Horizontal) => {
-                        // println!("moving right");
                         let mut safe = true;
                         for (_k, v) in &others {
-                            // println!("Checking {:?} - 1 against {:?}", movable.get_pos().1, v.1);
-                            if movable.get_pos().1 > 0 && movable.get_pos().1 - 1 == v.1 {
+                            let next = &(movable.get_x(), movable.y_sub(1));
+                            if collision(next, v) {
                                 safe = false;
                             }
                         }
-                        // println!("{:?}", safe);
                         if safe {
                             movable.move_left()
                         }
@@ -101,9 +91,11 @@ impl<'s> System<'s> for MovementSystem {
                     (TransformedInputEvent::Interact, Name::Interact) => movable.interact(),
                     (_, _) => (),
                 }
-
-                println!("{}@{:?}", name, movable.get_pos());
             }
         }
     }
+}
+
+fn collision((x1, y1): &(u8, u8), (x2, y2): &(u8, u8)) -> bool {
+    x1 == x2 && y1 == y2
 }

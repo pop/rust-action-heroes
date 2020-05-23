@@ -1,43 +1,49 @@
 use crate::component::{Movable, Name, Named};
 use amethyst::{
-    assets::{AssetStorage, Handle, Loader},
+    assets::Handle,
     core::transform::Transform,
-    ecs::prelude::{Component, DenseVecStorage},
     prelude::*,
-    renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
+    renderer::{Camera, SpriteSheet, SpriteRender},
 };
+use crate::lib::get_sprite;
 
-pub(crate) fn make_horizontal(world: &mut World) {
+fn make_playable_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite: SpriteRender) {
+    let transform = Transform::default();
     world
         .create_entity()
-        .with(Movable::new(0, 2))
-        .with(Named::new(Name::Horizontal))
+        .with(Movable::new(x, y))
+        .with(Named::new(name))
+        .with(sprite)
+        .with(transform)
         .build();
 }
 
-pub(crate) fn make_vertical(world: &mut World) {
-    world
-        .create_entity()
-        .with(Movable::new(0, 1))
-        .with(Named::new(Name::Vertical))
-        .build();
+pub(crate) fn make_horizontal(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let sprite = get_sprite(sprite_sheet_handle, 0);
+    make_playable_entity(world, (0, 2), Name::Horizontal, sprite);
 }
 
-pub(crate) fn make_interact(world: &mut World) {
-    world
-        .create_entity()
-        .with(Movable::new(0, 0))
-        .with(Named::new(Name::Interact))
-        .build();
+pub(crate) fn make_vertical(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let sprite = get_sprite(sprite_sheet_handle, 1);
+    make_playable_entity(world, (0, 1), Name::Vertical, sprite);
+}
+
+pub(crate) fn make_interact(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let sprite = get_sprite(sprite_sheet_handle, 2);
+    make_playable_entity(world, (0, 0), Name::Interact, sprite);
 }
 
 pub(crate) fn make_camera(world: &mut World) {
-    let mut transform = Transform::default();
-    transform.set_translation_xyz(50.0, 50.0, 1.0);
-
     world
         .create_entity()
         .with(Camera::standard_2d(100.0, 100.0))
-        .with(transform)
+        .with(
+            {
+                // I just want to call Transform::from(x, y, z)...
+                let mut transform = Transform::default();
+                transform.set_translation_xyz(50.0, 50.0, 1.0);
+                transform
+            }
+        )
         .build();
 }

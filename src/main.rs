@@ -6,7 +6,7 @@ mod system;
 
 use crate::lib::TransformedInputEvent;
 use crate::state::GameState;
-use crate::system::{MovementSystem, ProcessInputSystem};
+use crate::system::{MovementSystem, ProcessInputSystem, GridSystem};
 use amethyst::{
     core::{bundle::SystemBundle, transform::TransformBundle},
     ecs::DispatcherBuilder,
@@ -67,14 +67,15 @@ fn main() -> amethyst::Result<()> {
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(
                     RenderToWindow::from_config_path(display_config_path)?
-                        .with_clear([0.8, 0.2, 0.2, 1.0]),
+                        .with_clear([0.0, 0.0, 0.0, 0.0]),
                 )
                 .with_plugin(RenderFlat2D::default()),
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(InputBundle::<StringBindings>::new())?
         .with(ProcessInputSystem::new(), "input_transform_system", &[])
-        .with_bundle(MovementBundle)?;
+        .with_bundle(MovementBundle)?
+        .with(GridSystem::new(), "grid_system", &["movement_system"]);
 
     let mut game = Application::new(assets_dir, GameState, game_data)?;
 
