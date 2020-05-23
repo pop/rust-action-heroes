@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::{prelude::{Component, DenseVecStorage}},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 
 ///
 /// Movable Component
@@ -41,11 +39,9 @@ impl Movable {
         }
     }
 
-    pub(crate) fn interact(&self) { }
+    pub(crate) fn interact(&self) {}
 
-    pub(crate) fn new() -> Self {
-        Movable { pos: (0,0) }
+    pub(crate) fn new(x: u8, y: u8) -> Self {
+        Movable { pos: (x, y) }
     }
 }
-
-

@@ -1,6 +1,4 @@
-use amethyst::{
-    ecs::{prelude::{Component, DenseVecStorage}},
-};
+use amethyst::ecs::prelude::{Component, DenseVecStorage};
 use std::fmt;
 
 ///
@@ -21,11 +19,17 @@ impl Component for Named {
 }
 
 impl Named {
-    pub(crate) fn new(name: Name) -> Self { Named(name) }
+    pub(crate) fn new(name: Name) -> Self {
+        Named(name)
+    }
 
-    pub(crate) fn is(&self, other: Name) -> bool { self.0 == other }
+    pub(crate) fn is(&self, other: Name) -> bool {
+        self.0 == other
+    }
 
-    pub(crate) fn get(&self) -> Name { self.0 }
+    pub(crate) fn get(&self) -> Name {
+        self.0
+    }
 }
 
 impl fmt::Display for Named {
@@ -33,4 +37,3 @@ impl fmt::Display for Named {
         write!(_f, "{:?}", self.0)
     }
 }
-

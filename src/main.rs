@@ -1,28 +1,27 @@
+mod component;
+mod entity;
 mod lib;
 mod state;
 mod system;
-mod component;
 
+use crate::lib::TransformedInputEvent;
+use crate::state::GameState;
+use crate::system::{MovementSystem, ProcessInputSystem};
 use amethyst::{
-    core::{transform::TransformBundle, bundle::SystemBundle},
-    input::{InputBundle, StringBindings},
+    core::{bundle::SystemBundle, transform::TransformBundle},
     ecs::DispatcherBuilder,
+    input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
         plugins::{RenderFlat2D, RenderToWindow},
         types::DefaultBackend,
         RenderingBundle,
     },
+    shrev::EventChannel,
     utils::application_root_dir,
-    shrev::{EventChannel},
     Error,
 };
-use std::{
-    env,
-};
-use crate::system::{ProcessInputSystem, MovementSystem};
-use crate::state::GameState;
-use crate::lib::TransformedInputEvent;
+use std::env;
 
 ///
 /// ...
@@ -72,20 +71,12 @@ fn main() -> amethyst::Result<()> {
                 )
                 .with_plugin(RenderFlat2D::default()),
         )?
-        .with_bundle(
-            TransformBundle::new()
-        )?
-        .with_bundle(
-            InputBundle::<StringBindings>::new()
-        )?
+        .with_bundle(TransformBundle::new())?
+        .with_bundle(InputBundle::<StringBindings>::new())?
         .with(ProcessInputSystem::new(), "input_transform_system", &[])
         .with_bundle(MovementBundle)?;
 
-    let mut game = Application::new(
-        assets_dir,
-        GameState,
-        game_data,
-    )?;
+    let mut game = Application::new(assets_dir, GameState, game_data)?;
 
     game.run();
 

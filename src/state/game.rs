@@ -1,7 +1,5 @@
-use amethyst::{
-    prelude::*,
-};
-use crate::component::{Movable, Named, Name};
+use crate::entity::{make_camera, make_horizontal, make_interact, make_vertical};
+use amethyst::prelude::*;
 
 ///
 /// ...
@@ -12,20 +10,9 @@ impl SimpleState for GameState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
 
-        world
-            .create_entity()
-            .with(Movable::new())
-            .with(Named::new(Name::Horizontal))
-            .build();
-        world
-            .create_entity()
-            .with(Movable::new())
-            .with(Named::new(Name::Vertical))
-            .build();
-        world
-            .create_entity()
-            .with(Movable::new())
-            .with(Named::new(Name::Interact))
-            .build();
+        make_camera(world);
+        make_horizontal(world);
+        make_vertical(world);
+        make_interact(world);
     }
 }

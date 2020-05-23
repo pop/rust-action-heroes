@@ -1,12 +1,12 @@
 use amethyst::{
     derive::SystemDesc,
-    ecs::{ System, SystemData, Read, ReadStorage, WriteStorage, Join},
-    shrev::{ReaderId, EventChannel},
+    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
+    shrev::{EventChannel, ReaderId},
 };
 use std::collections::HashMap;
 
+use crate::component::{Movable, Name, Named};
 use crate::lib::TransformedInputEvent;
-use crate::component::{Movable, Named, Name};
 
 ///
 /// ...
@@ -56,7 +56,7 @@ impl<'s> System<'s> for MovementSystem {
                         if safe {
                             movable.move_up()
                         }
-                    },
+                    }
                     (TransformedInputEvent::Down, Name::Vertical) => {
                         // println!("Moving down");
                         let mut safe = true;
@@ -69,7 +69,7 @@ impl<'s> System<'s> for MovementSystem {
                         if safe {
                             movable.move_down()
                         }
-                    },
+                    }
                     (TransformedInputEvent::Left, Name::Horizontal) => {
                         // println!("moving left");
                         let mut safe = true;
@@ -83,7 +83,7 @@ impl<'s> System<'s> for MovementSystem {
                         if safe {
                             movable.move_right()
                         }
-                    },
+                    }
                     (TransformedInputEvent::Right, Name::Horizontal) => {
                         // println!("moving right");
                         let mut safe = true;
@@ -97,11 +97,9 @@ impl<'s> System<'s> for MovementSystem {
                         if safe {
                             movable.move_left()
                         }
-                    },
-                    (TransformedInputEvent::Interact, Name::Interact) => {
-                        movable.interact()
-                    },
-                    (_, _) => ()
+                    }
+                    (TransformedInputEvent::Interact, Name::Interact) => movable.interact(),
+                    (_, _) => (),
                 }
 
                 println!("{}@{:?}", name, movable.get_pos());
@@ -109,5 +107,3 @@ impl<'s> System<'s> for MovementSystem {
         }
     }
 }
-
-

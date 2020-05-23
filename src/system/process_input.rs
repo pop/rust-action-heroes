@@ -1,14 +1,11 @@
+use crate::lib::TransformedInputEvent;
 use amethyst::{
     derive::SystemDesc,
-    ecs::{System, Read, Write, SystemData},
+    ecs::{Read, System, SystemData, Write},
     input::{InputHandler, StringBindings, VirtualKeyCode},
     shrev::EventChannel,
 };
-use std::{
-    collections::BTreeSet,
-    iter::FromIterator,
-};
-use crate::lib::TransformedInputEvent;
+use std::{collections::BTreeSet, iter::FromIterator};
 
 ///
 /// ...
@@ -38,9 +35,7 @@ impl<'s> System<'s> for ProcessInputSystem {
     fn run(&mut self, (input, mut input_event_channel): Self::SystemData) {
         // Figure out which movement the user is requesting
         let movement =
-            if !self.curr.contains(&VirtualKeyCode::Up)
-                && input.key_is_down(VirtualKeyCode::Up)
-            {
+            if !self.curr.contains(&VirtualKeyCode::Up) && input.key_is_down(VirtualKeyCode::Up) {
                 Some(TransformedInputEvent::Up)
             } else if !self.curr.contains(&VirtualKeyCode::Down)
                 && input.key_is_down(VirtualKeyCode::Down)
@@ -67,7 +62,7 @@ impl<'s> System<'s> for ProcessInputSystem {
             Some(m) => {
                 println!("WriteEvent {:?}", movement);
                 input_event_channel.single_write(m)
-            },
+            }
             None => (),
         };
 
