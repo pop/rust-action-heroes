@@ -3,13 +3,12 @@ mod entity;
 mod lib;
 mod state;
 mod system;
+mod bundle;
 
-use crate::lib::TransformedInputEvent;
-use crate::state::GameState;
-use crate::system::{MovementSystem, ProcessInputSystem, GridSystem, GrabSystem};
+use std::env;
+
 use amethyst::{
-    core::{bundle::SystemBundle, transform::TransformBundle},
-    ecs::DispatcherBuilder,
+    core::{transform::TransformBundle},
     input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
@@ -17,45 +16,12 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
-    shrev::EventChannel,
     utils::application_root_dir,
-    Error,
 };
-use std::env;
 
-///
-/// ...
-///
-struct MovementBundle;
-
-impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
-    fn build(
-        self,
-        world: &mut World,
-        builder: &mut DispatcherBuilder<'a, 'b>,
-    ) -> Result<(), Error> {
-        let mut channel = EventChannel::<TransformedInputEvent>::new();
-
-        let movement_reader = channel.register_reader();
-        let grab_reader = channel.register_reader();
-
-        world.insert(channel);
-
-        builder.add(
-            MovementSystem::new(movement_reader),
-            "movement_system",
-            &["input_transform_system"],
-        );
-
-        builder.add(
-            GrabSystem::new(grab_reader),
-            "grab_system",
-            &["input_transform_system"],
-        );
-
-        Ok(())
-    }
-}
+use crate::state::GameState;
+use crate::system::{ProcessInputSystem, GridSystem};
+use crate::bundle::MovementBundle;
 
 ///
 /// ...

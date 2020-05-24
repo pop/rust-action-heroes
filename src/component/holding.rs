@@ -1,16 +1,16 @@
-use amethyst::ecs::prelude::{Component, DenseVecStorage};
+use amethyst::ecs::{prelude::*, Component};
 
 ///
 /// Holding Component
 ///
-#[derive(Debug)]
+#[derive(Debug, Component)]
 pub(crate) struct Holding(bool);
 
-impl Component for Holding {
-    type Storage = DenseVecStorage<Self>;
-}
-
 impl Holding {
+    pub(crate) fn new() -> Self {
+        Holding(false)
+    }
+
     pub(crate) fn is_holding(&mut self) {
         self.0 = true;
     }

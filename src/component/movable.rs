@@ -1,16 +1,12 @@
-use amethyst::ecs::prelude::{Component, DenseVecStorage};
+use amethyst::ecs::{prelude::DenseVecStorage, Component};
 
 ///
 /// Movable Component
 ///
-#[derive(Debug)]
+#[derive(Debug, Component)]
 pub(crate) struct Movable {
     x: u8,
     y: u8,
-}
-
-impl Component for Movable {
-    type Storage = DenseVecStorage<Self>;
 }
 
 impl Movable {
@@ -54,20 +50,45 @@ impl Movable {
         }
     }
 
+    pub(crate) fn set_pos(&mut self, (x, y): (u8, u8)) {
+        self.x = x;
+        self.y = y;
+    }
+
     pub(crate) fn move_up(&mut self) {
-        self.y = self.y_add(1);
+        let new = self.up_pos();
+        self.set_pos(new);
     }
 
     pub(crate) fn move_down(&mut self) {
-        self.y = self.y_sub(1);
+        let new = self.down_pos();
+        self.set_pos(new);
     }
 
     pub(crate) fn move_right(&mut self) {
-        self.x = self.x_add(1);
+        let new = self.right_pos();
+        self.set_pos(new);
     }
 
     pub(crate) fn move_left(&mut self) {
-        self.x = self.x_sub(1);
+        let new = self.left_pos();
+        self.set_pos(new);
+    }
+
+    pub(crate) fn up_pos(&self) -> (u8, u8) {
+        (self.get_x(), self.y_add(1))
+    }
+
+    pub(crate) fn down_pos(&self) -> (u8, u8) {
+        (self.get_x(), self.y_sub(1))
+    }
+
+    pub(crate) fn left_pos(&self) -> (u8, u8) {
+        (self.x_sub(1), self.get_y())
+    }
+
+    pub(crate) fn right_pos(&self) -> (u8, u8) {
+        (self.x_add(1), self.get_y())
     }
 
     pub(crate) fn interact(&self) {}

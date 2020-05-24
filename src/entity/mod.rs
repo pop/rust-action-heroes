@@ -1,3 +1,4 @@
+// use crate::component::{Movable, Name, Named, Holding};
 use crate::component::{Movable, Name, Named};
 use amethyst::{
     assets::Handle,
@@ -13,6 +14,7 @@ fn make_playable_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite:
         .create_entity()
         .with(Movable::new(x, y))
         .with(Named::new(name))
+        // .with(Holding::new())
         .with(sprite)
         .with(transform)
         .build();
@@ -20,17 +22,17 @@ fn make_playable_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite:
 
 pub(crate) fn make_horizontal(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 0);
-    make_playable_entity(world, (0, 2), Name::Vertical, sprite);
+    make_playable_entity(world, (5, 4), Name::Vertical, sprite);
 }
 
 pub(crate) fn make_vertical(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 1);
-    make_playable_entity(world, (0, 1), Name::Horizontal, sprite);
+    make_playable_entity(world, (5, 5), Name::Horizontal, sprite);
 }
 
 pub(crate) fn make_interact(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 2);
-    make_playable_entity(world, (0, 0), Name::Interact, sprite);
+    make_playable_entity(world, (5, 6), Name::Interact, sprite);
 }
 
 pub(crate) fn make_camera(world: &mut World) {

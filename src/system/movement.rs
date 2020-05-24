@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
 use amethyst::{
     derive::SystemDesc,
-    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
+    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage, Entity},
     shrev::{EventChannel, ReaderId},
 };
-use std::collections::HashMap;
+
 
 use crate::component::{Movable, Name, Named};
 use crate::lib::TransformedInputEvent;
@@ -30,72 +32,135 @@ impl<'s> System<'s> for MovementSystem {
     );
 
     fn run(&mut self, (channel, mut movables, names): Self::SystemData) {
+        // This code is so complicated I throw up a little every time I see it...
         for event in channel.read(&mut self.reader) {
-            let mut others = HashMap::new();
-            for (movable, name) in (&movables, &names).join() {
-                others.insert(name, movable.get_pos());
+            let mut to_move_names: Vec<Name> = Vec::new();
+            let mut to_move_next_pos: Vec<(u8, u8)> = Vec::new();
+            match event {
+                TransformedInputEvent::Up => {
+                    // See if Vertical will collide with anything movable
+                    // See if that will collide with anything movable, etc.
+                    // Collect all things that can move into a Vector.
+                    for (movable, name) in (&movables, &names).join() {
+                        if name.get() == Name::Vertical {                   // different
+                            to_move_names.push(name.get());
+                            to_move_next_pos.push(movable.up_pos());        // different
+                        }
+                    }
+                    let mut added_to_move = true;
+                    while added_to_move {
+                        added_to_move = false;
+                        for (movable, name) in (&movables, &names).join() {
+                            if let Some(next_pos) = to_move_next_pos.last() {
+                                if will_collide(&next_pos, &movable.get_pos()) {
+                                    to_move_names.push(name.get());
+                                    to_move_next_pos.push(movable.up_pos());    // different
+                                    added_to_move = true;
+                                }
+                            }
+                        }
+                    }
+                    for (movable, name) in (&mut movables, &names).join() {
+                        if to_move_names.contains(&name.get()) {
+                            movable.move_up()                                   // different
+                        }
+                    }
+
+                    println!("UP {:?}", to_move_names);
+                },
+                TransformedInputEvent::Down => {
+                    for (movable, name) in (&movables, &names).join() {
+                        if name.get() == Name::Vertical {                   // different
+                            to_move_names.push(name.get());
+                            to_move_next_pos.push(movable.down_pos());        // different
+                        }
+                    }
+                    let mut added_to_move = true;
+                    while added_to_move {
+                        added_to_move = false;
+                        for (movable, name) in (&movables, &names).join() {
+                            if let Some(next_pos) = to_move_next_pos.last() {
+                                if will_collide(&next_pos, &movable.get_pos()) {
+                                    to_move_names.push(name.get());
+                                    to_move_next_pos.push(movable.down_pos());    // different
+                                    added_to_move = true;
+                                }
+                            }
+                        }
+                    }
+                    for (movable, name) in (&mut movables, &names).join() {
+                        if to_move_names.contains(&name.get()) {
+                            movable.move_down()                                   // different
+                        }
+                    }
+
+                    println!("DOWN {:?}", to_move_names);
+
+                },
+                TransformedInputEvent::Left => {
+
+                    for (movable, name) in (&movables, &names).join() {
+                        if name.get() == Name::Horizontal {                   // different
+                            to_move_names.push(name.get());
+                            to_move_next_pos.push(movable.left_pos());        // different
+                        }
+                    }
+                    let mut added_to_move = true;
+                    while added_to_move {
+                        added_to_move = false;
+                        for (movable, name) in (&movables, &names).join() {
+                            if let Some(next_pos) = to_move_next_pos.last() {
+                                if will_collide(&next_pos, &movable.get_pos()) {
+                                    to_move_names.push(name.get());
+                                    to_move_next_pos.push(movable.left_pos());    // different
+                                    added_to_move = true;
+                                }
+                            }
+                        }
+                    }
+                    for (movable, name) in (&mut movables, &names).join() {
+                        if to_move_names.contains(&name.get()) {
+                            movable.move_left()                                   // different
+                        }
+                    }
+
+                    println!("LEFT {:?}", to_move_names);
+                },
+                TransformedInputEvent::Right => {
+                    for (movable, name) in (&movables, &names).join() {
+                        if name.get() == Name::Horizontal {                   // different
+                            to_move_names.push(name.get());
+                            to_move_next_pos.push(movable.right_pos());        // different
+                        }
+                    }
+                    let mut added_to_move = true;
+                    while added_to_move {
+                        added_to_move = false;
+                        for (movable, name) in (&movables, &names).join() {
+                            if let Some(next_pos) = to_move_next_pos.last() {
+                                if will_collide(&next_pos, &movable.get_pos()) {
+                                    to_move_names.push(name.get());
+                                    to_move_next_pos.push(movable.right_pos());    // different
+                                    added_to_move = true;
+                                }
+                            }
+                        }
+                    }
+                    for (movable, name) in (&mut movables, &names).join() {
+                        if to_move_names.contains(&name.get()) {
+                            movable.move_right()                                   // different
+                        }
+                    }
+
+                    println!("RIGHT {:?}", to_move_names);
+                },
+                TransformedInputEvent::Interact => ()
             }
 
-            for (movable, name) in (&mut movables, &names).join() {
-                // Get the other movables and their names
-                // Decide what directions we cannot go in
-                match (event, name.get()) {
-                    (TransformedInputEvent::Up, Name::Vertical) => {
-                        let mut safe = true;
-                        for (_k, v) in &others {
-                            let next = &(movable.get_x(), movable.y_add(1));
-                            if collision(next, v) {
-                                safe = false;
-                            }
-                        }
-                        if safe {
-                            movable.move_up()
-                        }
-                    }
-                    (TransformedInputEvent::Down, Name::Vertical) => {
-                        let mut safe = true;
-                        for (_k, v) in &others {
-                            let next = &(movable.get_x(), movable.y_sub(1));
-                            if collision(next, v) {
-                                safe = false;
-                            }
-                        }
-                        if safe {
-                            movable.move_down()
-                        }
-                    }
-                    (TransformedInputEvent::Left, Name::Horizontal) => {
-                        let mut safe = true;
-                        for (_k, v) in &others {
-                            let next = &(movable.x_sub(1), movable.get_y());
-                            if collision(next, v) {
-                                safe = false;
-                            }
-                        }
-                        if safe {
-                            movable.move_left()
-                        }
-                    }
-                    (TransformedInputEvent::Right, Name::Horizontal) => {
-                        let mut safe = true;
-                        for (_k, v) in &others {
-                            let next = &(movable.x_add(1), movable.get_y());
-                            if collision(next, v) {
-                                safe = false;
-                            }
-                        }
-                        if safe {
-                            movable.move_right()
-                        }
-                    }
-                    (TransformedInputEvent::Interact, Name::Interact) => movable.interact(),
-                    (_, _) => (),
-                }
-            }
         }
     }
 }
 
-fn collision((x1, y1): &(u8, u8), (x2, y2): &(u8, u8)) -> bool {
+fn will_collide((x1, y1): &(u8, u8), (x2, y2): &(u8, u8)) -> bool {
     x1 == x2 && y1 == y2
 }

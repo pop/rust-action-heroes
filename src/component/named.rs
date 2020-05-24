@@ -1,10 +1,10 @@
-use amethyst::ecs::prelude::{Component, DenseVecStorage};
+use amethyst::ecs::{prelude::DenseVecStorage, Component};
 use std::fmt;
 
 ///
 /// Movable Component
 ///
-#[derive(PartialEq, Debug, Eq, Hash)]
+#[derive(PartialEq, Debug, Eq, Hash, Component)]
 pub(crate) struct Named(Name);
 
 #[derive(PartialEq, Copy, Clone, Debug, Eq, Hash)]
@@ -12,10 +12,6 @@ pub(crate) enum Name {
     Horizontal,
     Vertical,
     Interact,
-}
-
-impl Component for Named {
-    type Storage = DenseVecStorage<Self>;
 }
 
 impl Named {

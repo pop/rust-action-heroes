@@ -14,8 +14,8 @@ impl SimpleState for GameState {
         let sprite_sheet_handle = load_sprite_sheet(world, "texture/evg1_spritesheet.png", "texture/evg1_spritesheet.ron");
 
         make_camera(world);
-        make_horizontal(world, sprite_sheet_handle.clone());
-        make_vertical(world, sprite_sheet_handle.clone());
         make_interact(world, sprite_sheet_handle.clone());
+        make_vertical(world, sprite_sheet_handle.clone());
+        make_horizontal(world, sprite_sheet_handle.clone());
     }
 }
