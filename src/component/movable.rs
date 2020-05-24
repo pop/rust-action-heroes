@@ -91,7 +91,7 @@ impl Movable {
         (self.x_add(1), self.get_y())
     }
 
-    pub(crate) fn interact(&self) {}
+    pub(crate) fn _interact(&self) {}
 
     pub(crate) fn new(x: u8, y: u8) -> Self {
         Movable { x: x, y: y }

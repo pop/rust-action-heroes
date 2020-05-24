@@ -56,14 +56,14 @@ List((
             width: 9,
             height: 9,
         ),
-        ( // Wall Stone
+        ( // Floor Stone
             x: 36,
             y: 9,
             width: 9,
             height: 9,
         ),
-        ( // Floor Stone
-            x: 54,
+        ( // Wall Stone
+            x: 45,
             y: 0,
             width: 9,
             height: 9,
