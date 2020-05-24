@@ -20,19 +20,40 @@ fn make_playable_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite:
         .build();
 }
 
+fn make_obsticle(world: &mut World, (x, y): (u8, u8), sprite: SpriteRender) {
+    let transform = Transform::default();
+    world
+        .create_entity()
+        .with(Movable::new(x, y))
+        .with(transform)
+        .with(sprite)
+        .build();
+}
+
 pub(crate) fn make_horizontal(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 0);
     make_playable_entity(world, (5, 4), Name::Vertical, sprite);
 }
 
 pub(crate) fn make_vertical(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
-    let sprite = get_sprite(sprite_sheet_handle, 1);
+    let sprite = get_sprite(sprite_sheet_handle, 2);
     make_playable_entity(world, (5, 5), Name::Horizontal, sprite);
 }
 
 pub(crate) fn make_interact(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
-    let sprite = get_sprite(sprite_sheet_handle, 2);
+    let sprite = get_sprite(sprite_sheet_handle, 4);
     make_playable_entity(world, (5, 6), Name::Interact, sprite);
+}
+
+pub(crate) fn make_walls(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let sprite = get_sprite(sprite_sheet_handle, 9);
+    let max = 10;
+    for x in 0 ..= max {
+        make_obsticle(world, (0, x), sprite.clone());
+        make_obsticle(world, (x, 0), sprite.clone());
+        make_obsticle(world, (max, x), sprite.clone());
+        make_obsticle(world, (x, max), sprite.clone());
+    }
 }
 
 pub(crate) fn make_camera(world: &mut World) {

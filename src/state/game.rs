@@ -1,4 +1,4 @@
-use crate::entity::{make_camera, make_horizontal, make_interact, make_vertical};
+use crate::entity::{make_camera, make_horizontal, make_interact, make_vertical, make_walls};
 use crate::lib::load_sprite_sheet;
 use amethyst::prelude::*;
 
@@ -17,5 +17,6 @@ impl SimpleState for GameState {
         make_interact(world, sprite_sheet_handle.clone());
         make_vertical(world, sprite_sheet_handle.clone());
         make_horizontal(world, sprite_sheet_handle.clone());
+        make_walls(world, sprite_sheet_handle.clone());
     }
 }

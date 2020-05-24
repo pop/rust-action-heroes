@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use amethyst::{
     derive::SystemDesc,
-    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage, Entity},
+    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
     shrev::{EventChannel, ReaderId},
 };
 

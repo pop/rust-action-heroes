@@ -2,20 +2,68 @@ List((
     texture_width: 128,
     texture_height: 128,
     sprites: [
-        (
+        ( // Vertical
             x: 0,
             y: 0,
             width: 9,
             height: 9,
         ),
-        (
+        ( // Vertical + Grab
+            x: 0,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // Horizontal
             x: 9,
             y: 0,
             width: 9,
             height: 9,
         ),
-        (
+        ( // Horizontal + Grab
+            x: 9,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // Grab
             x: 18,
+            y: 0,
+            width: 9,
+            height: 9,
+        ),
+        ( // Grab + Grab
+            x: 18,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // Crate
+            x: 27,
+            y: 0,
+            width: 9,
+            height: 9,
+        ),
+        ( // Crate + Grab
+            x: 27,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // Exit
+            x: 36,
+            y: 0,
+            width: 9,
+            height: 9,
+        ),
+        ( // Wall Stone
+            x: 36,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // Floor Stone
+            x: 54,
             y: 0,
             width: 9,
             height: 9,
