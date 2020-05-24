@@ -1,7 +1,11 @@
 pub mod movement;
-pub mod process_input;
-pub mod grid;
-
 pub(crate) use movement::*;
+
+pub mod process_input;
 pub(crate) use process_input::*;
+
+pub mod grid;
 pub(crate) use grid::*;
+
+pub mod grab;
+pub(crate) use grab::*;

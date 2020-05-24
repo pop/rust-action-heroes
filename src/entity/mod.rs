@@ -20,12 +20,12 @@ fn make_playable_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite:
 
 pub(crate) fn make_horizontal(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 0);
-    make_playable_entity(world, (0, 2), Name::Horizontal, sprite);
+    make_playable_entity(world, (0, 2), Name::Vertical, sprite);
 }
 
 pub(crate) fn make_vertical(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 1);
-    make_playable_entity(world, (0, 1), Name::Vertical, sprite);
+    make_playable_entity(world, (0, 1), Name::Horizontal, sprite);
 }
 
 pub(crate) fn make_interact(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {

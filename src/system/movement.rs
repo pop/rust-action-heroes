@@ -43,7 +43,7 @@ impl<'s> System<'s> for MovementSystem {
                     (TransformedInputEvent::Up, Name::Vertical) => {
                         let mut safe = true;
                         for (_k, v) in &others {
-                            let next = &(movable.x_add(1), movable.get_y());
+                            let next = &(movable.get_x(), movable.y_add(1));
                             if collision(next, v) {
                                 safe = false;
                             }
@@ -55,7 +55,7 @@ impl<'s> System<'s> for MovementSystem {
                     (TransformedInputEvent::Down, Name::Vertical) => {
                         let mut safe = true;
                         for (_k, v) in &others {
-                            let next = &(movable.x_sub(1), movable.get_y());
+                            let next = &(movable.get_x(), movable.y_sub(1));
                             if collision(next, v) {
                                 safe = false;
                             }
@@ -67,25 +67,25 @@ impl<'s> System<'s> for MovementSystem {
                     (TransformedInputEvent::Left, Name::Horizontal) => {
                         let mut safe = true;
                         for (_k, v) in &others {
-                            let next = &(movable.get_x(), movable.y_add(1));
-                            if collision(next, v) {
-                                safe = false;
-                            }
-                        }
-                        if safe {
-                            movable.move_right()
-                        }
-                    }
-                    (TransformedInputEvent::Right, Name::Horizontal) => {
-                        let mut safe = true;
-                        for (_k, v) in &others {
-                            let next = &(movable.get_x(), movable.y_sub(1));
+                            let next = &(movable.x_sub(1), movable.get_y());
                             if collision(next, v) {
                                 safe = false;
                             }
                         }
                         if safe {
                             movable.move_left()
+                        }
+                    }
+                    (TransformedInputEvent::Right, Name::Horizontal) => {
+                        let mut safe = true;
+                        for (_k, v) in &others {
+                            let next = &(movable.x_add(1), movable.get_y());
+                            if collision(next, v) {
+                                safe = false;
+                            }
+                        }
+                        if safe {
+                            movable.move_right()
                         }
                     }
                     (TransformedInputEvent::Interact, Name::Interact) => movable.interact(),

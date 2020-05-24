@@ -23,10 +23,6 @@ impl Named {
         Named(name)
     }
 
-    pub(crate) fn is(&self, other: Name) -> bool {
-        self.0 == other
-    }
-
     pub(crate) fn get(&self) -> Name {
         self.0
     }

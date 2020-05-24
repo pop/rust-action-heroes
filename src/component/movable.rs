@@ -54,21 +54,20 @@ impl Movable {
         }
     }
 
-
     pub(crate) fn move_up(&mut self) {
-        self.x = self.x + 1;
+        self.y = self.y_add(1);
     }
 
     pub(crate) fn move_down(&mut self) {
-        self.x = self.x_sub(1);
+        self.y = self.y_sub(1);
     }
 
     pub(crate) fn move_right(&mut self) {
-        self.y = self.y + 1;
+        self.x = self.x_add(1);
     }
 
     pub(crate) fn move_left(&mut self) {
-        self.y = self.y_sub(1);
+        self.x = self.x_sub(1);
     }
 
     pub(crate) fn interact(&self) {}

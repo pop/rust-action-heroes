@@ -6,7 +6,7 @@ mod system;
 
 use crate::lib::TransformedInputEvent;
 use crate::state::GameState;
-use crate::system::{MovementSystem, ProcessInputSystem, GridSystem};
+use crate::system::{MovementSystem, ProcessInputSystem, GridSystem, GrabSystem};
 use amethyst::{
     core::{bundle::SystemBundle, transform::TransformBundle},
     ecs::DispatcherBuilder,
@@ -35,15 +35,24 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
         builder: &mut DispatcherBuilder<'a, 'b>,
     ) -> Result<(), Error> {
         let mut channel = EventChannel::<TransformedInputEvent>::new();
-        let reader = channel.register_reader();
+
+        let movement_reader = channel.register_reader();
+        let grab_reader = channel.register_reader();
 
         world.insert(channel);
 
         builder.add(
-            MovementSystem::new(reader),
+            MovementSystem::new(movement_reader),
             "movement_system",
             &["input_transform_system"],
         );
+
+        builder.add(
+            GrabSystem::new(grab_reader),
+            "grab_system",
+            &["input_transform_system"],
+        );
+
         Ok(())
     }
 }
