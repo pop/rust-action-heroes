@@ -1,0 +1,1 @@
+{"version":1,"ops":[{"type":1,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1590364106,"title":"Add a mechanic to load levels from files","message":"e.g.,\n* levels/1.ron -\u003e some plaintext map\n* levels/2.ron -\u003e some other plaintext map","files":null}]}
