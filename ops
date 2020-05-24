@@ -1,1 +1,1 @@
-{"version":1,"ops":[{"type":1,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1590364147,"title":"Add grab mechanic","message":"","files":null}]}
+{"version":1,"ops":[{"type":3,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1590364292,"message":"When the user hits space, then all Movables touching Grab are glued together and move together.\n\nWill probably require heavy reafactor of the movement mechanic.\n\nI wonder if we can factor movement out into two or so components... need to think about that...","files":null}]}
