@@ -27,7 +27,8 @@ impl<'s> System<'s> for GridSystem {
         for (transform, movable) in (&mut transforms, &movables).join() {
             let (x_u8, y_u8) = movable.get_pos();
             let (x, y): (f32, f32) = ((x_u8 * GRID_SIZE).into(), (y_u8 * GRID_SIZE).into());
-            transform.set_translation_xyz(x, y, 0.0);
+            transform.set_translation_x(x);
+            transform.set_translation_y(y);
         }
     }
 }

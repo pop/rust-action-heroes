@@ -51,9 +51,15 @@ impl<'s> System<'s> for MovementSystem {
                         for (movable, name) in (&movables, &names).join() {
                             if let Some(next_pos) = to_move_next_pos.last() {
                                 if will_collide(&next_pos, &movable.get_pos()) {
-                                    to_move_names.push(name.get());
-                                    to_move_next_pos.push(movable.up_pos());    // different
-                                    added_to_move = true;
+                                    if name.get() == Name::Wall {
+                                        // Hitting a wall, do not move;
+                                        to_move_names.clear();
+                                        to_move_next_pos.clear();
+                                    } else {
+                                        to_move_names.push(name.get());
+                                        to_move_next_pos.push(movable.up_pos());    // different
+                                        added_to_move = true;
+                                    }
                                 }
                             }
                         }
@@ -79,9 +85,15 @@ impl<'s> System<'s> for MovementSystem {
                         for (movable, name) in (&movables, &names).join() {
                             if let Some(next_pos) = to_move_next_pos.last() {
                                 if will_collide(&next_pos, &movable.get_pos()) {
-                                    to_move_names.push(name.get());
-                                    to_move_next_pos.push(movable.down_pos());    // different
-                                    added_to_move = true;
+                                    if name.get() == Name::Wall {
+                                        // Hitting a wall, do not move;
+                                        to_move_names.clear();
+                                        to_move_next_pos.clear();
+                                    } else {
+                                        to_move_names.push(name.get());
+                                        to_move_next_pos.push(movable.down_pos());    // different
+                                        added_to_move = true;
+                                    }
                                 }
                             }
                         }
@@ -109,9 +121,15 @@ impl<'s> System<'s> for MovementSystem {
                         for (movable, name) in (&movables, &names).join() {
                             if let Some(next_pos) = to_move_next_pos.last() {
                                 if will_collide(&next_pos, &movable.get_pos()) {
-                                    to_move_names.push(name.get());
-                                    to_move_next_pos.push(movable.left_pos());    // different
-                                    added_to_move = true;
+                                    if name.get() == Name::Wall {
+                                        // Hitting a wall, do not move;
+                                        to_move_names.clear();
+                                        to_move_next_pos.clear();
+                                    } else {
+                                        to_move_names.push(name.get());
+                                        to_move_next_pos.push(movable.left_pos());    // different
+                                        added_to_move = true;
+                                    }
                                 }
                             }
                         }
@@ -137,9 +155,15 @@ impl<'s> System<'s> for MovementSystem {
                         for (movable, name) in (&movables, &names).join() {
                             if let Some(next_pos) = to_move_next_pos.last() {
                                 if will_collide(&next_pos, &movable.get_pos()) {
-                                    to_move_names.push(name.get());
-                                    to_move_next_pos.push(movable.right_pos());    // different
-                                    added_to_move = true;
+                                    if name.get() == Name::Wall {
+                                        // Hitting a wall, do not move;
+                                        to_move_names.clear();
+                                        to_move_next_pos.clear();
+                                    } else {
+                                        to_move_names.push(name.get());
+                                        to_move_next_pos.push(movable.right_pos());    // different
+                                        added_to_move = true;
+                                    }
                                 }
                             }
                         }

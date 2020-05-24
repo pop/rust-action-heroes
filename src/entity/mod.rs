@@ -1,4 +1,4 @@
-use crate::component::{Movable, Name, Named, Immovable, Pushable};
+use crate::component::{Movable, Name, Named};
 use amethyst::{
     assets::Handle,
     core::transform::Transform,
@@ -8,27 +8,15 @@ use amethyst::{
 use crate::lib::get_sprite;
 
 // TODO: Better name
-fn make_playable_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite: SpriteRender) {
-    let transform = Transform::default();
+fn make_named_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite: SpriteRender) {
+    let mut transform = Transform::default();
+    transform.set_translation_z(1.0);
     world
         .create_entity()
         .with(transform)
         .with(sprite)
         .with(Movable::new(x, y))
         .with(Named::new(name))
-        .with(Pushable::new())
-        .build();
-}
-
-// TODO: Better name
-fn make_obsticle(world: &mut World, (x, y): (u8, u8), sprite: SpriteRender) {
-    let transform = Transform::default();
-    world
-        .create_entity()
-        .with(transform)
-        .with(sprite)
-        .with(Movable::new(x, y))
-        .with(Immovable::new())
         .build();
 }
 
@@ -45,17 +33,17 @@ fn make_non_obsticle(world: &mut World, (x, y): (u8, u8), sprite: SpriteRender) 
 
 pub(crate) fn make_horizontal(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 0);
-    make_playable_entity(world, (5, 4), Name::Vertical, sprite);
+    make_named_entity(world, (5, 4), Name::Vertical, sprite);
 }
 
 pub(crate) fn make_vertical(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 2);
-    make_playable_entity(world, (5, 5), Name::Horizontal, sprite);
+    make_named_entity(world, (5, 5), Name::Horizontal, sprite);
 }
 
 pub(crate) fn make_interact(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let sprite = get_sprite(sprite_sheet_handle, 4);
-    make_playable_entity(world, (5, 6), Name::Interact, sprite);
+    make_named_entity(world, (5, 6), Name::Interact, sprite);
 }
 
 pub(crate) fn make_walls(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
@@ -63,10 +51,10 @@ pub(crate) fn make_walls(world: &mut World, sprite_sheet_handle: Handle<SpriteSh
     let max = 10;
     let min = 1;
     for x in min ..= max {
-        make_obsticle(world, (min, x), sprite.clone());
-        make_obsticle(world, (x, min), sprite.clone());
-        make_obsticle(world, (max, x), sprite.clone());
-        make_obsticle(world, (x, max), sprite.clone());
+        make_named_entity(world, (min, x), Name::Wall, sprite.clone());
+        make_named_entity(world, (x, min), Name::Wall, sprite.clone());
+        make_named_entity(world, (max, x), Name::Wall, sprite.clone());
+        make_named_entity(world, (x, max), Name::Wall, sprite.clone());
     }
 }
 
@@ -80,6 +68,11 @@ pub(crate) fn make_floor(world: &mut World, sprite_sheet_handle: Handle<SpriteSh
     }
 }
 
+pub(crate) fn make_crates(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+    let sprite = get_sprite(sprite_sheet_handle, 6);
+    make_named_entity(world, (2,3), Name::Crate, sprite.clone());
+}
+
 pub(crate) fn make_camera(world: &mut World) {
     world
         .create_entity()
@@ -88,7 +81,7 @@ pub(crate) fn make_camera(world: &mut World) {
             {
                 // I just want to call Transform::from(x, y, z)...
                 let mut transform = Transform::default();
-                transform.set_translation_xyz(50.0, 50.0, 1.0);
+                transform.set_translation_xyz(50.0, 50.0, 5.0);
                 transform
             }
         )

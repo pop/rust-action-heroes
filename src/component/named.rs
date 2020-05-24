@@ -12,6 +12,8 @@ pub(crate) enum Name {
     Horizontal,
     Vertical,
     Interact,
+    Wall,
+    Crate,
 }
 
 impl Named {
