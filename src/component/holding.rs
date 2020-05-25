@@ -18,4 +18,8 @@ impl Holding {
     pub(crate) fn is_not_holding(&mut self) {
         self.0 = false;
     }
+
+    pub(crate) fn status(&self) -> bool {
+        self.0
+    }
 }

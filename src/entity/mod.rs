@@ -1,4 +1,4 @@
-use crate::component::{Movable, Name, Named};
+use crate::component::{Movable, Name, Named, Holding};
 use amethyst::{
     assets::Handle,
     core::transform::Transform,
@@ -17,6 +17,7 @@ fn make_named_entity(world: &mut World, (x, y): (u8, u8), name: Name, sprite: Sp
         .with(sprite)
         .with(Movable::new(x, y))
         .with(Named::new(name))
+        .with(Holding::new())
         .build();
 }
 
