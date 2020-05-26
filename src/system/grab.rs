@@ -50,11 +50,14 @@ impl<'s> System<'s> for GrabSystem {
                     toggle_queue.push_front((Name::Interact, pos));
 
                     while let Some((name, pos)) = toggle_queue.pop_back() {
-                        println!("{:?} {:?}", name, pos);
                         toggle_holding.insert((name, pos));
                         for (movable, name) in (&movables, &nameds).join() {
-                            if name.get() != Name::Wall && !toggle_holding.contains(&(name.get(), movable.get_pos())) && touching(pos, movable.get_pos()) {
-                                toggle_queue.push_front((name.get(), movable.get_pos()));
+                            if name.get() != Name::Wall {
+                                println!("{:?} {:?}", name, movable.get_pos());
+                                if !toggle_holding.contains(&(name.get(), movable.get_pos())) && touching(pos, movable.get_pos()) {
+                                    println!("{:?} is touching Interact", name.get());
+                                    toggle_queue.push_front((name.get(), movable.get_pos()));
+                                }
                             }
                         }
                     }

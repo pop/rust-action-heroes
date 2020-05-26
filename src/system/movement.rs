@@ -1,3 +1,5 @@
+use std::collections::{VecDeque, HashSet};
+
 use amethyst::{
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
@@ -5,7 +7,7 @@ use amethyst::{
 };
 
 
-use crate::component::{Movable, Name, Named};
+use crate::component::{Movable, Name, Named, Holding};
 use crate::lib::TransformedInputEvent;
 
 ///
@@ -27,42 +29,54 @@ impl<'s> System<'s> for MovementSystem {
         Read<'s, EventChannel<TransformedInputEvent>>,
         WriteStorage<'s, Movable>,
         ReadStorage<'s, Named>,
+        ReadStorage<'s, Holding>,
     );
 
-    fn run(&mut self, (channel, mut movables, names): Self::SystemData) {
+    fn run(&mut self, (channel, mut movables, names, holdings): Self::SystemData) {
         // This code is so complicated I throw up a little every time I see it...
         for event in channel.read(&mut self.reader) {
-            let mut to_move_names: Vec<Name> = Vec::new();
-            let mut to_move_next_pos: Vec<(u8, u8)> = Vec::new();
+            let mut to_move_queue: VecDeque<(Name, (u8, u8))> = VecDeque::new();
+
+            let mut to_move_names: HashSet<Name> = HashSet::new();
+            let mut to_move_next_pos: HashSet<(u8, u8)> = HashSet::new();
             match event {
                 TransformedInputEvent::Up => {
                     // See if Vertical will collide with anything movable
                     // See if that will collide with anything movable, etc.
                     // Collect all things that can move into a Vector.
-                    for (movable, name) in (&movables, &names).join() {
-                        if name.get() == Name::Vertical {                   // different
-                            to_move_names.push(name.get());
-                            to_move_next_pos.push(movable.up_pos());        // different
+                    let mut is_holding = false;
+                    for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                        // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
+                        if name.get() == Name::Vertical {          // different
+                            to_move_queue.push_front((name.get(), movable.up_pos()));  // different
+                            is_holding = holding.status();
+                            break
                         }
                     }
-                    let mut added_to_move = true;
-                    while added_to_move {
-                        added_to_move = false;
-                        for (movable, name) in (&movables, &names).join() {
-                            if let Some(next_pos) = to_move_next_pos.last() {
-                                if will_collide(&next_pos, &movable.get_pos()) {
-                                    if name.get() == Name::Wall {
-                                        // Hitting a wall, do not move;
-                                        to_move_names.clear();
-                                        to_move_next_pos.clear();
-                                    } else {
-                                        to_move_names.push(name.get());
-                                        to_move_next_pos.push(movable.up_pos());    // different
-                                        added_to_move = true;
-                                    }
+                    if is_holding {
+                        for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                            if holding.status() {
+                                to_move_queue.push_front((name.get(), movable.up_pos())); // different
+                            }
+                        }
+                    }
+                    // TODO: This is a new pattern with a queue and filling a vec, use that for the
+                    // other directions
+                    while let Some((name, pos)) = to_move_queue.pop_back() {
+                        to_move_names.insert(name);
+                        to_move_next_pos.insert(pos);
+                        if name == Name::Wall {
+                            // Hitting a wall, do not move;
+                            to_move_names.clear();
+                            to_move_next_pos.clear();
+                        } else {
+                            for (movable, new_name) in (&movables, &names).join() {
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
+                                    to_move_queue.push_front((new_name.get(), movable.up_pos()));  // different
                                 }
                             }
                         }
+
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
@@ -73,30 +87,42 @@ impl<'s> System<'s> for MovementSystem {
                     println!("UP {:?}", to_move_names);
                 },
                 TransformedInputEvent::Down => {
-                    for (movable, name) in (&movables, &names).join() {
-                        if name.get() == Name::Vertical {                   // different
-                            to_move_names.push(name.get());
-                            to_move_next_pos.push(movable.down_pos());        // different
+                    // See if Vertical will collide with anything movable
+                    // See if that will collide with anything movable, etc.
+                    // Collect all things that can move into a Vector.
+                    let mut is_holding = false;
+                    for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                        // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
+                        if name.get() == Name::Vertical {          // different
+                            to_move_queue.push_front((name.get(), movable.down_pos()));  // different
+                            is_holding = holding.status();
+                            break
                         }
                     }
-                    let mut added_to_move = true;
-                    while added_to_move {
-                        added_to_move = false;
-                        for (movable, name) in (&movables, &names).join() {
-                            if let Some(next_pos) = to_move_next_pos.last() {
-                                if will_collide(&next_pos, &movable.get_pos()) {
-                                    if name.get() == Name::Wall {
-                                        // Hitting a wall, do not move;
-                                        to_move_names.clear();
-                                        to_move_next_pos.clear();
-                                    } else {
-                                        to_move_names.push(name.get());
-                                        to_move_next_pos.push(movable.down_pos());    // different
-                                        added_to_move = true;
-                                    }
+                    if is_holding {
+                        for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                            if holding.status() {
+                                to_move_queue.push_front((name.get(), movable.down_pos())); // different
+                            }
+                        }
+                    }
+                    // TODO: This is a new pattern with a queue and filling a vec, use that for the
+                    // other directions
+                    while let Some((name, pos)) = to_move_queue.pop_back() {
+                        to_move_names.insert(name);
+                        to_move_next_pos.insert(pos);
+                        if name == Name::Wall {
+                            // Hitting a wall, do not move;
+                            to_move_names.clear();
+                            to_move_next_pos.clear();
+                        } else {
+                            for (movable, new_name) in (&movables, &names).join() {
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
+                                    to_move_queue.push_front((new_name.get(), movable.down_pos()));  // different
                                 }
                             }
                         }
+
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
@@ -108,31 +134,42 @@ impl<'s> System<'s> for MovementSystem {
 
                 },
                 TransformedInputEvent::Left => {
-
-                    for (movable, name) in (&movables, &names).join() {
-                        if name.get() == Name::Horizontal {                   // different
-                            to_move_names.push(name.get());
-                            to_move_next_pos.push(movable.left_pos());        // different
+                    // See if Horizontal will collide with anything movable
+                    // See if that will collide with anything movable, etc.
+                    // Collect all things that can move into a Vector.
+                    let mut is_holding = false;
+                    for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                        // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
+                        if name.get() == Name::Horizontal {          // different
+                            to_move_queue.push_front((name.get(), movable.left_pos()));  // different
+                            is_holding = holding.status();
+                            break
                         }
                     }
-                    let mut added_to_move = true;
-                    while added_to_move {
-                        added_to_move = false;
-                        for (movable, name) in (&movables, &names).join() {
-                            if let Some(next_pos) = to_move_next_pos.last() {
-                                if will_collide(&next_pos, &movable.get_pos()) {
-                                    if name.get() == Name::Wall {
-                                        // Hitting a wall, do not move;
-                                        to_move_names.clear();
-                                        to_move_next_pos.clear();
-                                    } else {
-                                        to_move_names.push(name.get());
-                                        to_move_next_pos.push(movable.left_pos());    // different
-                                        added_to_move = true;
-                                    }
+                    if is_holding {
+                        for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                            if holding.status() {
+                                to_move_queue.push_front((name.get(), movable.left_pos())); // different
+                            }
+                        }
+                    }
+                    // TODO: This is a new pattern with a queue and filling a vec, use that for the
+                    // other directions
+                    while let Some((name, pos)) = to_move_queue.pop_back() {
+                        to_move_names.insert(name);
+                        to_move_next_pos.insert(pos);
+                        if name == Name::Wall {
+                            // Hitting a wall, do not move;
+                            to_move_names.clear();
+                            to_move_next_pos.clear();
+                        } else {
+                            for (movable, new_name) in (&movables, &names).join() {
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
+                                    to_move_queue.push_front((new_name.get(), movable.left_pos()));  // different
                                 }
                             }
                         }
+
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
@@ -143,30 +180,42 @@ impl<'s> System<'s> for MovementSystem {
                     println!("LEFT {:?}", to_move_names);
                 },
                 TransformedInputEvent::Right => {
-                    for (movable, name) in (&movables, &names).join() {
-                        if name.get() == Name::Horizontal {                   // different
-                            to_move_names.push(name.get());
-                            to_move_next_pos.push(movable.right_pos());        // different
+                    // See if Horizontal will collide with anything movable
+                    // See if that will collide with anything movable, etc.
+                    // Collect all things that can move into a Vector.
+                    let mut is_holding = false;
+                    for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                        // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
+                        if name.get() == Name::Horizontal {          // different
+                            to_move_queue.push_front((name.get(), movable.right_pos()));  // different
+                            is_holding = holding.status();
+                            break
                         }
                     }
-                    let mut added_to_move = true;
-                    while added_to_move {
-                        added_to_move = false;
-                        for (movable, name) in (&movables, &names).join() {
-                            if let Some(next_pos) = to_move_next_pos.last() {
-                                if will_collide(&next_pos, &movable.get_pos()) {
-                                    if name.get() == Name::Wall {
-                                        // Hitting a wall, do not move;
-                                        to_move_names.clear();
-                                        to_move_next_pos.clear();
-                                    } else {
-                                        to_move_names.push(name.get());
-                                        to_move_next_pos.push(movable.right_pos());    // different
-                                        added_to_move = true;
-                                    }
+                    if is_holding {
+                        for (name, movable, holding) in (&names, &movables, &holdings).join() {
+                            if holding.status() {
+                                to_move_queue.push_front((name.get(), movable.right_pos())); // different
+                            }
+                        }
+                    }
+                    // TODO: This is a new pattern with a queue and filling a vec, use that for the
+                    // other directions
+                    while let Some((name, pos)) = to_move_queue.pop_back() {
+                        to_move_names.insert(name);
+                        to_move_next_pos.insert(pos);
+                        if name == Name::Wall {
+                            // Hitting a wall, do not move;
+                            to_move_names.clear();
+                            to_move_next_pos.clear();
+                        } else {
+                            for (movable, new_name) in (&movables, &names).join() {
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
+                                    to_move_queue.push_front((new_name.get(), movable.right_pos()));  // different
                                 }
                             }
                         }
+
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
