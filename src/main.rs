@@ -20,7 +20,7 @@ use amethyst::{
 };
 
 use crate::state::GameState;
-use crate::system::{ProcessInputSystem, GridSystem};
+use crate::system::{ProcessInputSystem, GridSystem, LevelSystem};
 use crate::bundle::MovementBundle;
 
 ///
@@ -50,9 +50,10 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(InputBundle::<StringBindings>::new())?
         .with(ProcessInputSystem::new(), "input_transform_system", &["input_system"])
         .with_bundle(MovementBundle)?
+        .with(LevelSystem::new(), "level_system", &["movement_system"])
         .with(GridSystem::new(), "grid_system", &["movement_system"]);
 
-    let mut game = Application::new(assets_dir, GameState, game_data)?;
+    let mut game = Application::new(assets_dir, GameState::default(), game_data)?;
 
     game.run();
 
