@@ -48,7 +48,7 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(InputBundle::<StringBindings>::new())?
-        .with(ProcessInputSystem::new(), "input_transform_system", &[])
+        .with(ProcessInputSystem::new(), "input_transform_system", &["input_system"])
         .with_bundle(MovementBundle)?
         .with(GridSystem::new(), "grid_system", &["movement_system"]);
 

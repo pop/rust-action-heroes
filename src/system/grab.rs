@@ -41,6 +41,7 @@ impl<'s> System<'s> for GrabSystem {
                         if name.get() == Name::Interact {
                             pos = movable.get_pos();
                             desired_holding = !holding.status();
+                            break;
                         }
                     }
 
@@ -73,7 +74,46 @@ impl<'s> System<'s> for GrabSystem {
                         }
                     }
                 },
-                _ => ()
+                TransformedInputEvent::Left | TransformedInputEvent::Right | TransformedInputEvent::Up | TransformedInputEvent::Down => {
+                    let mut pos = (0, 0);
+                    let mut desired_holding = false;
+                    for (name, movable, holding) in (&nameds, &movables, &holdings).join() {
+                        if name.get() == Name::Interact {
+                            pos = movable.get_pos();
+                            desired_holding = holding.status();
+                            break;
+                        }
+                    }
+
+                    let mut toggle_holding: HashSet<(Name, (u8, u8))> = HashSet::new();
+
+                    let mut toggle_queue: VecDeque<(Name, (u8, u8))> = VecDeque::new();
+                    toggle_queue.push_front((Name::Interact, pos));
+
+                    while let Some((name, pos)) = toggle_queue.pop_back() {
+                        toggle_holding.insert((name, pos));
+                        for (movable, name) in (&movables, &nameds).join() {
+                            if name.get() != Name::Wall {
+                                println!("{:?} {:?}", name, movable.get_pos());
+                                if !toggle_holding.contains(&(name.get(), movable.get_pos())) && touching(pos, movable.get_pos()) {
+                                    println!("{:?} is touching Interact", name.get());
+                                    toggle_queue.push_front((name.get(), movable.get_pos()));
+                                }
+                            }
+                        }
+                    }
+
+                    // Toggle all the things
+                    for (hold, movable, name) in (&mut holdings, &movables, &nameds).join() {
+                        if toggle_holding.contains(&(name.get(), movable.get_pos())) {
+                            match desired_holding {
+                                true => hold.is_holding(),
+                                false => hold.is_not_holding(),
+                            }
+                            println!("{:?} is now holding: {}", name.get(), desired_holding);
+                        }
+                    }
+                },
             };
         }
     }

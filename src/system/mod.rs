@@ -9,3 +9,6 @@ pub(crate) use grid::*;
 
 pub mod grab;
 pub(crate) use grab::*;
+
+pub mod sprites;
+pub(crate) use sprites::*;

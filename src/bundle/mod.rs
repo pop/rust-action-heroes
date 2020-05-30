@@ -7,7 +7,7 @@ use amethyst::{
 };
 
 use crate::lib::TransformedInputEvent;
-use crate::system::{MovementSystem, GrabSystem};
+use crate::system::{MovementSystem, GrabSystem, SpriteSystem};
 
 ///
 /// ...
@@ -24,6 +24,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
 
         let movement_reader = channel.register_reader();
         let grab_reader = channel.register_reader();
+        let sprite_reader = channel.register_reader();
 
         world.insert(channel);
 
@@ -37,6 +38,12 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
             GrabSystem::new(grab_reader),
             "grab_system",
             &["movement_system"],
+        );
+
+        builder.add(
+            SpriteSystem::new(sprite_reader),
+            "sprite_system",
+            &["grab_system"],
         );
 
         Ok(())

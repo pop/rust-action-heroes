@@ -1,10 +1,10 @@
-use crate::component::{Movable, Name, Named, Holding};
 use amethyst::{
     assets::Handle,
     core::transform::Transform,
     prelude::*,
     renderer::{Camera, SpriteSheet, SpriteRender},
 };
+use crate::component::{Movable, Name, Named, Holding};
 use crate::lib::get_sprite;
 
 // TODO: Better name
