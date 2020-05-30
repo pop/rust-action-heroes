@@ -1,7 +1,7 @@
 use amethyst::{
-    assets::{AssetStorage, Loader, Handle},
+    assets::{AssetStorage, Handle, Loader},
     prelude::*,
-    renderer::{ImageFormat, SpriteSheet, SpriteSheetFormat, Texture, SpriteRender},
+    renderer::{ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
 };
 
 /// TODO: This is marked as dead code...
@@ -14,7 +14,11 @@ pub(crate) enum TransformedInputEvent {
     Interact,
 }
 
-pub(crate) fn load_sprite_sheet(world: &mut World, sprite_img: &str, sprite_key: &str) -> Handle<SpriteSheet> {
+pub(crate) fn load_sprite_sheet(
+    world: &mut World,
+    sprite_img: &str,
+    sprite_key: &str,
+) -> Handle<SpriteSheet> {
     let loader = world.read_resource::<Loader>();
 
     let texture_handle = loader.load(

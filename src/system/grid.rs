@@ -1,10 +1,10 @@
 use amethyst::{
+    core::Transform,
     derive::SystemDesc,
-    core::{Transform},
     ecs::{Join, ReadStorage, System, SystemData, WriteStorage},
 };
 
-use crate::component::{Movable};
+use crate::component::Movable;
 
 const GRID_SIZE: u8 = 9;
 
@@ -18,10 +18,7 @@ impl GridSystem {
 }
 
 impl<'s> System<'s> for GridSystem {
-    type SystemData = (
-        WriteStorage<'s, Transform>,
-        ReadStorage<'s, Movable>,
-    );
+    type SystemData = (WriteStorage<'s, Transform>, ReadStorage<'s, Movable>);
 
     fn run(&mut self, (mut transforms, movables): Self::SystemData) {
         for (transform, movable) in (&mut transforms, &movables).join() {

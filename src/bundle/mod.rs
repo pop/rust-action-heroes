@@ -1,13 +1,9 @@
 use amethyst::{
-    core::{bundle::SystemBundle},
-    ecs::DispatcherBuilder,
-    prelude::*,
-    shrev::EventChannel,
-    Error,
+    core::bundle::SystemBundle, ecs::DispatcherBuilder, prelude::*, shrev::EventChannel, Error,
 };
 
 use crate::lib::TransformedInputEvent;
-use crate::system::{MovementSystem, GrabSystem, SpriteSystem};
+use crate::system::{GrabSystem, MovementSystem, SpriteSystem};
 
 ///
 /// ...

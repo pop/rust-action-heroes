@@ -1,12 +1,9 @@
+use crate::{component::Holding, lib::TransformedInputEvent};
 use amethyst::{
-    renderer::{SpriteRender},
-    ecs::{Join, Read, System, SystemData, ReadStorage, WriteStorage},
-    shrev::{EventChannel, ReaderId},
     derive::SystemDesc,
-};
-use crate::{
-    lib::TransformedInputEvent,
-    component::Holding,
+    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
+    renderer::SpriteRender,
+    shrev::{EventChannel, ReaderId},
 };
 
 /// SpriteSystem figures out what a given entity's sprite should be
@@ -41,12 +38,12 @@ impl<'s> System<'s> for SpriteSystem {
                         if holding.status() {
                             sprite.sprite_number = sprite.sprite_number + 1;
                         }
-                    },
+                    }
                     1 => {
                         if !holding.status() {
                             sprite.sprite_number = sprite.sprite_number - 1;
                         }
-                    },
+                    }
                     _ => (),
                 }
             }

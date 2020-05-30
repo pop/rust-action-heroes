@@ -1,14 +1,14 @@
+mod bundle;
 mod component;
 mod entity;
 mod lib;
 mod state;
 mod system;
-mod bundle;
 
 use std::env;
 
 use amethyst::{
-    core::{transform::TransformBundle},
+    core::transform::TransformBundle,
     input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
@@ -19,9 +19,9 @@ use amethyst::{
     utils::application_root_dir,
 };
 
-use crate::state::GameState;
-use crate::system::{ProcessInputSystem, GridSystem, LevelSystem};
 use crate::bundle::MovementBundle;
+use crate::state::GameState;
+use crate::system::{GridSystem, LevelSystem, ProcessInputSystem};
 
 ///
 /// ...
@@ -48,7 +48,11 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(InputBundle::<StringBindings>::new())?
-        .with(ProcessInputSystem::new(), "input_transform_system", &["input_system"])
+        .with(
+            ProcessInputSystem::new(),
+            "input_transform_system",
+            &["input_system"],
+        )
         .with_bundle(MovementBundle)?
         .with(LevelSystem::new(), "level_system", &["movement_system"])
         .with(GridSystem::new(), "grid_system", &["movement_system"]);

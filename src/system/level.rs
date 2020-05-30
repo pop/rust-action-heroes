@@ -1,16 +1,16 @@
 use amethyst::{
     derive::SystemDesc,
-    ecs::{Join, ReadStorage, System, SystemData, Entities},
+    ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
 
-use crate::component::{Movable, Exit, Named};
+use crate::component::{Exit, Movable, Named};
 
 #[derive(SystemDesc)]
 pub(crate) struct LevelSystem;
 
 impl LevelSystem {
     pub(crate) fn new() -> Self {
-        LevelSystem 
+        LevelSystem
     }
 }
 
@@ -19,11 +19,11 @@ impl<'s> System<'s> for LevelSystem {
         ReadStorage<'s, Exit>,
         ReadStorage<'s, Movable>,
         ReadStorage<'s, Named>,
-        Entities<'s>
+        Entities<'s>,
     );
 
     fn run(&mut self, (exits, movables, nameds, entities): Self::SystemData) {
-        let mut pos = (0,0);
+        let mut pos = (0, 0);
         for (movable, _exit) in (&movables, &exits).join() {
             pos = movable.get_pos()
         }

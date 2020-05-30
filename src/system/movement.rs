@@ -1,4 +1,4 @@
-use std::collections::{VecDeque, HashSet};
+use std::collections::{HashSet, VecDeque};
 
 use amethyst::{
     derive::SystemDesc,
@@ -6,8 +6,7 @@ use amethyst::{
     shrev::{EventChannel, ReaderId},
 };
 
-
-use crate::component::{Movable, Name, Named, Holding};
+use crate::component::{Holding, Movable, Name, Named};
 use crate::lib::TransformedInputEvent;
 
 ///
@@ -47,16 +46,18 @@ impl<'s> System<'s> for MovementSystem {
                     let mut is_holding = false;
                     for (name, movable, holding) in (&names, &movables, &holdings).join() {
                         // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
-                        if name.get() == Name::Vertical {          // different
-                            to_move_queue.push_front((name.get(), movable.up_pos()));  // different
+                        if name.get() == Name::Vertical {
+                            // different
+                            to_move_queue.push_front((name.get(), movable.up_pos())); // different
                             is_holding = holding.status();
-                            break
+                            break;
                         }
                     }
                     if is_holding {
                         for (name, movable, holding) in (&names, &movables, &holdings).join() {
                             if holding.status() {
-                                to_move_queue.push_front((name.get(), movable.up_pos())); // different
+                                to_move_queue.push_front((name.get(), movable.up_pos()));
+                                // different
                             }
                         }
                     }
@@ -71,21 +72,22 @@ impl<'s> System<'s> for MovementSystem {
                             to_move_next_pos.clear();
                         } else {
                             for (movable, new_name) in (&movables, &names).join() {
-                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
-                                    to_move_queue.push_front((new_name.get(), movable.up_pos()));  // different
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos())
+                                {
+                                    to_move_queue.push_front((new_name.get(), movable.up_pos()));
+                                    // different
                                 }
                             }
                         }
-
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
-                            movable.move_up()                                   // different
+                            movable.move_up() // different
                         }
                     }
 
                     println!("UP {:?}", to_move_names);
-                },
+                }
                 TransformedInputEvent::Down => {
                     // See if Vertical will collide with anything movable
                     // See if that will collide with anything movable, etc.
@@ -93,16 +95,18 @@ impl<'s> System<'s> for MovementSystem {
                     let mut is_holding = false;
                     for (name, movable, holding) in (&names, &movables, &holdings).join() {
                         // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
-                        if name.get() == Name::Vertical {          // different
-                            to_move_queue.push_front((name.get(), movable.down_pos()));  // different
+                        if name.get() == Name::Vertical {
+                            // different
+                            to_move_queue.push_front((name.get(), movable.down_pos())); // different
                             is_holding = holding.status();
-                            break
+                            break;
                         }
                     }
                     if is_holding {
                         for (name, movable, holding) in (&names, &movables, &holdings).join() {
                             if holding.status() {
-                                to_move_queue.push_front((name.get(), movable.down_pos())); // different
+                                to_move_queue.push_front((name.get(), movable.down_pos()));
+                                // different
                             }
                         }
                     }
@@ -117,22 +121,22 @@ impl<'s> System<'s> for MovementSystem {
                             to_move_next_pos.clear();
                         } else {
                             for (movable, new_name) in (&movables, &names).join() {
-                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
-                                    to_move_queue.push_front((new_name.get(), movable.down_pos()));  // different
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos())
+                                {
+                                    to_move_queue.push_front((new_name.get(), movable.down_pos()));
+                                    // different
                                 }
                             }
                         }
-
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
-                            movable.move_down()                                   // different
+                            movable.move_down() // different
                         }
                     }
 
                     println!("DOWN {:?}", to_move_names);
-
-                },
+                }
                 TransformedInputEvent::Left => {
                     // See if Horizontal will collide with anything movable
                     // See if that will collide with anything movable, etc.
@@ -140,16 +144,18 @@ impl<'s> System<'s> for MovementSystem {
                     let mut is_holding = false;
                     for (name, movable, holding) in (&names, &movables, &holdings).join() {
                         // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
-                        if name.get() == Name::Horizontal {          // different
-                            to_move_queue.push_front((name.get(), movable.left_pos()));  // different
+                        if name.get() == Name::Horizontal {
+                            // different
+                            to_move_queue.push_front((name.get(), movable.left_pos())); // different
                             is_holding = holding.status();
-                            break
+                            break;
                         }
                     }
                     if is_holding {
                         for (name, movable, holding) in (&names, &movables, &holdings).join() {
                             if holding.status() {
-                                to_move_queue.push_front((name.get(), movable.left_pos())); // different
+                                to_move_queue.push_front((name.get(), movable.left_pos()));
+                                // different
                             }
                         }
                     }
@@ -164,21 +170,22 @@ impl<'s> System<'s> for MovementSystem {
                             to_move_next_pos.clear();
                         } else {
                             for (movable, new_name) in (&movables, &names).join() {
-                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
-                                    to_move_queue.push_front((new_name.get(), movable.left_pos()));  // different
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos())
+                                {
+                                    to_move_queue.push_front((new_name.get(), movable.left_pos()));
+                                    // different
                                 }
                             }
                         }
-
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
-                            movable.move_left()                                   // different
+                            movable.move_left() // different
                         }
                     }
 
                     println!("LEFT {:?}", to_move_names);
-                },
+                }
                 TransformedInputEvent::Right => {
                     // See if Horizontal will collide with anything movable
                     // See if that will collide with anything movable, etc.
@@ -186,16 +193,18 @@ impl<'s> System<'s> for MovementSystem {
                     let mut is_holding = false;
                     for (name, movable, holding) in (&names, &movables, &holdings).join() {
                         // println!("{:?} {:?} {:?}", name.get(), movable.get_pos(), holding.status());
-                        if name.get() == Name::Horizontal {          // different
-                            to_move_queue.push_front((name.get(), movable.right_pos()));  // different
+                        if name.get() == Name::Horizontal {
+                            // different
+                            to_move_queue.push_front((name.get(), movable.right_pos())); // different
                             is_holding = holding.status();
-                            break
+                            break;
                         }
                     }
                     if is_holding {
                         for (name, movable, holding) in (&names, &movables, &holdings).join() {
                             if holding.status() {
-                                to_move_queue.push_front((name.get(), movable.right_pos())); // different
+                                to_move_queue.push_front((name.get(), movable.right_pos()));
+                                // different
                             }
                         }
                     }
@@ -210,24 +219,24 @@ impl<'s> System<'s> for MovementSystem {
                             to_move_next_pos.clear();
                         } else {
                             for (movable, new_name) in (&movables, &names).join() {
-                                if name != new_name.get() && will_collide(&pos, &movable.get_pos()) {
-                                    to_move_queue.push_front((new_name.get(), movable.right_pos()));  // different
+                                if name != new_name.get() && will_collide(&pos, &movable.get_pos())
+                                {
+                                    to_move_queue.push_front((new_name.get(), movable.right_pos()));
+                                    // different
                                 }
                             }
                         }
-
                     }
                     for (movable, name) in (&mut movables, &names).join() {
                         if to_move_names.contains(&name.get()) {
-                            movable.move_right()                                   // different
+                            movable.move_right() // different
                         }
                     }
 
                     println!("RIGHT {:?}", to_move_names);
-                },
-                TransformedInputEvent::Interact => ()
+                }
+                TransformedInputEvent::Interact => (),
             }
-
         }
     }
 }

@@ -1,14 +1,13 @@
-use std::collections::{VecDeque, HashSet};
+use std::collections::{HashSet, VecDeque};
 
 use amethyst::{
     derive::SystemDesc,
-    ecs::{Join, Read, System, SystemData, ReadStorage, WriteStorage},
+    ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
     shrev::{EventChannel, ReaderId},
 };
 
-use crate::component::{Holding, Movable, Named, Name};
+use crate::component::{Holding, Movable, Name, Named};
 use crate::lib::TransformedInputEvent;
-
 
 #[derive(SystemDesc)]
 pub(crate) struct GrabSystem {
@@ -20,7 +19,6 @@ impl GrabSystem {
         GrabSystem { reader: reader }
     }
 }
-
 
 impl<'s> System<'s> for GrabSystem {
     type SystemData = (
@@ -55,7 +53,9 @@ impl<'s> System<'s> for GrabSystem {
                         for (movable, name) in (&movables, &nameds).join() {
                             if name.get() != Name::Wall {
                                 println!("{:?} {:?}", name, movable.get_pos());
-                                if !toggle_holding.contains(&(name.get(), movable.get_pos())) && touching(pos, movable.get_pos()) {
+                                if !toggle_holding.contains(&(name.get(), movable.get_pos()))
+                                    && touching(pos, movable.get_pos())
+                                {
                                     println!("{:?} is touching Interact", name.get());
                                     toggle_queue.push_front((name.get(), movable.get_pos()));
                                 }
@@ -73,8 +73,11 @@ impl<'s> System<'s> for GrabSystem {
                             println!("{:?} is now holding: {}", name.get(), desired_holding);
                         }
                     }
-                },
-                TransformedInputEvent::Left | TransformedInputEvent::Right | TransformedInputEvent::Up | TransformedInputEvent::Down => {
+                }
+                TransformedInputEvent::Left
+                | TransformedInputEvent::Right
+                | TransformedInputEvent::Up
+                | TransformedInputEvent::Down => {
                     let mut pos = (0, 0);
                     let mut desired_holding = false;
                     for (name, movable, holding) in (&nameds, &movables, &holdings).join() {
@@ -95,7 +98,9 @@ impl<'s> System<'s> for GrabSystem {
                         for (movable, name) in (&movables, &nameds).join() {
                             if name.get() != Name::Wall {
                                 println!("{:?} {:?}", name, movable.get_pos());
-                                if !toggle_holding.contains(&(name.get(), movable.get_pos())) && touching(pos, movable.get_pos()) {
+                                if !toggle_holding.contains(&(name.get(), movable.get_pos()))
+                                    && touching(pos, movable.get_pos())
+                                {
                                     println!("{:?} is touching Interact", name.get());
                                     toggle_queue.push_front((name.get(), movable.get_pos()));
                                 }
@@ -113,7 +118,7 @@ impl<'s> System<'s> for GrabSystem {
                             println!("{:?} is now holding: {}", name.get(), desired_holding);
                         }
                     }
-                },
+                }
             };
         }
     }
