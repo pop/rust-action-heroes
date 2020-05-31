@@ -1,8 +1,8 @@
 use amethyst::{
-    assets::{Handle, Asset},
+    assets::{Asset, Handle},
     ecs::VecStorage,
 };
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub(crate) type Coordinates = (u8, u8);
 

@@ -1,9 +1,9 @@
+use crate::assets::GameLevel;
 use crate::entity::*;
 use crate::lib::load_sprite_sheet;
+use amethyst::assets::Handle;
 use amethyst::ecs::Entity;
 use amethyst::prelude::*;
-use amethyst::assets::Handle;
-use crate::assets::GameLevel;
 
 ///
 /// ...
@@ -26,7 +26,11 @@ impl SimpleState for GameLevelState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
 
-        let sprite_sheet_handle = load_sprite_sheet(world, "texture/evg1_spritesheet.png", "texture/evg1_spritesheet.ron");
+        let sprite_sheet_handle = load_sprite_sheet(
+            world,
+            "texture/evg1_spritesheet.png",
+            "texture/evg1_spritesheet.ron",
+        );
 
         make_camera(world);
         make_exit(world, &self.level_handle, &sprite_sheet_handle);

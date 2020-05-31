@@ -1,6 +1,6 @@
+use crate::assets::GameLevel;
 use crate::component::{Exit, Holding, Movable, Name, Named};
 use crate::lib::get_sprite;
-use crate::assets::GameLevel;
 use amethyst::{
     assets::{AssetStorage, Handle},
     core::transform::Transform,
@@ -8,7 +8,6 @@ use amethyst::{
     prelude::*,
     renderer::{Camera, SpriteSheet},
 };
-
 
 pub(crate) fn make_horizontal(
     world: &mut World,
@@ -19,10 +18,12 @@ pub(crate) fn make_horizontal(
 
     if let Some((x, y)) = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(&level_handle).expect("Cannot load game level");
-        level.characters.horizontal 
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
+        level.characters.horizontal
     } {
-        println!("Creating horizontal at {:?}", (x,y));
+        println!("Creating horizontal at {:?}", (x, y));
         Some(
             world
                 .create_entity()
@@ -31,22 +32,28 @@ pub(crate) fn make_horizontal(
                 .with(Movable::new(x, y))
                 .with(Named::new(Name::Horizontal))
                 .with(Holding::new())
-                .build()
+                .build(),
         )
     } else {
         None
     }
 }
 
-pub(crate) fn make_vertical(world: &mut World, level_handle: &Handle<GameLevel>, sprite_sheet_handle: &Handle<SpriteSheet>) -> Option<Entity> {
+pub(crate) fn make_vertical(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>,
+) -> Option<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 0);
 
     if let Some((x, y)) = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(&level_handle).expect("Cannot load game level");
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
         level.characters.vertical
     } {
-        println!("Creating vertical at {:?}", (x,y));
+        println!("Creating vertical at {:?}", (x, y));
         Some(
             world
                 .create_entity()
@@ -55,22 +62,28 @@ pub(crate) fn make_vertical(world: &mut World, level_handle: &Handle<GameLevel>,
                 .with(Movable::new(x, y))
                 .with(Named::new(Name::Vertical))
                 .with(Holding::new())
-                .build()
+                .build(),
         )
     } else {
         None
     }
 }
 
-pub(crate) fn make_interact(world: &mut World, level_handle: &Handle<GameLevel>, sprite_sheet_handle: &Handle<SpriteSheet>) -> Option<Entity> {
+pub(crate) fn make_interact(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>,
+) -> Option<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 4);
 
     if let Some((x, y)) = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(&level_handle).expect("Cannot load game level");
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
         level.characters.interact
     } {
-        println!("Creating interact at {:?}", (x,y));
+        println!("Creating interact at {:?}", (x, y));
         Some(
             world
                 .create_entity()
@@ -79,7 +92,7 @@ pub(crate) fn make_interact(world: &mut World, level_handle: &Handle<GameLevel>,
                 .with(Movable::new(x, y))
                 .with(Named::new(Name::Interact))
                 .with(Holding::new())
-                .build()
+                .build(),
         )
     } else {
         None
@@ -95,7 +108,9 @@ pub(crate) fn make_walls(
 
     let (size_x, size_y) = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(&level_handle).expect("Cannot load game level");
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
         level.dimensions
     };
 
@@ -112,7 +127,7 @@ pub(crate) fn make_walls(
                 .with(Movable::new(n, min))
                 .with(Named::new(Name::Wall))
                 .with(Holding::new())
-                .build()
+                .build(),
         );
         entities.push(
             world
@@ -122,7 +137,7 @@ pub(crate) fn make_walls(
                 .with(Movable::new(size_x, n))
                 .with(Named::new(Name::Wall))
                 .with(Holding::new())
-                .build()
+                .build(),
         );
     }
     for n in min..=size_y {
@@ -134,7 +149,7 @@ pub(crate) fn make_walls(
                 .with(Movable::new(min, n))
                 .with(Named::new(Name::Wall))
                 .with(Holding::new())
-                .build()
+                .build(),
         );
         entities.push(
             world
@@ -144,7 +159,7 @@ pub(crate) fn make_walls(
                 .with(Movable::new(n, size_y))
                 .with(Named::new(Name::Wall))
                 .with(Holding::new())
-                .build()
+                .build(),
         );
     }
     entities
@@ -157,7 +172,9 @@ pub(crate) fn make_floor(
 ) -> Vec<Entity> {
     let (size_x, size_y) = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(&level_handle).expect("Cannot load game level");
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
         level.dimensions
     };
 
@@ -173,7 +190,7 @@ pub(crate) fn make_floor(
                     .with(Transform::default())
                     .with(sprite.clone())
                     .with(Movable::new(x, y))
-                    .build()
+                    .build(),
             );
         }
     }
@@ -188,7 +205,9 @@ pub(crate) fn make_crates(
     let sprite = get_sprite(sprite_sheet_handle, 6);
     let obstacles = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(&level_handle).expect("Cannot load game level");
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
         level.obstacles.to_vec()
     };
     let mut entities: Vec<Entity> = Vec::new();
@@ -201,17 +220,23 @@ pub(crate) fn make_crates(
                 .with(Movable::new(x, y))
                 .with(Named::new(Name::Crate))
                 .with(Holding::new())
-                .build()
+                .build(),
         );
     }
     entities
 }
 
-pub(crate) fn make_exit(world: &mut World, level_handle: &Handle<GameLevel>, sprite_sheet_handle: &Handle<SpriteSheet>) -> Entity {
+pub(crate) fn make_exit(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>,
+) -> Entity {
     let sprite = get_sprite(sprite_sheet_handle, 8);
     let (x, y) = {
         let asset_storage = world.write_resource::<AssetStorage<GameLevel>>();
-        let level: &GameLevel = asset_storage.get(level_handle).expect("Cannot load game level");
+        let level: &GameLevel = asset_storage
+            .get(level_handle)
+            .expect("Cannot load game level");
         level.exit
     };
     world
