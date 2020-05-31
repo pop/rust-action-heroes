@@ -36,9 +36,9 @@ pub(crate) fn load_sprite_sheet(
     )
 }
 
-pub(crate) fn get_sprite(handle: Handle<SpriteSheet>, index: usize) -> SpriteRender {
+pub(crate) fn get_sprite(handle: &Handle<SpriteSheet>, index: usize) -> SpriteRender {
     SpriteRender {
-        sprite_sheet: handle,
+        sprite_sheet: handle.clone(),
         sprite_number: index,
     }
 }

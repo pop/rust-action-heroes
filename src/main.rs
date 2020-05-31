@@ -4,6 +4,7 @@ mod entity;
 mod lib;
 mod state;
 mod system;
+mod assets;
 
 use std::env;
 
@@ -16,11 +17,13 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
+    assets::Processor,
     utils::application_root_dir,
 };
 
 use crate::bundle::MovementBundle;
-use crate::state::GameState;
+use crate::state::MenuState;
+use crate::assets::GameLevel;
 use crate::system::{GridSystem, LevelSystem, ProcessInputSystem};
 
 ///
@@ -48,16 +51,17 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(InputBundle::<StringBindings>::new())?
+        .with(Processor::<GameLevel>::new(), "game_level_processor", &[])
         .with(
             ProcessInputSystem::new(),
             "input_transform_system",
             &["input_system"],
         )
         .with_bundle(MovementBundle)?
-        .with(LevelSystem::new(), "level_system", &["movement_system"])
+        .with(LevelSystem::new(), "level_system", &["game_level_processor", "movement_system"])
         .with(GridSystem::new(), "grid_system", &["movement_system"]);
 
-    let mut game = Application::new(assets_dir, GameState::default(), game_data)?;
+    let mut game = Application::new(assets_dir, MenuState::new(), game_data)?;
 
     game.run();
 

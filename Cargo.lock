@@ -1117,6 +1117,7 @@ dependencies = [
  "amethyst",
  "amethyst_input",
  "amethyst_test",
+ "serde",
 ]
 
 [[package]]
