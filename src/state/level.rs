@@ -28,6 +28,7 @@ impl SimpleState for GameLevelState {
 
         let sprite_sheet_handle = load_sprite_sheet(world, "texture/evg1_spritesheet.png", "texture/evg1_spritesheet.ron");
 
+        make_camera(world);
         make_exit(world, &self.level_handle, &sprite_sheet_handle);
         match make_interact(world, &self.level_handle, &sprite_sheet_handle) {
             Some(e) => self.player_entities.push(e),
@@ -44,8 +45,6 @@ impl SimpleState for GameLevelState {
         make_crates(world, &self.level_handle, &sprite_sheet_handle); // :shrug:
         make_walls(world, &self.level_handle, &sprite_sheet_handle);
         make_floor(world, &self.level_handle, &sprite_sheet_handle);
-
-        make_camera(world);
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {

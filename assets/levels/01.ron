@@ -1,6 +1,6 @@
 GameLevel(
     dimensions: (10, 10),
-    characters: CharacterPlacement(horizontal: Some((2,2)), vertical: Some((3,3)), interact: Some((5,5))),
-    exit: (4,4),
+    characters: CharacterPlacement(horizontal: Some((2,3)), vertical: Some((2,2)), interact: Some((2,4))),
+    exit: (2,5),
     obstacles: [(2,3), (2,4), (2,5)]
 )

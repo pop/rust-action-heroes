@@ -99,7 +99,7 @@ pub(crate) fn make_walls(
         level.dimensions
     };
 
-    let min = 1;
+    let min = 0;
 
     let mut entities: Vec<Entity> = Vec::new();
 
