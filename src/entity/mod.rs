@@ -182,8 +182,8 @@ pub(crate) fn make_floor(
 
     let mut entities: Vec<Entity> = Vec::new();
 
-    for x in 1..=size_x {
-        for y in 1..=size_y {
+    for x in 1..size_x {
+        for y in 1..size_y {
             entities.push(
                 world
                     .create_entity()

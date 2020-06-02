@@ -47,10 +47,13 @@ impl SimpleState for MenuState {
         }
     }
 
-    fn handle_event(
+    fn on_resume(&mut self, data: StateData<GameData>) {
+        data.world.delete_all();
+    }
+
+    fn fixed_update(
         &mut self,
-        data: StateData<'_, GameData<'_, '_>>,
-        event: StateEvent,
+        data: StateData<GameData>,
     ) -> SimpleTrans {
         // TODO: Cleanup existing state when we pop back here
         match self.progress.last() {

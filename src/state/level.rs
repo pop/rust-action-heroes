@@ -35,20 +35,29 @@ impl SimpleState for GameLevelState {
         make_camera(world);
         make_exit(world, &self.level_handle, &sprite_sheet_handle);
         match make_interact(world, &self.level_handle, &sprite_sheet_handle) {
-            Some(e) => self.player_entities.push(e),
+            Some(e) => {
+                println!("Creating interact");
+                self.player_entities.push(e);
+            },
             None => (),
         }
         match make_vertical(world, &self.level_handle, &sprite_sheet_handle) {
-            Some(e) => self.player_entities.push(e),
+            Some(e) => {
+                println!("Creating vertical");
+                self.player_entities.push(e);
+            },
             None => (),
         }
         match make_horizontal(world, &self.level_handle, &sprite_sheet_handle) {
-            Some(e) => self.player_entities.push(e),
+            Some(e) => {
+                println!("Creating horizontal");
+                self.player_entities.push(e);
+            },
             None => (),
         }
         make_crates(world, &self.level_handle, &sprite_sheet_handle); // :shrug:
         make_walls(world, &self.level_handle, &sprite_sheet_handle);
-        make_floor(world, &self.level_handle, &sprite_sheet_handle);
+        // make_floor(world, &self.level_handle, &sprite_sheet_handle);
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
