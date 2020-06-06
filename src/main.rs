@@ -18,6 +18,7 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
+    ui::{UiBundle, RenderUi},
     utils::application_root_dir,
 };
 
@@ -41,16 +42,20 @@ fn main() -> amethyst::Result<()> {
     let display_config_path = config_dir.join("display.ron");
 
     let game_data = GameDataBuilder::default()
-        .with_bundle(
-            RenderingBundle::<DefaultBackend>::new()
-                .with_plugin(
-                    RenderToWindow::from_config_path(display_config_path)?
-                        .with_clear([0.0, 0.0, 0.0, 0.0]),
-                )
-                .with_plugin(RenderFlat2D::default()),
-        )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(InputBundle::<StringBindings>::new())?
+        .with_bundle(UiBundle::<StringBindings>::new())?
+        .with_bundle(
+            RenderingBundle::<DefaultBackend>::new()
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(
+                    RenderToWindow::from_config_path(display_config_path)?
+                        .with_clear([0.005, 0.005, 0.005, 1.0]),
+                )
+                .with_plugin(
+                    RenderUi::default()
+                )
+        )?
         .with(Processor::<GameLevel>::new(), "game_level_processor", &[])
         .with(
             ProcessInputSystem::new(),

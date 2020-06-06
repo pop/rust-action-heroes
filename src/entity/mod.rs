@@ -140,7 +140,7 @@ pub(crate) fn make_walls(
                 .build(),
         );
     }
-    for n in min..=size_y {
+    for n in min..size_y {
         entities.push(
             world
                 .create_entity()
