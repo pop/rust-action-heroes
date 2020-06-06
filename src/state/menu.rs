@@ -114,7 +114,7 @@ impl SimpleState for MenuState {
 
     fn handle_event(
         &mut self,
-        _: StateData<'_, GameData<'_, '_>>,
+        data: StateData<'_, GameData<'_, '_>>,
         event: StateEvent,
     ) -> SimpleTrans {
         match event {
@@ -136,7 +136,15 @@ impl SimpleState for MenuState {
                             if progress.is_complete() {
                                 self.progress.pop();
                                 match self.levels.pop() {
-                                    Some(level) => Trans::Push(Box::new(GameLevelState::new(level))),
+                                    Some(level) => {
+                                        match self.ui_handle {
+                                            Some(entity) => {
+                                                data.world.delete_entity(entity).expect("couldnt delete menu UI...");
+                                            },
+                                            None => ()
+                                        };
+                                        Trans::Push(Box::new(GameLevelState::new(level)))
+                                    },
                                     None => Trans::None,
                                 }
                             } else {

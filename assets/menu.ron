@@ -26,7 +26,6 @@ Container(
                         id: "start_button",
                         width: 750.,
                         height: 145.,
-                        tab_order: 1,
                         anchor: Middle,
                         mouse_reactive: true,
                     ),
