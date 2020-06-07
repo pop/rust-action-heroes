@@ -1,6 +1,7 @@
 use crate::assets::GameLevel;
 use crate::component::{Exit, Holding, Movable, Name, Named};
 use crate::lib::get_sprite;
+use crate::system::grid::GRID_SIZE;
 use amethyst::{
     assets::{AssetStorage, Handle},
     core::transform::Transform,
@@ -248,14 +249,24 @@ pub(crate) fn make_exit(
         .build()
 }
 
-pub(crate) fn make_camera(world: &mut World) -> Entity {
+pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -> Entity {
+    let (size_x, size_y) = {
+        let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
+        let level: &GameLevel = asset_storage
+            .get(&level_handle)
+            .expect("Cannot load game level");
+        level.dimensions
+    };
+
+    let (x_adjust, y_adjust): (f32, f32) = ((size_x * GRID_SIZE / 2).into(), (size_y * GRID_SIZE / 2).into());
+
     world
         .create_entity()
         .with(Camera::standard_2d(100.0, 100.0))
         .with({
             // I just want to call Transform::from_xyz(x, y, z)...
             let mut transform = Transform::default();
-            transform.set_translation_xyz(50.0, 50.0, 5.0);
+            transform.set_translation_xyz(x_adjust, y_adjust, 5.0);
             transform
         })
         .build()

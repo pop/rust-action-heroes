@@ -6,7 +6,7 @@ use amethyst::{
 
 use crate::component::Movable;
 
-const GRID_SIZE: u8 = 9;
+pub const GRID_SIZE: u8 = 9;
 
 #[derive(SystemDesc)]
 pub(crate) struct GridSystem;

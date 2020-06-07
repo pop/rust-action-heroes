@@ -33,10 +33,6 @@ impl SimpleState for GameLevelState {
             "texture/evg1_spritesheet.png",
             "texture/evg1_spritesheet.ron",
         );
-
-        self.npc_entities.push(
-            make_camera(world)
-        );
         self.npc_entities.push(
             make_exit(world, &self.level_handle, &sprite_sheet_handle)
         );
@@ -66,6 +62,9 @@ impl SimpleState for GameLevelState {
         );
         self.npc_entities.extend(
             make_walls(world, &self.level_handle, &sprite_sheet_handle)
+        );
+        self.npc_entities.push(
+            make_camera(world, &self.level_handle)
         );
     }
 
