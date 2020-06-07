@@ -6,11 +6,17 @@ mod lib;
 mod state;
 mod system;
 
-use std::env;
+use std::{
+    env,
+    time::Duration,
+};
 
 use amethyst::{
     assets::Processor,
-    core::transform::TransformBundle,
+    core::{
+        transform::TransformBundle,
+        frame_limiter::FrameRateLimitStrategy,
+    },
     input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
@@ -70,7 +76,11 @@ fn main() -> amethyst::Result<()> {
         )
         .with(GridSystem::new(), "grid_system", &["movement_system"]);
 
-    let mut game = Application::new(assets_dir, MenuState::new(), game_data)?;
+    let mut game = Application::build(assets_dir, MenuState::new())?
+        .with_frame_limit(
+            FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
+            60,
+        ).build(game_data)?;
 
     game.run();
 
