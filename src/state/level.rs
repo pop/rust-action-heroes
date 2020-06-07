@@ -11,6 +11,7 @@ use amethyst::prelude::*;
 pub(crate) struct GameLevelState {
     player_entities: Vec<Entity>,
     level_handle: Handle<GameLevel>,
+    npc_entities: Vec<Entity>,
 }
 
 impl GameLevelState {
@@ -18,6 +19,7 @@ impl GameLevelState {
         GameLevelState {
             player_entities: Vec::new(),
             level_handle: level_handle,
+            npc_entities: Vec::new(),
         }
     }
 }
@@ -32,8 +34,12 @@ impl SimpleState for GameLevelState {
             "texture/evg1_spritesheet.ron",
         );
 
-        make_camera(world);
-        make_exit(world, &self.level_handle, &sprite_sheet_handle);
+        self.npc_entities.push(
+            make_camera(world)
+        );
+        self.npc_entities.push(
+            make_exit(world, &self.level_handle, &sprite_sheet_handle)
+        );
         match make_interact(world, &self.level_handle, &sprite_sheet_handle) {
             Some(e) => {
                 println!("Creating interact");
@@ -55,9 +61,22 @@ impl SimpleState for GameLevelState {
             },
             None => (),
         }
-        make_crates(world, &self.level_handle, &sprite_sheet_handle); // :shrug:
-        make_walls(world, &self.level_handle, &sprite_sheet_handle);
-        // make_floor(world, &self.level_handle, &sprite_sheet_handle);
+        self.npc_entities.extend(
+            make_crates(world, &self.level_handle, &sprite_sheet_handle)
+        );
+        self.npc_entities.extend(
+            make_walls(world, &self.level_handle, &sprite_sheet_handle)
+        );
+    }
+
+    /// Cleanup entities
+    fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+        match data.world.delete_entities(&self.npc_entities) {
+            _ => ()
+        };
+        match data.world.delete_entities(&self.player_entities) {
+            _ => ()
+        }
     }
 
     fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {

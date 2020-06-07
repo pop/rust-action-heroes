@@ -64,6 +64,26 @@ impl MenuState {
         }
         dir_list_vec
     }
+
+    fn start_next_level(&mut self) -> SimpleTrans {
+        match self.progress.last() {
+            Some(progress) => {
+                if progress.is_complete() {
+                    self.progress.pop();
+                    match self.levels.pop() {
+                        Some(level) => {
+                            println!("Starting level: {:?}", level);
+                            Trans::Push(Box::new(GameLevelState::new(level)))
+                        },
+                        None => Trans::None,
+                    }
+                } else {
+                    Trans::None
+                }
+            },
+            None => Trans::None,
+        }
+    }
 }
 
 
@@ -108,13 +128,32 @@ impl SimpleState for MenuState {
         Trans::None
     }
 
+    fn on_pause(&mut self, data: StateData<GameData>) {
+        match self.ui_handle {
+            Some(entity) => {
+                match data.world.delete_entity(entity) {
+                    Ok(_) => self.ui_handle = None,
+                    Err(_) => (),
+                }
+            },
+            None => ()
+        };
+        self.start_button = None;
+    }
+
     fn on_resume(&mut self, data: StateData<GameData>) {
-        data.world.delete_all();
+        let world = data.world;
+
+        self.ui_handle = Some(
+            world.exec(|mut creator: UiCreator| {
+                creator.create("menu.ron", ())
+            }
+        ));
     }
 
     fn handle_event(
         &mut self,
-        data: StateData<'_, GameData<'_, '_>>,
+        data: StateData<GameData>,
         event: StateEvent,
     ) -> SimpleTrans {
         match event {
@@ -131,28 +170,7 @@ impl SimpleState for MenuState {
             }) => {
                 println!("Ui Event: {:?}", target);
                 if Some(target) == self.start_button {
-                    match self.progress.last() {
-                        Some(progress) => {
-                            if progress.is_complete() {
-                                self.progress.pop();
-                                match self.levels.pop() {
-                                    Some(level) => {
-                                        match self.ui_handle {
-                                            Some(entity) => {
-                                                data.world.delete_entity(entity).expect("couldnt delete menu UI...");
-                                            },
-                                            None => ()
-                                        };
-                                        Trans::Push(Box::new(GameLevelState::new(level)))
-                                    },
-                                    None => Trans::None,
-                                }
-                            } else {
-                                Trans::None
-                            }
-                        },
-                        None => Trans::None,
-                    }
+                    self.start_next_level() // Trans::Push(...)
                 } else {
                     Trans::None
                 }
