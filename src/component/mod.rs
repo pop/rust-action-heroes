@@ -1,6 +1,9 @@
 mod movable;
 pub(crate) use movable::*;
 
+mod immovable;
+pub(crate) use immovable::*;
+
 mod named;
 pub(crate) use named::*;
 

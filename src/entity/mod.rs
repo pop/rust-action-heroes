@@ -1,5 +1,5 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Holding, Position, Movable, Name, Named};
+use crate::component::{Exit, Holding, Position, Movable, Name, Named, Immovable};
 use crate::lib::get_sprite;
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
@@ -107,6 +107,7 @@ fn make_wall(world: &mut World, sprite: SpriteRender, (x, y): (i8, i8)) -> Entit
     world
         .create_entity()
         .with(Transform::default())
+        .with(Immovable::default())
         .with(Position::new(x, y))
         .with(sprite)
         .build()

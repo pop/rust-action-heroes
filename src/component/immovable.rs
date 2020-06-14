@@ -1,13 +1,11 @@
-use amethyst::ecs::{prelude::DenseVecStorage, Component};
+use amethyst::ecs::{prelude::NullStorage, Component};
 
 ///
 /// Immovable Component
 ///
-#[derive(Debug, Component)]
+#[derive(Debug, Default)]
 pub(crate) struct Immovable;
 
-impl Immovable {
-    pub(crate) fn new() -> Self {
-        Immovable
-    }
+impl Component for Immovable {
+    type Storage = NullStorage<Self>;
 }
