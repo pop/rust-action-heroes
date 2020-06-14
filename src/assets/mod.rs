@@ -21,10 +21,8 @@ pub(crate) struct GameLevel {
     pub obstacles: Vec<Coordinates>,
 }
 
-pub(crate) type GameLevelHandle = Handle<GameLevel>;
-
 impl Asset for GameLevel {
     const NAME: &'static str = "evg1::GameLevel";
     type Data = Self;
-    type HandleStorage = VecStorage<GameLevelHandle>;
+    type HandleStorage = VecStorage<Handle<GameLevel>>;
 }

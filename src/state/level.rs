@@ -1,9 +1,11 @@
 use crate::assets::GameLevel;
 use crate::entity::*;
 use crate::lib::load_sprite_sheet;
+use crate::state::{LevelProgression, Levels};
 use amethyst::assets::Handle;
 use amethyst::ecs::Entity;
 use amethyst::prelude::*;
+use amethyst::input::{InputEvent, VirtualKeyCode};
 
 ///
 /// ...
@@ -25,7 +27,7 @@ impl GameLevelState {
 }
 
 impl SimpleState for GameLevelState {
-    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+    fn on_start(&mut self, data: StateData<GameData>) {
         let world = data.world;
 
         let sprite_sheet_handle = load_sprite_sheet(
@@ -69,29 +71,74 @@ impl SimpleState for GameLevelState {
     }
 
     /// Cleanup entities
-    fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        match data.world.delete_entities(&self.npc_entities) {
-            _ => ()
-        };
-        match data.world.delete_entities(&self.player_entities) {
+    fn on_stop(&mut self, data: StateData<GameData>) {
+        match data.world.delete_entities(
+            &[
+                &self.npc_entities[..],
+                &self.player_entities[..],
+            ].concat()
+        ) {
             _ => ()
         }
     }
 
-    fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
-        let world = &data.world;
+    fn handle_event(&mut self, data: StateData<GameData>, event: StateEvent) -> SimpleTrans {
+        match event {
+            StateEvent::Input(
+                InputEvent::KeyPressed {
+                    key_code: VirtualKeyCode::R, ..
+                }
+            ) => {
+                // Reload the current level
+                Trans::Switch(
+                    Box::new(
+                        GameLevelState::new(
+                            self.level_handle.clone()
+                        )
+                    )
+                )
+            }, 
+            StateEvent::Input(
+                InputEvent::KeyPressed {
+                    key_code: VirtualKeyCode::Escape, ..
+                }
+            ) => {
+                // Go back to the main menu
+                Trans::Pop
+            },
+            _ => {
+                let world = &data.world;
 
-        let mut quit = true;
+                for entity in &self.player_entities {
+                    if world.is_alive(*entity) {
+                        return Trans::None
+                    }
+                }
 
-        for entity in &self.player_entities {
-            if world.is_alive(*entity) {
-                quit = false;
+                if let Some(mut progression_resource) = world.try_fetch_mut::<LevelProgression>() {
+                    progression_resource.current += 1;
+
+                    if let Some(levels_resource) = world.try_fetch::<Levels>() {
+                        if let Some(next_level) = levels_resource.levels.get(progression_resource.current) {
+                            // Progress to the next level
+                            Trans::Switch(
+                                Box::new(
+                                    GameLevelState::new(
+                                        next_level.clone()
+                                    )
+                                )
+                            )
+                        } else {
+                            Trans::Pop
+                        }
+                    } else {
+                        Trans::Pop
+                    }
+                } else {
+                    // Something went wrong... 
+                    Trans::Pop
+                }
             }
-        }
-
-        match quit {
-            false => Trans::None,
-            true => Trans::Pop,
         }
     }
 }

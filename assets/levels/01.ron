@@ -1,6 +1,7 @@
+#![enable(implicit_some)]
 GameLevel(
-    dimensions: (10, 10),
-    characters: CharacterPlacement(horizontal: Some((2,3)), vertical: Some((2,2)), interact: Some((2,4))),
-    exit: (2,5),
-    obstacles: [(3,3), (3,4), (3,5)]
+    dimensions: (5, 7),
+    characters: (vertical: (2, 2)),
+    exit: (2, 5),
+    obstacles: [],
 )

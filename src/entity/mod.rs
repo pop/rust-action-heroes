@@ -125,7 +125,7 @@ pub(crate) fn make_walls(
         let level: &GameLevel = asset_storage
             .get(&level_handle)
             .expect("Cannot load game level");
-        level.dimensions
+        (level.dimensions.0 - 1, level.dimensions.1 - 1)
     };
 
     let min = 0;
@@ -133,19 +133,23 @@ pub(crate) fn make_walls(
     let mut entities: Vec<Entity> = Vec::new();
 
     for n in min..=size_x {
+        println!("Pushing wall {:?}", (n, min));
         entities.push(
             make_wall(world, sprite.clone(), (n, min))
         );
+        println!("Pushing wall {:?}", (n, size_y));
         entities.push(
-            make_wall(world, sprite.clone(), (size_x, n))
+            make_wall(world, sprite.clone(), (n, size_y))
         );
     }
-    for n in min..size_y {
+    for n in min..=size_y {
+        println!("Pushing wall {:?}", (min, n));
         entities.push(
             make_wall(world, sprite.clone(), (min, n))
         );
+        println!("Pushing wall {:?}", (size_x, n));
         entities.push(
-            make_wall(world, sprite.clone(), (n, size_y))
+            make_wall(world, sprite.clone(), (size_x, n))
         );
     }
     entities

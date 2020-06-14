@@ -8,36 +8,68 @@ Container(
         width: 20.,
         height: 20.,
     ),
-    background: SolidColor(0.03, 0.03, 0.03, 1.0),
+    background: SolidColor(1.0, 0.0, 0.0, 1.0),
     children: [
-
         Container(
             transform: (
                 id: "container_start_button",
-                width: 755.,
-                height: 150.,
+                width: 200.,
+                height: 100.,
                 anchor: Middle,
             ),
-            background: SolidColor(1.0, 0.65, 0.0, 1.0),
+            background: SolidColor(0.0, 0.0, 0.0, 0.0),
             children: [
-
                 Button(
                     transform: (
                         id: "start_button",
-                        width: 750.,
-                        height: 145.,
+                        width: 600.,
+                        height: 200.,
                         anchor: Middle,
                         mouse_reactive: true,
                     ),
                     button: (
-                        text: "START GAME",
+                        text: "BEGIN",
                         font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 75.,
-                        normal_text_color: (1.0, 0.65, 0., 1.0), // ffa500
-                        normal_image: SolidColor(0., 0., 0., 1.),
-                        hover_image: SolidColor(0.1, 0.1, 0.1, 1.),
-                        press_image: SolidColor(0.15, 0.15, 0.15, 1.),
+                        font_size: 200.,
+                        normal_text_color: (0.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.0),
+                        hover_image: SolidColor(1.0, 1.0, 1.0, 1.0),
+                        press_image: SolidColor(0.0, 0.0, 0.0, 1.0),
                     )
+                ),
+                Label(
+                    transform: (
+                        id: "info_top",
+                        width: 700.,
+                        height: 250.,
+                        y: 200,
+                        anchor: TopMiddle,
+                        mouse_reactive: false,
+                    ),
+                    text: (
+                        text: "\n Arrow Keys Move \n Space Grabs",
+                        line_mode: Wrap,
+                        font_size: 50.,
+                        font: File("font/square.ttf", ("TTF", ())),
+                        color: (1.0, 1.0, 1.0, 1.0),
+                    ),
+                ),
+                Label(
+                    transform: (
+                        id: "info_bottom",
+                        width: 700.,
+                        height: 250.,
+                        y: -200,
+                        anchor: TopMiddle,
+                        mouse_reactive: false,
+                    ),
+                    text: (
+                        text: "\n Escape Exits \n R Reloads",
+                        line_mode: Wrap,
+                        font_size: 50.,
+                        font: File("font/square.ttf", ("TTF", ())),
+                        color: (1.0, 1.0, 1.0, 1.0),
+                    ),
                 ),
             ]
         ),

@@ -1,20 +1,17 @@
 use crate::assets::GameLevel;
-use crate::state::GameLevelState;
-use crate::entity::make_camera;
+use crate::state::{GameLevelState, LevelProgression, Levels};
 use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter, RonFormat};
 use amethyst::input::{is_close_requested, is_key_down};
 use amethyst::winit::VirtualKeyCode;
 use amethyst::prelude::*;
 use amethyst::ecs::Entity;
-use amethyst::ui::{UiButtonBuilder, UiButton, UiButtonBuilderResources, get_default_font, FontAsset, UiCreator, UiEvent, UiEventType, UiFinder};
+use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
 use std::path::{PathBuf, Path};
 
 ///
 /// ...
 ///
 pub(crate) struct MenuState {
-    progress: Vec<ProgressCounter>,
-    levels: Vec<Handle<GameLevel>>,
     ui_handle: Option<Entity>,
     start_button: Option<Entity>,
 }
@@ -22,8 +19,6 @@ pub(crate) struct MenuState {
 impl MenuState {
     pub fn new() -> Self {
         MenuState {
-            progress: Vec::new(),
-            levels: Vec::new(),
             ui_handle: None,
             start_button: None,
         }
@@ -46,8 +41,8 @@ impl MenuState {
         let mut progresses = Vec::new();
         for path in dir_list {
             if let Some((level, progress)) = self.load_level(loader, storage, path) {
-                levels.push(level);
-                progresses.push(progress);
+                levels.insert(0, level);
+                progresses.insert(0, progress);
             }
         }
         (levels, progresses)
@@ -65,15 +60,19 @@ impl MenuState {
         dir_list_vec
     }
 
-    fn start_next_level(&mut self) -> SimpleTrans {
-        match self.progress.last() {
+    fn start_current_level(&mut self, world: &World) -> SimpleTrans {
+        let current_level = match world.try_fetch::<LevelProgression>() {
+            Some(level_progress) => level_progress.current,
+            None => 0,
+        };
+        let levels_resource = world.try_fetch::<Levels>().expect("Could not load level handles!");
+        match levels_resource.progress.get(current_level) {
             Some(progress) => {
                 if progress.is_complete() {
-                    self.progress.pop();
-                    match self.levels.pop() {
+                    match levels_resource.levels.get(current_level) {
                         Some(level) => {
                             println!("Starting level: {:?}", level);
-                            Trans::Push(Box::new(GameLevelState::new(level)))
+                            Trans::Push(Box::new(GameLevelState::new(level.clone())))
                         },
                         None => Trans::None,
                     }
@@ -96,7 +95,9 @@ impl SimpleState for MenuState {
                 creator.create("menu.ron", ())
             }
         ));
-        println!("ui_handle: {:?}", self.ui_handle);
+
+        let mut levels = Levels::default();
+        let mut progression = LevelProgression::default();
 
         // TODO: I'm pretty sure there's an Amethyst idiomatic way to register "levels" as a source
         // and load from there...
@@ -106,12 +107,15 @@ impl SimpleState for MenuState {
                 let level_storage = &world.read_resource::<AssetStorage<GameLevel>>();
                 let level_files = self.find_levels(dir_list);
                 let result = self.load_levels(asset_loader, level_storage, level_files);
-                println!("Loading level: {:?}", result);
-                self.levels = result.0;
-                self.progress = result.1;
+                let total_num_levels = result.0.len();
+                levels = Levels { levels: result.0, progress: result.1 };
+                progression = LevelProgression { current: 0, total: total_num_levels };
             }
             Err(_) => (),
         }
+
+        world.insert(levels);
+        world.insert(progression);
     }
 
     fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
@@ -138,7 +142,15 @@ impl SimpleState for MenuState {
             },
             None => ()
         };
-        self.start_button = None;
+        match self.start_button {
+            Some(entity) => {
+                match data.world.delete_entity(entity) {
+                    Ok(_) => self.start_button = None,
+                    Err(_) => (),
+                }
+            },
+            None => ()
+        };
     }
 
     fn on_resume(&mut self, data: StateData<GameData>) {
@@ -170,20 +182,12 @@ impl SimpleState for MenuState {
             }) => {
                 println!("Ui Event: {:?}", target);
                 if Some(target) == self.start_button {
-                    self.start_next_level() // Trans::Push(...)
+                    self.start_current_level(data.world) // Trans::Push(...)
                 } else {
                     Trans::None
                 }
             },
             _ => Trans::None
         }
-    }
-
-    fn fixed_update(
-        &mut self,
-        data: StateData<GameData>,
-    ) -> SimpleTrans {
-        // TODO: Cleanup existing state when we pop back here
-        Trans::None
     }
 }
