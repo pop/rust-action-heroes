@@ -11,11 +11,11 @@ impl Holding {
         Holding(false)
     }
 
-    pub(crate) fn is_holding(&mut self) {
+    pub(crate) fn set_holding(&mut self) {
         self.0 = true;
     }
 
-    pub(crate) fn is_not_holding(&mut self) {
+    pub(crate) fn set_not_holding(&mut self) {
         self.0 = false;
     }
 

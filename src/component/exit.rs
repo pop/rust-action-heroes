@@ -1,13 +1,11 @@
-use amethyst::ecs::{prelude::*, Component};
+use amethyst::ecs::{NullStorage, Component};
 
 ///
 /// Exit Component
 ///
-#[derive(Debug, Component)]
+#[derive(Debug, Default)]
 pub(crate) struct Exit;
 
-impl Exit {
-    pub fn new() -> Self {
-        Exit
-    }
+impl Component for Exit {
+    type Storage = NullStorage<Self>;
 }

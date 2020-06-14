@@ -1,5 +1,8 @@
-pub mod movement;
-pub(crate) use movement::*;
+pub mod movement_solver;
+pub(crate) use movement_solver::*;
+
+pub mod mover;
+pub(crate) use mover::*;
 
 pub mod process_input;
 pub(crate) use process_input::*;

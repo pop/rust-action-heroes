@@ -1,5 +1,5 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Holding, Movable, Name, Named};
+use crate::component::{Exit, Holding, Position, Movable, Name, Named};
 use crate::lib::get_sprite;
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
@@ -7,7 +7,7 @@ use amethyst::{
     core::transform::Transform,
     ecs::Entity,
     prelude::*,
-    renderer::{Camera, SpriteSheet},
+    renderer::{Camera, SpriteSheet, SpriteRender},
 };
 
 pub(crate) fn make_horizontal(
@@ -29,8 +29,9 @@ pub(crate) fn make_horizontal(
             world
                 .create_entity()
                 .with(Transform::default())
+                .with(Movable::default())
                 .with(sprite.clone())
-                .with(Movable::new(x, y))
+                .with(Position::new(x, y))
                 .with(Named::new(Name::Horizontal))
                 .with(Holding::new())
                 .build(),
@@ -59,8 +60,9 @@ pub(crate) fn make_vertical(
             world
                 .create_entity()
                 .with(Transform::default())
+                .with(Movable::default())
                 .with(sprite.clone())
-                .with(Movable::new(x, y))
+                .with(Position::new(x, y))
                 .with(Named::new(Name::Vertical))
                 .with(Holding::new())
                 .build(),
@@ -89,8 +91,9 @@ pub(crate) fn make_interact(
             world
                 .create_entity()
                 .with(Transform::default())
+                .with(Movable::default())
                 .with(sprite.clone())
-                .with(Movable::new(x, y))
+                .with(Position::new(x, y))
                 .with(Named::new(Name::Interact))
                 .with(Holding::new())
                 .build(),
@@ -98,6 +101,15 @@ pub(crate) fn make_interact(
     } else {
         None
     }
+}
+
+fn make_wall(world: &mut World, sprite: SpriteRender, (x, y): (i8, i8)) -> Entity {
+    world
+        .create_entity()
+        .with(Transform::default())
+        .with(Position::new(x, y))
+        .with(sprite)
+        .build()
 }
 
 pub(crate) fn make_walls(
@@ -121,46 +133,18 @@ pub(crate) fn make_walls(
 
     for n in min..=size_x {
         entities.push(
-            world
-                .create_entity()
-                .with(Transform::default())
-                .with(sprite.clone())
-                .with(Movable::new(n, min))
-                .with(Named::new(Name::Wall))
-                .with(Holding::new())
-                .build(),
+            make_wall(world, sprite.clone(), (n, min))
         );
         entities.push(
-            world
-                .create_entity()
-                .with(Transform::default())
-                .with(sprite.clone())
-                .with(Movable::new(size_x, n))
-                .with(Named::new(Name::Wall))
-                .with(Holding::new())
-                .build(),
+            make_wall(world, sprite.clone(), (size_x, n))
         );
     }
     for n in min..size_y {
         entities.push(
-            world
-                .create_entity()
-                .with(Transform::default())
-                .with(sprite.clone())
-                .with(Movable::new(min, n))
-                .with(Named::new(Name::Wall))
-                .with(Holding::new())
-                .build(),
+            make_wall(world, sprite.clone(), (min, n))
         );
         entities.push(
-            world
-                .create_entity()
-                .with(Transform::default())
-                .with(sprite.clone())
-                .with(Movable::new(n, size_y))
-                .with(Named::new(Name::Wall))
-                .with(Holding::new())
-                .build(),
+            make_wall(world, sprite.clone(), (n, size_y))
         );
     }
     entities
@@ -190,7 +174,7 @@ pub(crate) fn make_floor(
                     .create_entity()
                     .with(Transform::default())
                     .with(sprite.clone())
-                    .with(Movable::new(x, y))
+                    .with(Position::new(x, y))
                     .build(),
             );
         }
@@ -216,11 +200,11 @@ pub(crate) fn make_crates(
         entities.push(
             world
                 .create_entity()
+                .with(Holding::new())
+                .with(Movable::default())
+                .with(Position::new(x, y))
                 .with(Transform::default())
                 .with(sprite.clone())
-                .with(Movable::new(x, y))
-                .with(Named::new(Name::Crate))
-                .with(Holding::new())
                 .build(),
         );
     }
@@ -233,6 +217,7 @@ pub(crate) fn make_exit(
     sprite_sheet_handle: &Handle<SpriteSheet>,
 ) -> Entity {
     let sprite = get_sprite(sprite_sheet_handle, 8);
+
     let (x, y) = {
         let asset_storage = world.write_resource::<AssetStorage<GameLevel>>();
         let level: &GameLevel = asset_storage
@@ -240,12 +225,13 @@ pub(crate) fn make_exit(
             .expect("Cannot load game level");
         level.exit
     };
+
     world
         .create_entity()
         .with(Transform::default())
         .with(sprite.clone())
-        .with(Exit::new())
-        .with(Movable::new(x, y))
+        .with(Exit::default())
+        .with(Position::new(x, y))
         .build()
 }
 

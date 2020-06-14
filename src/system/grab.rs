@@ -6,7 +6,7 @@ use amethyst::{
     shrev::{EventChannel, ReaderId},
 };
 
-use crate::component::{Holding, Movable, Name, Named};
+use crate::component::{Holding, Position, Name, Named};
 use crate::lib::TransformedInputEvent;
 
 #[derive(SystemDesc)]
@@ -23,107 +23,57 @@ impl GrabSystem {
 impl<'s> System<'s> for GrabSystem {
     type SystemData = (
         Read<'s, EventChannel<TransformedInputEvent>>,
-        ReadStorage<'s, Movable>,
+        ReadStorage<'s, Position>,
         WriteStorage<'s, Holding>,
         ReadStorage<'s, Named>,
     );
 
-    fn run(&mut self, (channel, movables, mut holdings, nameds): Self::SystemData) {
+    fn run(&mut self, (channel, positions, mut holdings, nameds): Self::SystemData) {
         for event in channel.read(&mut self.reader) {
-            // println!("grab system: {:?}", event);
-            match event {
-                TransformedInputEvent::Interact => {
-                    let mut pos = (0, 0);
-                    let mut desired_holding = false;
-                    for (name, movable, holding) in (&nameds, &movables, &holdings).join() {
-                        if name.get() == Name::Interact {
-                            pos = movable.get_pos();
-                            desired_holding = !holding.status();
-                            break;
-                        }
+            let mut pos = Position::default();
+            let mut desired_holding = false;
+            for (name, position, holding) in (&nameds, &positions, &holdings).join() {
+                if name.get() == Name::Interact {
+                    pos = *position;
+                     if event == &TransformedInputEvent::Interact {
+                        desired_holding = !holding.status();
+                    } else  {
+                        desired_holding = holding.status();
                     }
+                    break;
+                }
+            }
 
-                    let mut toggle_holding: HashSet<(Name, (u8, u8))> = HashSet::new();
 
-                    let mut toggle_queue: VecDeque<(Name, (u8, u8))> = VecDeque::new();
-                    toggle_queue.push_front((Name::Interact, pos));
+            let mut toggle_holding: HashSet<Position> = HashSet::new();
 
-                    while let Some((name, pos)) = toggle_queue.pop_back() {
-                        toggle_holding.insert((name, pos));
-                        for (movable, name) in (&movables, &nameds).join() {
-                            if name.get() != Name::Wall {
-                                println!("{:?} {:?}", name, movable.get_pos());
-                                if !toggle_holding.contains(&(name.get(), movable.get_pos()))
-                                    && touching(pos, movable.get_pos())
-                                {
-                                    println!("{:?} is touching Interact", name.get());
-                                    toggle_queue.push_front((name.get(), movable.get_pos()));
-                                }
-                            }
-                        }
-                    }
+            let mut toggle_queue: VecDeque<Position> = VecDeque::new();
+            toggle_queue.push_front(pos);
 
-                    // Toggle all the things
-                    for (hold, movable, name) in (&mut holdings, &movables, &nameds).join() {
-                        if toggle_holding.contains(&(name.get(), movable.get_pos())) {
-                            match desired_holding {
-                                true => hold.is_holding(),
-                                false => hold.is_not_holding(),
-                            }
-                            println!("{:?} is now holding: {}", name.get(), desired_holding);
-                        }
+            while let Some(pos) = toggle_queue.pop_back() {
+                toggle_holding.insert(pos);
+                for (position, _hold) in (&positions, &holdings).join() {
+                    if !toggle_holding.contains(&position)
+                        && touching(&pos, position)
+                    {
+                        toggle_queue.push_front(*position);
                     }
                 }
-                TransformedInputEvent::Left
-                | TransformedInputEvent::Right
-                | TransformedInputEvent::Up
-                | TransformedInputEvent::Down => {
-                    let mut pos = (0, 0);
-                    let mut desired_holding = false;
-                    for (name, movable, holding) in (&nameds, &movables, &holdings).join() {
-                        if name.get() == Name::Interact {
-                            pos = movable.get_pos();
-                            desired_holding = holding.status();
-                            break;
-                        }
-                    }
+            }
 
-                    let mut toggle_holding: HashSet<(Name, (u8, u8))> = HashSet::new();
-
-                    let mut toggle_queue: VecDeque<(Name, (u8, u8))> = VecDeque::new();
-                    toggle_queue.push_front((Name::Interact, pos));
-
-                    while let Some((name, pos)) = toggle_queue.pop_back() {
-                        toggle_holding.insert((name, pos));
-                        for (movable, name) in (&movables, &nameds).join() {
-                            if name.get() != Name::Wall {
-                                println!("{:?} {:?}", name, movable.get_pos());
-                                if !toggle_holding.contains(&(name.get(), movable.get_pos()))
-                                    && touching(pos, movable.get_pos())
-                                {
-                                    println!("{:?} is touching Interact", name.get());
-                                    toggle_queue.push_front((name.get(), movable.get_pos()));
-                                }
-                            }
-                        }
-                    }
-
-                    // Toggle all the things
-                    for (hold, movable, name) in (&mut holdings, &movables, &nameds).join() {
-                        if toggle_holding.contains(&(name.get(), movable.get_pos())) {
-                            match desired_holding {
-                                true => hold.is_holding(),
-                                false => hold.is_not_holding(),
-                            }
-                            println!("{:?} is now holding: {}", name.get(), desired_holding);
-                        }
+            // Toggle all the things
+            for (hold, position) in (&mut holdings, &positions).join() {
+                if toggle_holding.contains(&position) {
+                    match desired_holding {
+                        true => hold.set_holding(),
+                        false => hold.set_not_holding(),
                     }
                 }
-            };
+            }
         }
     }
 }
 
-fn touching((x1, y1): (u8, u8), (x2, y2): (u8, u8)) -> bool {
-    (x1 == x2 && (y1 - 1 == y2 || y1 + 1 == y2)) || (y1 == y2 && (x1 - 1 == x2 || x1 + 1 == x2))
+fn touching(Position { x: x1, y: y1 }: &Position, Position { x: x2, y: y2 }: &Position) -> bool {
+    (x1 == x2 && (y1 - 1 == *y2 || y1 + 1 == *y2)) || (y1 == y2 && (x1 - 1 == *x2 || x1 + 1 == *x2))
 }

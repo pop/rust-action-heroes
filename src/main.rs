@@ -72,9 +72,9 @@ fn main() -> amethyst::Result<()> {
         .with(
             LevelSystem::new(),
             "level_system",
-            &["game_level_processor", "movement_system"],
+            &["game_level_processor", "mover_system", "movement_solver_system", "sprite_system"],
         )
-        .with(GridSystem::new(), "grid_system", &["movement_system"]);
+        .with(GridSystem::new(), "grid_system", &["mover_system"]);
 
     let mut game = Application::build(assets_dir, MenuState::new())?
         .with_frame_limit(

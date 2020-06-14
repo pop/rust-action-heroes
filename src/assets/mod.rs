@@ -4,7 +4,7 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
-pub(crate) type Coordinates = (u8, u8);
+pub(crate) type Coordinates = (i8, i8);
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct CharacterPlacement {

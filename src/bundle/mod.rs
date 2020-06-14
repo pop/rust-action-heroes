@@ -3,7 +3,9 @@ use amethyst::{
 };
 
 use crate::lib::TransformedInputEvent;
-use crate::system::{GrabSystem, MovementSystem, SpriteSystem};
+// TODO: MovementEvent (and TransformedInputEvent) should go in a `channels` module or something.
+use crate::system::{GrabSystem, MovementSolverSystem, SpriteSystem, MovementSystem};
+use crate::system::movement_solver::MovementEvent;
 
 ///
 /// ...
@@ -16,24 +18,33 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
         world: &mut World,
         builder: &mut DispatcherBuilder<'a, 'b>,
     ) -> Result<(), Error> {
-        let mut channel = EventChannel::<TransformedInputEvent>::new();
+        let mut input_channel = EventChannel::<TransformedInputEvent>::new();
+        let mut movement_channel = EventChannel::<MovementEvent>::new();
 
-        let movement_reader = channel.register_reader();
-        let grab_reader = channel.register_reader();
-        let sprite_reader = channel.register_reader();
+        let movement_solver_reader = input_channel.register_reader();
+        let grab_reader = input_channel.register_reader();
+        let sprite_reader = input_channel.register_reader();
+        let mover_reader = movement_channel.register_reader();
 
-        world.insert(channel);
+        world.insert(input_channel);
+        world.insert(movement_channel);
 
         builder.add(
-            MovementSystem::new(movement_reader),
-            "movement_system",
+            MovementSolverSystem::new(movement_solver_reader),
+            "movement_solver_system",
             &["input_transform_system"],
+        );
+
+        builder.add(
+            MovementSystem::new(mover_reader),
+            "mover_system",
+            &["movement_solver_system"],
         );
 
         builder.add(
             GrabSystem::new(grab_reader),
             "grab_system",
-            &["movement_system"],
+            &["mover_system"],
         );
 
         builder.add(

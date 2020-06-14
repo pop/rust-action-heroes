@@ -5,7 +5,7 @@ use amethyst::{
 };
 
 /// TODO: This is marked as dead code...
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub(crate) enum TransformedInputEvent {
     Up,
     Down,
