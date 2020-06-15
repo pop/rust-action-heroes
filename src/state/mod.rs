@@ -10,7 +10,6 @@ pub(crate) struct Levels {
 #[derive(Default)]
 pub(crate) struct LevelProgression {
     pub(crate) current: usize,
-    pub(crate) total: usize,
 }
 
 mod menu;
@@ -18,3 +17,6 @@ pub(crate) use menu::*;
 
 mod level;
 pub(crate) use level::*;
+
+mod loading;
+pub(crate) use loading::*;

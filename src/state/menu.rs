@@ -1,86 +1,20 @@
-use crate::assets::GameLevel;
-use crate::assets::LevelFormat;
 use crate::state::{GameLevelState, LevelProgression, Levels};
-use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
 use amethyst::input::{is_close_requested, is_key_down};
 use amethyst::winit::VirtualKeyCode;
 use amethyst::prelude::*;
 use amethyst::ecs::Entity;
 use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
-use std::path::{PathBuf, Path};
 
 ///
 /// ...
 ///
+#[derive(Default)]
 pub(crate) struct MenuState {
     ui_handle: Option<Entity>,
     start_button: Option<Entity>,
 }
 
 impl MenuState {
-    pub fn new() -> Self {
-        MenuState {
-            ui_handle: None,
-            start_button: None,
-        }
-    }
-
-    fn load_level(
-        &self,
-        loader: &Loader,
-        storage: &AssetStorage<GameLevel>,
-        path: PathBuf
-    ) -> Option<(Handle<GameLevel>, ProgressCounter)> {
-        if let Some(path_str) = path.to_str() {
-            let mut progress = ProgressCounter::new();
-            Some(
-                (loader.load(path_str, LevelFormat, &mut progress, storage), progress)
-            )
-        } else {
-            None
-        }
-    }
-
-    fn load_levels(
-        &self,
-        loader: &Loader,
-        storage: &AssetStorage<GameLevel>,
-        dir_list: Vec<PathBuf>
-    ) -> (Vec<Handle<GameLevel>>, Vec<ProgressCounter>) {
-        let mut levels = Vec::new();
-        let mut progresses = Vec::new();
-        for path in dir_list {
-            if let Some((level, progress)) = self.load_level(loader, storage, path) {
-                levels.push(level);
-                progresses.push(progress);
-            }
-        }
-        (levels, progresses)
-    }
-
-    fn find_levels(&self, dir_list: std::fs::ReadDir) -> Vec<PathBuf> {
-        let mut dir_list_vec: Vec<PathBuf> = Vec::new();
-        // So
-        for e in dir_list {
-            // Many
-            if let Ok(p) = e {
-                // Layers
-                if let Ok(l) = p.path().strip_prefix("assets/") {
-                    // Please
-                    if let Some(extension) = l.extension() {
-                        // Help
-                        if extension.to_str() == Some("level") {
-                            // Me
-                            dir_list_vec.push(l.to_path_buf());
-                        }
-                    }
-                }
-            }
-        }
-        dir_list_vec.sort_unstable();
-        dir_list_vec
-    }
-
     fn start_current_level(&mut self, world: &World) -> SimpleTrans {
         let current_level = match world.try_fetch::<LevelProgression>() {
             Some(level_progress) => level_progress.current,
@@ -115,27 +49,6 @@ impl SimpleState for MenuState {
                 creator.create("menu.ron", ())
             }
         ));
-
-        let mut levels = Levels::default();
-        let mut progression = LevelProgression::default();
-
-        // TODO: I'm pretty sure there's an Amethyst idiomatic way to register "levels" as a source
-        // and load from there...
-        match Path::new("assets/levels").read_dir() {
-            Ok(dir_list) => {
-                let asset_loader = &world.read_resource::<Loader>();
-                let level_storage = &world.read_resource::<AssetStorage<GameLevel>>();
-                let level_files = self.find_levels(dir_list);
-                let result = self.load_levels(asset_loader, level_storage, level_files);
-                let total_num_levels = result.0.len();
-                levels = Levels { levels: result.0, progress: result.1 };
-                progression = LevelProgression { current: 0, total: total_num_levels };
-            }
-            Err(_) => (),
-        }
-
-        world.insert(levels);
-        world.insert(progression);
     }
 
     fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {

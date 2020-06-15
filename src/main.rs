@@ -30,7 +30,7 @@ use amethyst::{
 
 use crate::assets::GameLevel;
 use crate::bundle::MovementBundle;
-use crate::state::MenuState;
+use crate::state::LoadingState;
 use crate::system::{GridSystem, LevelSystem, ProcessInputSystem};
 
 ///
@@ -76,7 +76,7 @@ fn main() -> amethyst::Result<()> {
         )
         .with(GridSystem::new(), "grid_system", &["mover_system"]);
 
-    let mut game = Application::build(assets_dir, MenuState::new())?
+    let mut game = Application::build(assets_dir, LoadingState::default())?
         .with_frame_limit(
             FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
             60,

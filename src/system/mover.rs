@@ -38,7 +38,6 @@ impl<'s> System<'s> for MovementSystem {
                         None => ()
                     }
                 },
-                _ => ()
             }
         }
     }
