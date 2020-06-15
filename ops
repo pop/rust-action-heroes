@@ -1,1 +1,1 @@
-{"version":1,"ops":[{"type":1,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1592143490,"title":"we need a way to track which level(s) the user has completed","message":"The menu is dumb and any time you go back to it you auto-progress to the next level.\n\nA Resource can track the level I bet.\nWhen a level is completed, increment that level indicator.","files":null}]}
+{"version":1,"ops":[{"type":4,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1592228647,"status":2}]}
