@@ -1,1 +1,1 @@
-{"version":1,"ops":[{"type":1,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1591507471,"title":"when the grab entity goes away, everything should  un-grab","message":"","files":null}]}
+{"version":1,"ops":[{"type":5,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1592228661,"added":["Foo"],"removed":null},{"type":4,"author":{"id":"08114b024bd5423890e0b0055d132895669eb1b7"},"timestamp":1592228675,"status":2}]}
