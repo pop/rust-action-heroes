@@ -1,0 +1,9 @@
+#![enable(implicit_some)]
+GameLevel(
+    // NOT A SQUARE LEVEL
+    dimensions: (8, 6),
+    characters: (vertical: (3, 3), interact: (1, 1), horizontal: (5, 4)),
+    exit: (5, 1),
+    obstacles: [],
+)
+

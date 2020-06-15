@@ -35,26 +35,20 @@ impl SimpleState for GameLevelState {
             "texture/evg1_spritesheet.png",
             "texture/evg1_spritesheet.ron",
         );
-        self.npc_entities.push(
-            make_exit(world, &self.level_handle, &sprite_sheet_handle)
-        );
         match make_interact(world, &self.level_handle, &sprite_sheet_handle) {
             Some(e) => {
-                println!("Creating interact");
                 self.player_entities.push(e);
             },
             None => (),
         }
         match make_vertical(world, &self.level_handle, &sprite_sheet_handle) {
             Some(e) => {
-                println!("Creating vertical");
                 self.player_entities.push(e);
             },
             None => (),
         }
         match make_horizontal(world, &self.level_handle, &sprite_sheet_handle) {
             Some(e) => {
-                println!("Creating horizontal");
                 self.player_entities.push(e);
             },
             None => (),
@@ -67,6 +61,9 @@ impl SimpleState for GameLevelState {
         );
         self.npc_entities.push(
             make_camera(world, &self.level_handle)
+        );
+        self.npc_entities.push(
+            make_exit(world, &self.level_handle, &sprite_sheet_handle)
         );
     }
 
@@ -129,6 +126,8 @@ impl SimpleState for GameLevelState {
                                 )
                             )
                         } else {
+                            // Reset the level counter becuase we beat all the levels
+                            progression_resource.current = 0;
                             Trans::Pop
                         }
                     } else {

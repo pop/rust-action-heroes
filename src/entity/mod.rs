@@ -24,7 +24,6 @@ pub(crate) fn make_horizontal(
             .expect("Cannot load game level");
         level.characters.horizontal
     } {
-        println!("Creating horizontal at {:?}", (x, y));
         Some(
             world
                 .create_entity()
@@ -55,7 +54,6 @@ pub(crate) fn make_vertical(
             .expect("Cannot load game level");
         level.characters.vertical
     } {
-        println!("Creating vertical at {:?}", (x, y));
         Some(
             world
                 .create_entity()
@@ -86,7 +84,6 @@ pub(crate) fn make_interact(
             .expect("Cannot load game level");
         level.characters.interact
     } {
-        println!("Creating interact at {:?}", (x, y));
         Some(
             world
                 .create_entity()
@@ -133,21 +130,17 @@ pub(crate) fn make_walls(
     let mut entities: Vec<Entity> = Vec::new();
 
     for n in min..=size_x {
-        println!("Pushing wall {:?}", (n, min));
         entities.push(
             make_wall(world, sprite.clone(), (n, min))
         );
-        println!("Pushing wall {:?}", (n, size_y));
         entities.push(
             make_wall(world, sprite.clone(), (n, size_y))
         );
     }
     for n in min..=size_y {
-        println!("Pushing wall {:?}", (min, n));
         entities.push(
             make_wall(world, sprite.clone(), (min, n))
         );
-        println!("Pushing wall {:?}", (size_x, n));
         entities.push(
             make_wall(world, sprite.clone(), (size_x, n))
         );

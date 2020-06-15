@@ -3,7 +3,7 @@ use amethyst::{
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
 
-use crate::component::{Exit, Position, Named};
+use crate::component::{Exit, Position, Named, Holding};
 
 #[derive(SystemDesc)]
 pub(crate) struct LevelSystem;
@@ -20,9 +20,10 @@ impl<'s> System<'s> for LevelSystem {
         ReadStorage<'s, Position>,
         ReadStorage<'s, Named>,
         Entities<'s>,
+        ReadStorage<'s, Holding>,
     );
 
-    fn run(&mut self, (exits, positions, nameds, entities): Self::SystemData) {
+    fn run(&mut self, (exits, positions, nameds, entities, holdings): Self::SystemData) {
         let mut pos = &Position::default();
 
         // Get the position of the exit
@@ -32,11 +33,20 @@ impl<'s> System<'s> for LevelSystem {
         }
 
         // Delete every entity overlapping with that position
-        for (position, _named, entity) in (&positions, &nameds, &*entities).join() {
+        for (position, entity, holding, _named) in (&positions, &*entities, &holdings, &nameds).join() {
             if position == pos {
                 match entities.delete(entity) {
                     Ok(_success) => (),
                     Err(_error) => (),
+                }
+                // This entity is holding other entities, so clean those up too
+                if holding.status() {
+                    for (entity, _named, _holding) in (&entities, &nameds, &holdings).join() {
+                        match entities.delete(entity) {
+                            Ok(_success) => (),
+                            Err(_error) => (),
+                        }
+                    }
                 }
             }
         }

@@ -7,6 +7,7 @@ use amethyst::prelude::*;
 use amethyst::ecs::Entity;
 use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
 use std::path::{PathBuf, Path};
+use std::ffi::OsStr;
 
 ///
 /// ...
@@ -26,7 +27,6 @@ impl MenuState {
 
     fn load_level(&self, loader: &Loader, storage: &AssetStorage<GameLevel>, path: PathBuf) -> Option<(Handle<GameLevel>, ProgressCounter)> {
         if let Some(path_str) = path.to_str() {
-            println!("Loading level {:?}", path_str);
             let mut progress = ProgressCounter::new();
             Some(
                 (loader.load(path_str, RonFormat, &mut progress, storage), progress)
@@ -41,8 +41,8 @@ impl MenuState {
         let mut progresses = Vec::new();
         for path in dir_list {
             if let Some((level, progress)) = self.load_level(loader, storage, path) {
-                levels.insert(0, level);
-                progresses.insert(0, progress);
+                levels.push(level);
+                progresses.push(progress);
             }
         }
         (levels, progresses)
@@ -50,13 +50,24 @@ impl MenuState {
 
     fn find_levels(&self, dir_list: std::fs::ReadDir) -> Vec<PathBuf> {
         let mut dir_list_vec: Vec<PathBuf> = Vec::new();
+        // So
         for e in dir_list {
+            // Many
             if let Ok(p) = e {
+                // Layers
                 if let Ok(l) = p.path().strip_prefix("assets/") {
-                    dir_list_vec.push(l.to_path_buf());
+                    // Please
+                    if let Some(extension) = l.extension() {
+                        // Help
+                        if extension.to_str() == Some("ron") {
+                            // Me
+                            dir_list_vec.push(l.to_path_buf());
+                        }
+                    }
                 }
             }
         }
+        dir_list_vec.sort_unstable();
         dir_list_vec
     }
 
@@ -71,7 +82,6 @@ impl MenuState {
                 if progress.is_complete() {
                     match levels_resource.levels.get(current_level) {
                         Some(level) => {
-                            println!("Starting level: {:?}", level);
                             Trans::Push(Box::new(GameLevelState::new(level.clone())))
                         },
                         None => Trans::None,
@@ -126,7 +136,6 @@ impl SimpleState for MenuState {
                     ui_finder.find("start_button")
                 }
             );
-            println!("start_button: {:?}", self.start_button);
         }
 
         Trans::None
@@ -180,7 +189,6 @@ impl SimpleState for MenuState {
                 event_type: UiEventType::Click,
                 target,
             }) => {
-                println!("Ui Event: {:?}", target);
                 if Some(target) == self.start_button {
                     self.start_current_level(data.world) // Trans::Push(...)
                 } else {

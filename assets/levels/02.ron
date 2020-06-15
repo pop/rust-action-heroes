@@ -1,0 +1,7 @@
+#![enable(implicit_some)]
+GameLevel(
+    dimensions: (5, 7),
+    characters: (vertical: (2, 2)),
+    exit: (2, 5),
+    obstacles: [],
+)
