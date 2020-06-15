@@ -22,15 +22,15 @@ Container(
                 Button(
                     transform: (
                         id: "start_button",
-                        width: 600.,
-                        height: 200.,
+                        width: 2500.,
+                        height: 225.,
                         anchor: Middle,
                         mouse_reactive: true,
                     ),
                     button: (
                         text: "BEGIN",
                         font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 200.,
+                        font_size: 150.,
                         normal_text_color: (0.0, 1.0, 1.0, 1.0),
                         normal_image: SolidColor(0.0, 0.0, 0.0, 0.0),
                         hover_image: SolidColor(1.0, 1.0, 1.0, 1.0),
@@ -39,10 +39,28 @@ Container(
                 ),
                 Label(
                     transform: (
-                        id: "info_top",
+                        id: "title",
+                        width: 1250.,
+                        height: 250.,
+                        y: 100,
+                        anchor: TopMiddle,
+                        mouse_reactive: false,
+                    ),
+                    text: (
+                        text: "one-action-heroes-rs",
+                        line_mode: Wrap,
+                        font_size: 100.,
+                        font: File("font/square.ttf", ("TTF", ())),
+                        color: (1.0, 1.0, 1.0, 1.0),
+                    ),
+                ),
+                Label(
+                    transform: (
+                        id: "info_left",
                         width: 700.,
                         height: 250.,
-                        y: 200,
+                        y: -200,
+                        x: -200,
                         anchor: TopMiddle,
                         mouse_reactive: false,
                     ),
@@ -56,10 +74,11 @@ Container(
                 ),
                 Label(
                     transform: (
-                        id: "info_bottom",
+                        id: "info_right",
                         width: 700.,
                         height: 250.,
                         y: -200,
+                        x: 200,
                         anchor: TopMiddle,
                         mouse_reactive: false,
                     ),
