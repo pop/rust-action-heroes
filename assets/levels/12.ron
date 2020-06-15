@@ -1,9 +1,0 @@
-#![enable(implicit_some)]
-GameLevel(
-    // NOT A SQUARE LEVEL
-    dimensions: (7, 7),
-    characters: (vertical: (1, 1), interact: (2, 3), horizontal: (5, 4)),
-    exit: (3, 5),
-    obstacles: [],
-)
-

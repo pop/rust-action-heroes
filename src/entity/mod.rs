@@ -117,32 +117,19 @@ pub(crate) fn make_walls(
 ) -> Vec<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 10);
 
-    let (size_x, size_y) = {
+    let wall_coordinates = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
         let level: &GameLevel = asset_storage
             .get(&level_handle)
             .expect("Cannot load game level");
-        (level.dimensions.0 - 1, level.dimensions.1 - 1)
+        level.walls.clone()
     };
-
-    let min = 0;
 
     let mut entities: Vec<Entity> = Vec::new();
 
-    for n in min..=size_x {
+    for (x, y) in wall_coordinates {
         entities.push(
-            make_wall(world, sprite.clone(), (n, min))
-        );
-        entities.push(
-            make_wall(world, sprite.clone(), (n, size_y))
-        );
-    }
-    for n in min..=size_y {
-        entities.push(
-            make_wall(world, sprite.clone(), (min, n))
-        );
-        entities.push(
-            make_wall(world, sprite.clone(), (size_x, n))
+            make_wall(world, sprite.clone(), (x, y))
         );
     }
     entities
@@ -153,29 +140,27 @@ pub(crate) fn make_floor(
     level_handle: &Handle<GameLevel>,
     sprite_sheet_handle: &Handle<SpriteSheet>,
 ) -> Vec<Entity> {
-    let (size_x, size_y) = {
+    let floors = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
         let level: &GameLevel = asset_storage
             .get(&level_handle)
             .expect("Cannot load game level");
-        level.dimensions
+        level.floors.clone()
     };
 
     let sprite = get_sprite(sprite_sheet_handle, 9);
 
     let mut entities: Vec<Entity> = Vec::new();
 
-    for x in 1..size_x {
-        for y in 1..size_y {
-            entities.push(
-                world
-                    .create_entity()
-                    .with(Transform::default())
-                    .with(sprite.clone())
-                    .with(Position::new(x, y))
-                    .build(),
-            );
-        }
+    for (x, y) in floors {
+        entities.push(
+            world
+                .create_entity()
+                .with(Transform::default())
+                .with(sprite.clone())
+                .with(Position::new(x, y))
+                .build(),
+        );
     }
     entities
 }
@@ -186,15 +171,15 @@ pub(crate) fn make_crates(
     sprite_sheet_handle: &Handle<SpriteSheet>,
 ) -> Vec<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 6);
-    let obstacles = {
+    let crates = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
         let level: &GameLevel = asset_storage
             .get(&level_handle)
             .expect("Cannot load game level");
-        level.obstacles.to_vec()
+        level.obstacles.clone()
     };
     let mut entities: Vec<Entity> = Vec::new();
-    for (x, y) in obstacles {
+    for (x, y) in crates {
         entities.push(
             world
                 .create_entity()

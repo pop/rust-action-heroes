@@ -1,8 +1,0 @@
-#![enable(implicit_some)]
-GameLevel(
-    // DIMENSIONS ARE NOT SQARE FOR THIS LEVEL
-    dimensions: (5, 8),
-    characters: (horizontal: (2, 3), vertical: (2, 5)),
-    exit: (2, 1),
-    obstacles: [],
-)

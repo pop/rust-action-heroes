@@ -1,7 +1,0 @@
-#![enable(implicit_some)]
-GameLevel(
-    dimensions: (7, 5),
-    characters: (horizontal: (2, 2)),
-    exit: (5, 2),
-    obstacles: [],
-)

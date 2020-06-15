@@ -1,13 +1,13 @@
 use crate::assets::GameLevel;
+use crate::assets::LevelFormat;
 use crate::state::{GameLevelState, LevelProgression, Levels};
-use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter, RonFormat};
+use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
 use amethyst::input::{is_close_requested, is_key_down};
 use amethyst::winit::VirtualKeyCode;
 use amethyst::prelude::*;
 use amethyst::ecs::Entity;
 use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
 use std::path::{PathBuf, Path};
-use std::ffi::OsStr;
 
 ///
 /// ...
@@ -25,18 +25,28 @@ impl MenuState {
         }
     }
 
-    fn load_level(&self, loader: &Loader, storage: &AssetStorage<GameLevel>, path: PathBuf) -> Option<(Handle<GameLevel>, ProgressCounter)> {
+    fn load_level(
+        &self,
+        loader: &Loader,
+        storage: &AssetStorage<GameLevel>,
+        path: PathBuf
+    ) -> Option<(Handle<GameLevel>, ProgressCounter)> {
         if let Some(path_str) = path.to_str() {
             let mut progress = ProgressCounter::new();
             Some(
-                (loader.load(path_str, RonFormat, &mut progress, storage), progress)
+                (loader.load(path_str, LevelFormat, &mut progress, storage), progress)
             )
         } else {
             None
         }
     }
 
-    fn load_levels(&self, loader: &Loader, storage: &AssetStorage<GameLevel>, dir_list: Vec<PathBuf>) -> (Vec<Handle<GameLevel>>, Vec<ProgressCounter>) {
+    fn load_levels(
+        &self,
+        loader: &Loader,
+        storage: &AssetStorage<GameLevel>,
+        dir_list: Vec<PathBuf>
+    ) -> (Vec<Handle<GameLevel>>, Vec<ProgressCounter>) {
         let mut levels = Vec::new();
         let mut progresses = Vec::new();
         for path in dir_list {
@@ -59,7 +69,7 @@ impl MenuState {
                     // Please
                     if let Some(extension) = l.extension() {
                         // Help
-                        if extension.to_str() == Some("ron") {
+                        if extension.to_str() == Some("level") {
                             // Me
                             dir_list_vec.push(l.to_path_buf());
                         }
