@@ -6,6 +6,7 @@ use amethyst::assets::Handle;
 use amethyst::ecs::Entity;
 use amethyst::prelude::*;
 use amethyst::input::{InputEvent, VirtualKeyCode};
+use amethyst::ui::UiCreator;
 
 ///
 /// ...
@@ -14,6 +15,7 @@ pub(crate) struct GameLevelState {
     player_entities: Vec<Entity>,
     level_handle: Handle<GameLevel>,
     npc_entities: Vec<Entity>,
+    ui_handle: Option<Entity>,
 }
 
 impl GameLevelState {
@@ -22,6 +24,7 @@ impl GameLevelState {
             player_entities: Vec::new(),
             level_handle: level_handle,
             npc_entities: Vec::new(),
+            ui_handle: None,
         }
     }
 }
@@ -29,6 +32,14 @@ impl GameLevelState {
 impl SimpleState for GameLevelState {
     fn on_start(&mut self, data: StateData<GameData>) {
         let world = data.world;
+
+        self.ui_handle = Some(
+            world.exec(|mut creator: UiCreator| {
+                creator.create("leveltext.ron", ())
+            }
+        ));
+
+        println!("Starting level with {:?}", self.ui_handle);
 
         let sprite_sheet_handle = load_sprite_sheet(
             world,
@@ -76,6 +87,7 @@ impl SimpleState for GameLevelState {
             &[
                 &self.npc_entities[..],
                 &self.player_entities[..],
+                &[self.ui_handle.unwrap()],
             ].concat()
         ) {
             _ => ()
