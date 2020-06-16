@@ -4,6 +4,9 @@ pub(crate) use movement_solver::*;
 pub mod mover;
 pub(crate) use mover::*;
 
+pub mod move_sound;
+pub(crate) use move_sound::*;
+
 pub mod process_input;
 pub(crate) use process_input::*;
 

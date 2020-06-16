@@ -1,6 +1,7 @@
 use crate::assets::GameLevel;
 use crate::assets::LevelFormat;
 use crate::state::{LevelProgression, Levels, MenuState};
+use crate::audio::initialize_audio;
 use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
 use amethyst::prelude::*;
 use std::path::{PathBuf, Path};
@@ -95,6 +96,8 @@ impl SimpleState for LoadingState {
 
         world.insert(levels);
         world.insert(progression);
+
+        initialize_audio(world);
     }
 
     fn update(&mut self, _state_data: &mut StateData<GameData>) -> SimpleTrans {

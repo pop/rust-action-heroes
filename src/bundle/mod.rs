@@ -4,7 +4,7 @@ use amethyst::{
 
 use crate::lib::TransformedInputEvent;
 // TODO: MovementEvent (and TransformedInputEvent) should go in a `channels` module or something.
-use crate::system::{GrabSystem, MovementSolverSystem, SpriteSystem, MovementSystem};
+use crate::system::{GrabSystem, MovementSolverSystem, SpriteSystem, MovementSystem, MoveSoundSystem};
 use crate::system::movement_solver::MovementEvent;
 
 ///
@@ -25,6 +25,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
         let grab_reader = input_channel.register_reader();
         let sprite_reader = input_channel.register_reader();
         let mover_reader = movement_channel.register_reader();
+        let move_sound_reader = movement_channel.register_reader();
 
         world.insert(input_channel);
         world.insert(movement_channel);
@@ -38,6 +39,12 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
         builder.add(
             MovementSystem::new(mover_reader),
             "mover_system",
+            &["movement_solver_system"],
+        );
+
+        builder.add(
+            MoveSoundSystem::new(move_sound_reader),
+            "move_sound_system",
             &["movement_solver_system"],
         );
 

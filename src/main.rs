@@ -1,4 +1,5 @@
 mod assets;
+mod audio;
 mod bundle;
 mod component;
 mod entity;
@@ -12,6 +13,7 @@ use std::{
 };
 
 use amethyst::{
+    audio::AudioBundle,
     assets::Processor,
     core::{
         transform::TransformBundle,
@@ -74,6 +76,7 @@ fn main() -> amethyst::Result<()> {
             "level_system",
             &["game_level_processor", "mover_system", "movement_solver_system", "sprite_system"],
         )
+        .with_bundle(AudioBundle::default())?
         .with(GridSystem::new(), "grid_system", &["mover_system"]);
 
     let mut game = Application::build(assets_dir, LoadingState::default())?
