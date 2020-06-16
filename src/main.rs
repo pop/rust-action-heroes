@@ -33,7 +33,7 @@ use amethyst::{
 use crate::assets::GameLevel;
 use crate::bundle::MovementBundle;
 use crate::state::LoadingState;
-use crate::system::{GridSystem, LevelSystem, ProcessInputSystem};
+use crate::system::{GridSystem, LevelSystem, ProcessInputSystem, LockSystem};
 
 ///
 /// ...
@@ -72,8 +72,13 @@ fn main() -> amethyst::Result<()> {
         )
         .with_bundle(MovementBundle)?
         .with(
-            LevelSystem::new(),
+            LevelSystem::default(),
             "level_system",
+            &["game_level_processor", "mover_system", "movement_solver_system", "sprite_system"],
+        )
+        .with(
+            LockSystem::default(),
+            "lock_system",
             &["game_level_processor", "mover_system", "movement_solver_system", "sprite_system"],
         )
         .with_bundle(AudioBundle::default())?

@@ -46,24 +46,18 @@ impl SimpleState for GameLevelState {
             "texture/evg1_spritesheet.png",
             "texture/evg1_spritesheet.ron",
         );
-        match make_interact(world, &self.level_handle, &sprite_sheet_handle) {
-            Some(e) => {
-                self.player_entities.push(e);
-            },
-            None => (),
+        if let Some(e) = make_interact(world, &self.level_handle, &sprite_sheet_handle) {
+            self.player_entities.push(e);
         }
-        match make_vertical(world, &self.level_handle, &sprite_sheet_handle) {
-            Some(e) => {
-                self.player_entities.push(e);
-            },
-            None => (),
+        if let Some(e) = make_vertical(world, &self.level_handle, &sprite_sheet_handle) {
+            self.player_entities.push(e);
         }
-        match make_horizontal(world, &self.level_handle, &sprite_sheet_handle) {
-            Some(e) => {
-                self.player_entities.push(e);
-            },
-            None => (),
+        if let Some(e) = make_horizontal(world, &self.level_handle, &sprite_sheet_handle) {
+            self.player_entities.push(e);
         }
+        self.npc_entities.extend(
+            make_locks(world, &self.level_handle, &sprite_sheet_handle)
+        );
         self.npc_entities.extend(
             make_crates(world, &self.level_handle, &sprite_sheet_handle)
         );

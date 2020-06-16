@@ -68,5 +68,11 @@ List((
             width: 9,
             height: 9,
         ),
+        ( // 11. Lock
+            x: 45,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
     ],
 ))

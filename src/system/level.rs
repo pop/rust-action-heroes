@@ -5,14 +5,8 @@ use amethyst::{
 
 use crate::component::{Exit, Position, Named, Holding};
 
-#[derive(SystemDesc)]
+#[derive(SystemDesc, Default)]
 pub(crate) struct LevelSystem;
-
-impl LevelSystem {
-    pub(crate) fn new() -> Self {
-        LevelSystem
-    }
-}
 
 impl<'s> System<'s> for LevelSystem {
     type SystemData = (

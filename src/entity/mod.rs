@@ -1,5 +1,5 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Holding, Position, Movable, Name, Named, Immovable};
+use crate::component::{Exit, Holding, Position, Movable, Name, Named, Immovable, Lock};
 use crate::lib::get_sprite;
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
@@ -216,6 +216,38 @@ pub(crate) fn make_exit(
         .with(Exit::default())
         .with(Position::new(x, y))
         .build()
+}
+
+pub(crate) fn make_locks(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>
+) -> Vec<Entity> {
+    let sprite = get_sprite(sprite_sheet_handle, 11);
+
+    let locks = {
+        let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
+        let level: &GameLevel = asset_storage
+            .get(level_handle)
+            .expect("Could not load game level");
+        level.locks.clone()
+    };
+
+    let mut levels: Vec<Entity> = Vec::new();
+
+    for (x,y) in locks {
+        levels.push(
+            world
+                .create_entity()
+                .with(Transform::default())
+                .with(sprite.clone())
+                .with(Lock::default())
+                .with(Position::new(x, y))
+                .build()
+        )
+    }
+
+    levels
 }
 
 pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -> Entity {

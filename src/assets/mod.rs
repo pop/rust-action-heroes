@@ -25,6 +25,8 @@ pub(crate) struct GameLevel {
     pub obstacles: Vec<Coordinates>,
     pub walls: Vec<Coordinates>,
     pub floors: Vec<Coordinates>,
+    pub locks: Vec<Coordinates>,
+    pub keys: Vec<Coordinates>,
 }
 
 impl Asset for GameLevel {
@@ -90,6 +92,18 @@ impl Format<GameLevel> for LevelFormat {
                 },
                 'E' | 'e'  => {
                     val.exit = (x,y)
+                },
+                'K' | 'k' => {
+                    val.keys.push((x,y));
+                    if do_floor {
+                        val.floors.push((x,y));
+                    }
+                },
+                'L' | 'l' => {
+                    val.locks.push((x,y));
+                    if do_floor {
+                        val.floors.push((x,y));
+                    }
                 },
                 ' ' | '\t' => {
                     if do_floor {

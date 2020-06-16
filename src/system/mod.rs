@@ -21,3 +21,6 @@ pub(crate) use sprites::*;
 
 pub mod level;
 pub(crate) use level::*;
+
+pub mod locks;
+pub(crate) use locks::*;
