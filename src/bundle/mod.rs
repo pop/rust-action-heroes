@@ -4,8 +4,10 @@ use amethyst::{
 
 use crate::lib::TransformedInputEvent;
 // TODO: MovementEvent (and TransformedInputEvent) should go in a `channels` module or something.
-use crate::system::{GrabSystem, MovementSolverSystem, SpriteSystem, MovementSystem, MoveSoundSystem};
 use crate::system::movement_solver::MovementEvent;
+use crate::system::{
+    GrabSystem, MoveSoundSystem, MovementSolverSystem, MovementSystem, SpriteSystem,
+};
 
 ///
 /// ...

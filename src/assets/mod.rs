@@ -1,13 +1,13 @@
+use crate::lib::Int;
 use amethyst::{
-    assets::{Asset, Handle, Format},
+    assets::{Asset, Format, Handle},
     ecs::VecStorage,
     Error,
 };
 use serde::{Deserialize, Serialize};
-use std::iter::Iterator;
-use std::convert::TryFrom;
 use std::cmp::max;
-use crate::lib::Int;
+use std::convert::TryFrom;
+use std::iter::Iterator;
 
 pub(crate) type Coordinates = (Int, Int);
 
@@ -50,12 +50,8 @@ impl Format<GameLevel> for LevelFormat {
         let mut val = GameLevel::default();
         let mut do_floor = false;
 
-        let height = Int::try_from(
-            bytes
-                .iter()
-                .filter(|&b| char::from(*b) == '\n')
-                .count()
-        ).unwrap();
+        let height =
+            Int::try_from(bytes.iter().filter(|&b| char::from(*b) == '\n').count()).unwrap();
 
         val.dimensions.1 = height;
 
@@ -65,78 +61,76 @@ impl Format<GameLevel> for LevelFormat {
             print!("{}", char::from(byte));
             x += 1;
             match char::from(byte) {
-                'W' | 'w' | '#'  => {
+                'W' | 'w' | '#' => {
                     do_floor = true;
                     val.walls.push((x, y))
-                },
-                'H' | 'h'  => {
-                    val.characters.horizontal = Some((x,y));
+                }
+                'H' | 'h' => {
+                    val.characters.horizontal = Some((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
-                'V' | 'v'  => {
-                    val.characters.vertical = Some((x,y));
+                }
+                'V' | 'v' => {
+                    val.characters.vertical = Some((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
-                'G' | 'g'  => {
-                    val.characters.interact = Some((x,y));
+                }
+                'G' | 'g' => {
+                    val.characters.interact = Some((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
-                'C' | 'c'  => {
-                    val.obstacles.push((x,y));
+                }
+                'C' | 'c' => {
+                    val.obstacles.push((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
-                'E' | 'e'  => {
-                    val.exit = (x,y)
-                },
+                }
+                'E' | 'e' => val.exit = (x, y),
                 'K' | 'k' => {
-                    val.keys.push((x,y));
+                    val.keys.push((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
+                }
                 'L' | 'l' => {
-                    val.locks.push((x,y));
+                    val.locks.push((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
+                }
                 'S' | 's' => {
-                    val.switches.push((x,y));
-                },
+                    val.switches.push((x, y));
+                }
                 'D' | 'd' => {
-                    val.doors.push((x,y));
+                    val.doors.push((x, y));
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
+                }
                 ' ' => {
                     if do_floor {
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
                     }
-                },
+                }
                 '\t' => {
                     // tabs are four spaces
                     if do_floor {
-                        val.floors.push((x,y));
-                        val.floors.push((x,y));
-                        val.floors.push((x,y));
-                        val.floors.push((x,y));
+                        val.floors.push((x, y));
+                        val.floors.push((x, y));
+                        val.floors.push((x, y));
+                        val.floors.push((x, y));
                     }
-                },
+                }
                 '\n' => {
                     y -= 1;
                     val.dimensions.0 = max(val.dimensions.0, x);
                     x = 0;
                     do_floor = false;
-                },
+                }
                 _ => (),
             }
         }

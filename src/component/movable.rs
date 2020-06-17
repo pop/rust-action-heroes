@@ -1,4 +1,4 @@
-use amethyst::ecs::{NullStorage, Component};
+use amethyst::ecs::{Component, NullStorage};
 
 ///
 /// Movable Component

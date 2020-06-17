@@ -3,7 +3,7 @@ use amethyst::{
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
 
-use crate::component::{Exit, Position, Named, Holding};
+use crate::component::{Exit, Holding, Named, Position};
 
 #[derive(SystemDesc, Default)]
 pub(crate) struct LevelSystem;
@@ -27,7 +27,9 @@ impl<'s> System<'s> for LevelSystem {
         }
 
         // Delete every entity overlapping with that position
-        for (position, entity, holding, _named) in (&positions, &*entities, &holdings, &nameds).join() {
+        for (position, entity, holding, _named) in
+            (&positions, &*entities, &holdings, &nameds).join()
+        {
             if position == pos {
                 match entities.delete(entity) {
                     Ok(_success) => (),

@@ -1,5 +1,5 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Holding, Position, Movable, Name, Named, Immovable, Lock, Key};
+use crate::component::{Exit, Holding, Immovable, Key, Lock, Movable, Name, Named, Position};
 use crate::lib::{get_sprite, Int};
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
@@ -7,7 +7,7 @@ use amethyst::{
     core::transform::Transform,
     ecs::Entity,
     prelude::*,
-    renderer::{Camera, SpriteSheet, SpriteRender},
+    renderer::{Camera, SpriteRender, SpriteSheet},
 };
 
 pub(crate) fn make_horizontal(
@@ -128,9 +128,7 @@ pub(crate) fn make_walls(
     let mut entities: Vec<Entity> = Vec::new();
 
     for (x, y) in wall_coordinates {
-        entities.push(
-            make_wall(world, sprite.clone(), (x, y))
-        );
+        entities.push(make_wall(world, sprite.clone(), (x, y)));
     }
     entities
 }
@@ -221,7 +219,7 @@ pub(crate) fn make_exit(
 pub(crate) fn make_locks(
     world: &mut World,
     level_handle: &Handle<GameLevel>,
-    sprite_sheet_handle: &Handle<SpriteSheet>
+    sprite_sheet_handle: &Handle<SpriteSheet>,
 ) -> Vec<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 11);
 
@@ -235,7 +233,7 @@ pub(crate) fn make_locks(
 
     let mut levels: Vec<Entity> = Vec::new();
 
-    for (x,y) in locks {
+    for (x, y) in locks {
         levels.push(
             world
                 .create_entity()
@@ -243,7 +241,7 @@ pub(crate) fn make_locks(
                 .with(sprite.clone())
                 .with(Lock::default())
                 .with(Position::new(x, y))
-                .build()
+                .build(),
         )
     }
 
@@ -253,7 +251,7 @@ pub(crate) fn make_locks(
 pub(crate) fn make_keys(
     world: &mut World,
     level_handle: &Handle<GameLevel>,
-    sprite_sheet_handle: &Handle<SpriteSheet>
+    sprite_sheet_handle: &Handle<SpriteSheet>,
 ) -> Vec<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 12);
 
@@ -267,7 +265,7 @@ pub(crate) fn make_keys(
 
     let mut levels: Vec<Entity> = Vec::new();
 
-    for (x,y) in keys {
+    for (x, y) in keys {
         levels.push(
             world
                 .create_entity()
@@ -277,7 +275,7 @@ pub(crate) fn make_keys(
                 .with(Movable::default())
                 .with(Key::default())
                 .with(Holding::new()) // This is gonna be a bug
-                .build()
+                .build(),
         )
     }
 
@@ -293,7 +291,10 @@ pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -
         level.dimensions
     };
 
-    let (x_adjust, y_adjust): (f32, f32) = ((size_x * GRID_SIZE / 2).into(), (size_y * GRID_SIZE / 2).into());
+    let (x_adjust, y_adjust): (f32, f32) = (
+        (size_x * GRID_SIZE / 2).into(),
+        (size_y * GRID_SIZE / 2).into(),
+    );
 
     world
         .create_entity()

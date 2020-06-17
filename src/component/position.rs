@@ -1,8 +1,7 @@
 use std::ops::Add;
 
-use amethyst::ecs::{prelude::DenseVecStorage, Component};
 use crate::lib::Int;
-
+use amethyst::ecs::{prelude::DenseVecStorage, Component};
 
 ///
 ///
@@ -19,7 +18,7 @@ impl Position {
         Position { x: x, y: y }
     }
 
-    pub(crate) fn set_pos(&mut self, Position { x, y }: Position ) {
+    pub(crate) fn set_pos(&mut self, Position { x, y }: Position) {
         self.x = x;
         self.y = y;
     }

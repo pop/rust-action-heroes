@@ -9,4 +9,3 @@ pub(crate) struct Lock;
 impl Component for Lock {
     type Storage = NullStorage<Self>;
 }
-

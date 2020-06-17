@@ -1,9 +1,9 @@
+use crate::lib::Int;
 use amethyst::{
     core::Transform,
     derive::SystemDesc,
     ecs::{Join, ReadStorage, System, SystemData, WriteStorage},
 };
-use crate::lib::Int;
 
 use crate::component::Position;
 

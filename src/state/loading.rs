@@ -1,10 +1,10 @@
 use crate::assets::GameLevel;
 use crate::assets::LevelFormat;
-use crate::state::{LevelProgression, Levels, MenuState};
 use crate::audio::initialize_audio;
+use crate::state::{LevelProgression, Levels, MenuState};
 use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
 use amethyst::prelude::*;
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 ///
 /// ...
@@ -17,13 +17,14 @@ impl LoadingState {
         &self,
         loader: &Loader,
         storage: &AssetStorage<GameLevel>,
-        path: PathBuf
+        path: PathBuf,
     ) -> Option<(Handle<GameLevel>, ProgressCounter)> {
         if let Some(path_str) = path.to_str() {
             let mut progress = ProgressCounter::new();
-            Some(
-                (loader.load(path_str, LevelFormat, &mut progress, storage), progress)
-            )
+            Some((
+                loader.load(path_str, LevelFormat, &mut progress, storage),
+                progress,
+            ))
         } else {
             None
         }
@@ -34,7 +35,7 @@ impl LoadingState {
         &self,
         loader: &Loader,
         storage: &AssetStorage<GameLevel>,
-        dir_list: Vec<PathBuf>
+        dir_list: Vec<PathBuf>,
     ) -> (Vec<Handle<GameLevel>>, Vec<ProgressCounter>) {
         let mut levels = Vec::new();
         let mut progresses = Vec::new();
@@ -72,7 +73,6 @@ impl LoadingState {
     }
 }
 
-
 impl SimpleState for LoadingState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
@@ -88,7 +88,10 @@ impl SimpleState for LoadingState {
                 let level_storage = &world.read_resource::<AssetStorage<GameLevel>>();
                 let level_files = self.find_levels(dir_list);
                 let result = self.load_levels(asset_loader, level_storage, level_files);
-                levels = Levels { levels: result.0, progress: result.1 };
+                levels = Levels {
+                    levels: result.0,
+                    progress: result.1,
+                };
                 progression = LevelProgression { current: 0 };
             }
             Err(_) => (),
@@ -101,11 +104,6 @@ impl SimpleState for LoadingState {
     }
 
     fn update(&mut self, _state_data: &mut StateData<GameData>) -> SimpleTrans {
-        Trans::Switch(
-            Box::new(
-                MenuState::default()
-            )
-        )
+        Trans::Switch(Box::new(MenuState::default()))
     }
 }
-

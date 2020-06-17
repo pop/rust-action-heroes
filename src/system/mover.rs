@@ -1,6 +1,6 @@
 use amethyst::{
     derive::SystemDesc,
-    ecs::{Read, WriteStorage, System, SystemData},
+    ecs::{Read, System, SystemData, WriteStorage},
     shrev::{EventChannel, ReaderId},
 };
 
@@ -30,13 +30,13 @@ impl<'s> System<'s> for MovementSystem {
     fn run(&mut self, (movement_channel, mut positions): Self::SystemData) {
         for event in movement_channel.read(&mut self.reader) {
             match event {
-                MovementEvent { entity: e, to: t, .. } => {
-                    match positions.get_mut(*e) {
-                        Some(p) => {
-                            p.set_pos(*t);
-                        },
-                        None => ()
+                MovementEvent {
+                    entity: e, to: t, ..
+                } => match positions.get_mut(*e) {
+                    Some(p) => {
+                        p.set_pos(*t);
                     }
+                    None => (),
                 },
             }
         }

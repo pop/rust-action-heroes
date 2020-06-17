@@ -3,7 +3,7 @@ use amethyst::{
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
 
-use crate::component::{Lock, Key, Position};
+use crate::component::{Key, Lock, Position};
 
 #[derive(SystemDesc, Default)]
 pub(crate) struct LockSystem;
@@ -24,11 +24,10 @@ impl<'s> System<'s> for LockSystem {
                         _ => (),
                     }
                     match entities.delete(key_entity) {
-                        _ => ()
+                        _ => (),
                     }
                 }
             }
         }
     }
 }
-

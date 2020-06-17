@@ -80,5 +80,11 @@ List((
             width: 9,
             height: 9,
         ),
+        ( // 12. Key Holding
+            x: 54,
+            y: 0,
+            width: 9,
+            height: 9,
+        ),
     ],
 ))

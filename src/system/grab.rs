@@ -6,7 +6,7 @@ use amethyst::{
     shrev::{EventChannel, ReaderId},
 };
 
-use crate::component::{Holding, Position, Name, Named};
+use crate::component::{Holding, Name, Named, Position};
 use crate::lib::TransformedInputEvent;
 
 #[derive(SystemDesc)]
@@ -35,15 +35,14 @@ impl<'s> System<'s> for GrabSystem {
             for (name, position, holding) in (&nameds, &positions, &holdings).join() {
                 if name.get() == Name::Interact {
                     pos = *position;
-                     if event == &TransformedInputEvent::Interact {
+                    if event == &TransformedInputEvent::Interact {
                         desired_holding = !holding.status();
-                    } else  {
+                    } else {
                         desired_holding = holding.status();
                     }
                     break;
                 }
             }
-
 
             let mut toggle_holding: HashSet<Position> = HashSet::new();
 
@@ -53,9 +52,7 @@ impl<'s> System<'s> for GrabSystem {
             while let Some(pos) = toggle_queue.pop_back() {
                 toggle_holding.insert(pos);
                 for (position, _hold) in (&positions, &holdings).join() {
-                    if !toggle_holding.contains(&position)
-                        && touching(&pos, position)
-                    {
+                    if !toggle_holding.contains(&position) && touching(&pos, position) {
                         toggle_queue.push_front(*position);
                     }
                 }

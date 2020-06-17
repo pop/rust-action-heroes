@@ -7,18 +7,12 @@ mod lib;
 mod state;
 mod system;
 
-use std::{
-    env,
-    time::Duration,
-};
+use std::{env, time::Duration};
 
 use amethyst::{
-    audio::AudioBundle,
     assets::Processor,
-    core::{
-        transform::TransformBundle,
-        frame_limiter::FrameRateLimitStrategy,
-    },
+    audio::AudioBundle,
+    core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
     input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
@@ -26,14 +20,14 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
-    ui::{UiBundle, RenderUi},
+    ui::{RenderUi, UiBundle},
     utils::application_root_dir,
 };
 
 use crate::assets::GameLevel;
 use crate::bundle::MovementBundle;
 use crate::state::LoadingState;
-use crate::system::{GridSystem, LevelSystem, ProcessInputSystem, LockSystem};
+use crate::system::{GridSystem, LevelSystem, LockSystem, ProcessInputSystem};
 
 ///
 /// ...
@@ -60,9 +54,7 @@ fn main() -> amethyst::Result<()> {
                     RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([0.005, 0.005, 0.005, 1.0]),
                 )
-                .with_plugin(
-                    RenderUi::default()
-                )
+                .with_plugin(RenderUi::default()),
         )?
         .with(Processor::<GameLevel>::new(), "game_level_processor", &[])
         .with(
@@ -74,12 +66,22 @@ fn main() -> amethyst::Result<()> {
         .with(
             LevelSystem::default(),
             "level_system",
-            &["game_level_processor", "mover_system", "movement_solver_system", "sprite_system"],
+            &[
+                "game_level_processor",
+                "mover_system",
+                "movement_solver_system",
+                "sprite_system",
+            ],
         )
         .with(
             LockSystem::default(),
             "lock_system",
-            &["game_level_processor", "mover_system", "movement_solver_system", "sprite_system"],
+            &[
+                "game_level_processor",
+                "mover_system",
+                "movement_solver_system",
+                "sprite_system",
+            ],
         )
         .with_bundle(AudioBundle::default())?
         .with(GridSystem::new(), "grid_system", &["mover_system"]);
@@ -88,7 +90,8 @@ fn main() -> amethyst::Result<()> {
         .with_frame_limit(
             FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
             60,
-        ).build(game_data)?;
+        )
+        .build(game_data)?;
 
     game.run();
 
