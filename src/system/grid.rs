@@ -3,10 +3,11 @@ use amethyst::{
     derive::SystemDesc,
     ecs::{Join, ReadStorage, System, SystemData, WriteStorage},
 };
+use crate::lib::Int;
 
 use crate::component::Position;
 
-pub const GRID_SIZE: i8 = 9;
+pub const GRID_SIZE: Int = 9;
 
 #[derive(SystemDesc)]
 pub(crate) struct GridSystem;
@@ -22,8 +23,8 @@ impl<'s> System<'s> for GridSystem {
 
     fn run(&mut self, (mut transforms, positions): Self::SystemData) {
         for (transform, position) in (&mut transforms, &positions).join() {
-            let (x_u8, y_u8) = position.as_tuple();
-            let (x, y): (f32, f32) = ((x_u8 * GRID_SIZE).into(), (y_u8 * GRID_SIZE).into());
+            let (x_int, y_int) = position.as_tuple();
+            let (x, y): (f32, f32) = ((x_int * GRID_SIZE).into(), (y_int * GRID_SIZE).into());
             transform.set_translation_x(x);
             transform.set_translation_y(y);
         }

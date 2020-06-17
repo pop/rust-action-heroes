@@ -1,6 +1,7 @@
 use std::ops::Add;
 
 use amethyst::ecs::{prelude::DenseVecStorage, Component};
+use crate::lib::Int;
 
 
 ///
@@ -9,12 +10,12 @@ use amethyst::ecs::{prelude::DenseVecStorage, Component};
 ///
 #[derive(Debug, Component, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub(crate) struct Position {
-    pub(crate) x: i8,
-    pub(crate) y: i8,
+    pub(crate) x: Int,
+    pub(crate) y: Int,
 }
 
 impl Position {
-    pub(crate) fn new(x: i8, y: i8) -> Self {
+    pub(crate) fn new(x: Int, y: Int) -> Self {
         Position { x: x, y: y }
     }
 
@@ -23,7 +24,7 @@ impl Position {
         self.y = y;
     }
 
-    pub(crate) fn as_tuple(&self) -> (i8, i8) {
+    pub(crate) fn as_tuple(&self) -> (Int, Int) {
         (self.x, self.y)
     }
 }
@@ -39,8 +40,8 @@ impl Add for Position {
     }
 }
 
-impl From<(i8, i8)> for Position {
-    fn from(some: (i8, i8)) -> Self {
+impl From<(Int, Int)> for Position {
+    fn from(some: (Int, Int)) -> Self {
         Self {
             x: some.0,
             y: some.1,

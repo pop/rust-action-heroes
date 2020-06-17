@@ -39,8 +39,6 @@ impl SimpleState for GameLevelState {
             }
         ));
 
-        println!("Starting level with {:?}", self.ui_handle);
-
         let sprite_sheet_handle = load_sprite_sheet(
             world,
             "texture/evg1_spritesheet.png",
@@ -57,6 +55,9 @@ impl SimpleState for GameLevelState {
         }
         self.npc_entities.extend(
             make_locks(world, &self.level_handle, &sprite_sheet_handle)
+        );
+        self.npc_entities.extend(
+            make_keys(world, &self.level_handle, &sprite_sheet_handle)
         );
         self.npc_entities.extend(
             make_crates(world, &self.level_handle, &sprite_sheet_handle)

@@ -1,6 +1,6 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Holding, Position, Movable, Name, Named, Immovable, Lock};
-use crate::lib::get_sprite;
+use crate::component::{Exit, Holding, Position, Movable, Name, Named, Immovable, Lock, Key};
+use crate::lib::{get_sprite, Int};
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
     assets::{AssetStorage, Handle},
@@ -100,7 +100,7 @@ pub(crate) fn make_interact(
     }
 }
 
-fn make_wall(world: &mut World, sprite: SpriteRender, (x, y): (i8, i8)) -> Entity {
+fn make_wall(world: &mut World, sprite: SpriteRender, (x, y): (Int, Int)) -> Entity {
     world
         .create_entity()
         .with(Transform::default())
@@ -243,6 +243,40 @@ pub(crate) fn make_locks(
                 .with(sprite.clone())
                 .with(Lock::default())
                 .with(Position::new(x, y))
+                .build()
+        )
+    }
+
+    levels
+}
+
+pub(crate) fn make_keys(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>
+) -> Vec<Entity> {
+    let sprite = get_sprite(sprite_sheet_handle, 12);
+
+    let keys = {
+        let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
+        let level: &GameLevel = asset_storage
+            .get(level_handle)
+            .expect("Could not load game level");
+        level.keys.clone()
+    };
+
+    let mut levels: Vec<Entity> = Vec::new();
+
+    for (x,y) in keys {
+        levels.push(
+            world
+                .create_entity()
+                .with(Transform::default())
+                .with(sprite.clone())
+                .with(Position::new(x, y))
+                .with(Movable::default())
+                .with(Key::default())
+                .with(Holding::new()) // This is gonna be a bug
                 .build()
         )
     }

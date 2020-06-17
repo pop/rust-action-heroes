@@ -5,7 +5,7 @@ authors = []
 edition = "2018"
 
 [dependencies]
-amethyst = { version = "0.15.0", features = ["test-support"] }
+amethyst = { version = "0.15.0", features = ["test-support", "no-slow-safety-checks"] }
 amethyst_test = "*"
 amethyst_input = "*"
 serde = { version = "1.0", features = ["derive"] }

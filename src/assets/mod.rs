@@ -7,8 +7,9 @@ use serde::{Deserialize, Serialize};
 use std::iter::Iterator;
 use std::convert::TryFrom;
 use std::cmp::max;
+use crate::lib::Int;
 
-pub(crate) type Coordinates = (i8, i8);
+pub(crate) type Coordinates = (Int, Int);
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct CharacterPlacement {
@@ -27,6 +28,8 @@ pub(crate) struct GameLevel {
     pub floors: Vec<Coordinates>,
     pub locks: Vec<Coordinates>,
     pub keys: Vec<Coordinates>,
+    pub switches: Vec<Coordinates>,
+    pub doors: Vec<Coordinates>,
 }
 
 impl Asset for GameLevel {
@@ -47,7 +50,7 @@ impl Format<GameLevel> for LevelFormat {
         let mut val = GameLevel::default();
         let mut do_floor = false;
 
-        let height = i8::try_from(
+        let height = Int::try_from(
             bytes
                 .iter()
                 .filter(|&b| char::from(*b) == '\n')
@@ -59,7 +62,7 @@ impl Format<GameLevel> for LevelFormat {
         let (mut x, mut y) = (0, height);
 
         for byte in bytes {
-            print!("[{}]", char::from(byte));
+            print!("{}", char::from(byte));
             x += 1;
             match char::from(byte) {
                 'W' | 'w' | '#'  => {
@@ -105,8 +108,26 @@ impl Format<GameLevel> for LevelFormat {
                         val.floors.push((x,y));
                     }
                 },
-                ' ' | '\t' => {
+                'S' | 's' => {
+                    val.switches.push((x,y));
+                },
+                'D' | 'd' => {
+                    val.doors.push((x,y));
                     if do_floor {
+                        val.floors.push((x,y));
+                    }
+                },
+                ' ' => {
+                    if do_floor {
+                        val.floors.push((x,y));
+                    }
+                },
+                '\t' => {
+                    // tabs are four spaces
+                    if do_floor {
+                        val.floors.push((x,y));
+                        val.floors.push((x,y));
+                        val.floors.push((x,y));
                         val.floors.push((x,y));
                     }
                 },
@@ -119,7 +140,6 @@ impl Format<GameLevel> for LevelFormat {
                 _ => (),
             }
         }
-        println!("Level: {:?}", val);
         Ok(val)
     }
 }

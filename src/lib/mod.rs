@@ -4,7 +4,8 @@ use amethyst::{
     renderer::{ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
 };
 
-/// TODO: This is marked as dead code...
+pub(crate) type Int = i16;
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub(crate) enum TransformedInputEvent {
     Up,

@@ -18,3 +18,6 @@ pub(crate) use position::*;
 
 mod lock;
 pub(crate) use lock::*;
+
+mod key;
+pub(crate) use key::*;
