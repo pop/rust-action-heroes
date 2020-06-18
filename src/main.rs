@@ -1,3 +1,8 @@
+//! # Rust Action Heroes
+//!
+//! A remake of the delightful One Action Heroes gamejam
+//! written in Rust with Amethyst.
+
 mod assets;
 mod audio;
 mod bundle;

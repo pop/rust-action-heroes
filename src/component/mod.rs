@@ -21,3 +21,9 @@ pub(crate) use lock::*;
 
 mod key;
 pub(crate) use key::*;
+
+mod switch;
+pub(crate) use switch::*;
+
+mod door;
+pub(crate) use door::*;

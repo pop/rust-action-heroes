@@ -1,5 +1,5 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Holding, Immovable, Key, Lock, Movable, Name, Named, Position};
+use crate::component::{Exit, Immovable, Holding, Key, Lock, Movable, Name, Named, Position, Switch, Door};
 use crate::lib::{get_sprite, Int};
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
@@ -241,6 +241,7 @@ pub(crate) fn make_locks(
                 .with(sprite.clone())
                 .with(Lock::default())
                 .with(Position::new(x, y))
+                .with(Immovable::default())
                 .build(),
         )
     }
@@ -275,6 +276,72 @@ pub(crate) fn make_keys(
                 .with(Movable::default())
                 .with(Key::default())
                 .with(Holding::new()) // This is gonna be a bug
+                .build(),
+        )
+    }
+
+    levels
+}
+
+pub(crate) fn make_switches(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>,
+) -> Vec<Entity> {
+    let sprite = get_sprite(sprite_sheet_handle, 14);
+
+    let switches = {
+        let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
+        let level: &GameLevel = asset_storage
+            .get(level_handle)
+            .expect("Could not load game level");
+        level.switches.clone()
+    };
+
+    let mut levels: Vec<Entity> = Vec::new();
+
+    for (x, y) in switches {
+        levels.push(
+            world
+                .create_entity()
+                .with(Transform::default())
+                .with(sprite.clone())
+                .with(Position::new(x, y))
+                .with(Switch::default())
+                .build(),
+        )
+    }
+
+    levels
+}
+
+pub(crate) fn make_doors(
+    world: &mut World,
+    level_handle: &Handle<GameLevel>,
+    sprite_sheet_handle: &Handle<SpriteSheet>,
+) -> Vec<Entity> {
+    let sprite = get_sprite(sprite_sheet_handle, 16);
+
+    let doors = {
+        let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
+        let level: &GameLevel = asset_storage
+            .get(level_handle)
+            .expect("Could not load game level");
+        level.doors.clone()
+    };
+
+    let mut levels: Vec<Entity> = Vec::new();
+
+    for (x, y) in doors {
+        levels.push(
+            world
+                .create_entity()
+                .with(Transform::default())
+                .with(sprite.clone())
+                .with(Position::new(x, y))
+                .with(Movable::default())
+                .with(Door::default())
+                .with(Immovable::default())
                 .build(),
         )
     }

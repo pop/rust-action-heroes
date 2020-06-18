@@ -80,8 +80,26 @@ List((
             width: 9,
             height: 9,
         ),
-        ( // 12. Key Holding
+        ( // 13. Key Holding
             x: 54,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // 14. Switch
+            x: 63,
+            y: 0,
+            width: 9,
+            height: 9,
+        ),
+        ( // 15. Switch Pressed
+            x: 63,
+            y: 9,
+            width: 9,
+            height: 9,
+        ),
+        ( // 16. Door
+            x: 72,
             y: 0,
             width: 9,
             height: 9,

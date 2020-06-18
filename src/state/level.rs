@@ -41,6 +41,7 @@ impl SimpleState for GameLevelState {
             "texture/evg1_spritesheet.png",
             "texture/evg1_spritesheet.ron",
         );
+
         if let Some(e) = make_interact(world, &self.level_handle, &sprite_sheet_handle) {
             self.player_entities.push(e);
         }
@@ -50,18 +51,31 @@ impl SimpleState for GameLevelState {
         if let Some(e) = make_horizontal(world, &self.level_handle, &sprite_sheet_handle) {
             self.player_entities.push(e);
         }
-        self.npc_entities
-            .extend(make_locks(world, &self.level_handle, &sprite_sheet_handle));
-        self.npc_entities
-            .extend(make_keys(world, &self.level_handle, &sprite_sheet_handle));
-        self.npc_entities
-            .extend(make_crates(world, &self.level_handle, &sprite_sheet_handle));
-        self.npc_entities
-            .extend(make_walls(world, &self.level_handle, &sprite_sheet_handle));
+
         self.npc_entities
             .extend(make_floor(world, &self.level_handle, &sprite_sheet_handle));
+
+        self.npc_entities
+            .extend(make_crates(world, &self.level_handle, &sprite_sheet_handle));
+
+        self.npc_entities
+            .extend(make_locks(world, &self.level_handle, &sprite_sheet_handle));
+
+        self.npc_entities
+            .extend(make_keys(world, &self.level_handle, &sprite_sheet_handle));
+
+        self.npc_entities
+            .extend(make_switches(world, &self.level_handle, &sprite_sheet_handle));
+
+        self.npc_entities
+            .extend(make_doors(world, &self.level_handle, &sprite_sheet_handle));
+
+        self.npc_entities
+            .extend(make_walls(world, &self.level_handle, &sprite_sheet_handle));
+
         self.npc_entities
             .push(make_camera(world, &self.level_handle));
+
         self.npc_entities
             .push(make_exit(world, &self.level_handle, &sprite_sheet_handle));
     }
@@ -91,6 +105,10 @@ impl SimpleState for GameLevelState {
             }
             StateEvent::Input(InputEvent::KeyPressed {
                 key_code: VirtualKeyCode::Escape,
+                ..
+            }) |
+            StateEvent::Input(InputEvent::KeyPressed {
+                key_code: VirtualKeyCode::Q,
                 ..
             }) => {
                 // Go back to the main menu

@@ -24,3 +24,9 @@ pub(crate) use level::*;
 
 pub mod locks;
 pub(crate) use locks::*;
+
+pub mod switches;
+pub(crate) use switches::*;
+
+pub mod door;
+pub(crate) use door::*;
