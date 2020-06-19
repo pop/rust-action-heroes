@@ -1,4 +1,5 @@
-use crate::{component::Holding, lib::TransformedInputEvent};
+use crate::{component::{Holding, Switch}, lib::TransformedInputEvent};
+use crate::system::switches::SwitchEvent;
 use amethyst::{
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
@@ -11,25 +12,28 @@ use amethyst::{
 /// Pretty much just toggles the "holding" sprites.
 #[derive(SystemDesc)]
 pub(crate) struct SpriteSystem {
-    reader: ReaderId<TransformedInputEvent>,
+    transform_reader: ReaderId<TransformedInputEvent>,
+    switch_reader: ReaderId<SwitchEvent>,
 }
 
 impl SpriteSystem {
-    pub(crate) fn new(reader: ReaderId<TransformedInputEvent>) -> Self {
-        SpriteSystem { reader: reader }
+    pub(crate) fn new(transform_reader: ReaderId<TransformedInputEvent>, switch_reader: ReaderId<SwitchEvent>) -> Self {
+        SpriteSystem { transform_reader: transform_reader, switch_reader: switch_reader }
     }
 }
 
 impl<'s> System<'s> for SpriteSystem {
     type SystemData = (
         Read<'s, EventChannel<TransformedInputEvent>>,
+        Read<'s, EventChannel<SwitchEvent>>,
         ReadStorage<'s, Holding>,
+        ReadStorage<'s, Switch>,
         WriteStorage<'s, SpriteRender>,
     );
 
     // TODO: Put sprites in a more formal data structure
-    fn run(&mut self, (channel, holdings, mut sprites): Self::SystemData) {
-        for _ in channel.read(&mut self.reader) {
+    fn run(&mut self, (input_events, switch_events, holdings, switches, mut sprites): Self::SystemData) {
+        for _ in input_events.read(&mut self.transform_reader) {
             for (holding, sprite) in (&holdings, &mut sprites).join() {
                 // TODO: The "grabbing" and "not_grabbing" sprite number should be a
                 // component, not this dumb even or odd sprite number shit.
@@ -43,6 +47,17 @@ impl<'s> System<'s> for SpriteSystem {
                         if !holding.status() {
                             sprite.sprite_number = sprite.sprite_number - 1;
                         }
+                    }
+                    _ => (),
+                }
+            }
+        }
+        for _ in switch_events.read(&mut self.switch_reader) {
+            for (_switch, sprite) in (&switches, &mut sprites).join() {
+                // This should always be a one-way transformation
+                match sprite.sprite_number % 2 {
+                    0 => {
+                        sprite.sprite_number = sprite.sprite_number + 1;
                     }
                     _ => (),
                 }

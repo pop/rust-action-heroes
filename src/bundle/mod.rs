@@ -27,7 +27,8 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
 
         let movement_solver_reader = input_channel.register_reader();
         let grab_reader = input_channel.register_reader();
-        let sprite_reader = input_channel.register_reader();
+        let sprite_transform_reader = input_channel.register_reader();
+        let sprite_switch_reader = switch_channel.register_reader();
         let mover_reader = movement_channel.register_reader();
         let move_sound_reader = movement_channel.register_reader();
         let door_reader = switch_channel.register_reader();
@@ -61,7 +62,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
         );
 
         builder.add(
-            SpriteSystem::new(sprite_reader),
+            SpriteSystem::new(sprite_transform_reader, sprite_switch_reader),
             "sprite_system",
             &["grab_system"],
         );
