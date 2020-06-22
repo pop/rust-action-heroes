@@ -23,7 +23,7 @@ pub(crate) struct GameLevel {
     pub dimensions: Coordinates,
     pub characters: CharacterPlacement,
     pub exit: Coordinates,
-    pub obstacles: Vec<Coordinates>,
+    pub crates: Vec<Coordinates>,
     pub walls: Vec<Coordinates>,
     pub floors: Vec<Coordinates>,
     pub locks: Vec<Coordinates>,
@@ -84,7 +84,7 @@ impl Format<GameLevel> for LevelFormat {
                     }
                 }
                 'C' | 'c' => {
-                    val.obstacles.push((x, y));
+                    val.crates.push((x, y));
                     if do_floor {
                         val.floors.push((x, y));
                     }

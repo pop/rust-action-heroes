@@ -3,6 +3,7 @@ use crate::entity::*;
 use crate::lib::load_sprite_sheet;
 use crate::state::{LevelProgression, Levels};
 use amethyst::assets::Handle;
+use amethyst::assets::AssetStorage;
 use amethyst::ecs::Entity;
 use amethyst::input::{InputEvent, VirtualKeyCode};
 use amethyst::prelude::*;
@@ -42,42 +43,58 @@ impl SimpleState for GameLevelState {
             "texture/evg1_spritesheet.ron",
         );
 
-        if let Some(e) = make_interact(world, &self.level_handle, &sprite_sheet_handle) {
-            self.player_entities.push(e);
+        let level: GameLevel = {
+            let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
+            asset_storage
+                .get(&self.level_handle)
+                .expect("Could not load game level")
+                .clone()
+        };
+
+        if let Some((x, y)) = level.characters.interact {
+            self.player_entities.push(
+                make_interact(world, &sprite_sheet_handle, (x,y))
+            )
         }
-        if let Some(e) = make_vertical(world, &self.level_handle, &sprite_sheet_handle) {
-            self.player_entities.push(e);
+
+        if let Some((x,y)) = level.characters.vertical {
+            self.player_entities.push(
+                make_vertical(world, &sprite_sheet_handle, (x,y))
+            );
         }
-        if let Some(e) = make_horizontal(world, &self.level_handle, &sprite_sheet_handle) {
-            self.player_entities.push(e);
+
+        if let Some((x,y)) = level.characters.horizontal {
+            self.player_entities.push(
+                make_horizontal(world, &sprite_sheet_handle, (x,y))
+            );
         }
 
         self.npc_entities
-            .extend(make_floor(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_floor(world, &sprite_sheet_handle, level.floors));
 
         self.npc_entities
-            .extend(make_crates(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_crates(world, &sprite_sheet_handle, level.crates));
 
         self.npc_entities
-            .extend(make_locks(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_locks(world, &sprite_sheet_handle, level.locks));
 
         self.npc_entities
-            .extend(make_keys(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_keys(world, &sprite_sheet_handle, level.keys));
 
         self.npc_entities
-            .extend(make_switches(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_switches(world, &sprite_sheet_handle, level.switches));
 
         self.npc_entities
-            .extend(make_doors(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_doors(world, &sprite_sheet_handle, level.doors));
 
         self.npc_entities
-            .extend(make_walls(world, &self.level_handle, &sprite_sheet_handle));
+            .extend(make_walls(world, &sprite_sheet_handle, level.walls));
+
+        self.npc_entities
+            .push(make_exit(world, &sprite_sheet_handle, level.exit));
 
         self.npc_entities
             .push(make_camera(world, &self.level_handle));
-
-        self.npc_entities
-            .push(make_exit(world, &self.level_handle, &sprite_sheet_handle));
     }
 
     /// Cleanup entities
