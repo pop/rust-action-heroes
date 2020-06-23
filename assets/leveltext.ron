@@ -21,7 +21,7 @@ Container(
                 percent: false,
             ),
             text: (
-                text: "Arrow: Move | Space: Hold\nEsc: Exit | R: Reload",
+                text: "Arrow: Move | Space: Hold\nEsc: Exit | R: Reload | M: Mute",
                 line_mode: Wrap,
                 font_size: 30.,
                 font: File("font/square.ttf", ("TTF", ())),

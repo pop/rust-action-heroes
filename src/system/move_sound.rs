@@ -28,7 +28,9 @@ impl<'s> System<'s> for MoveSoundSystem {
 
     fn run(&mut self, (storage, events, sounds, audio_output): Self::SystemData) {
         for _ in events.read(&mut self.reader) {
-            play_move_sound(&*sounds, &storage, audio_output.as_ref().map(|o| o.deref()));
+            if !sounds.muted {
+                play_move_sound(&*sounds, &storage, audio_output.as_ref().map(|o| o.deref()));
+            }
         }
     }
 }

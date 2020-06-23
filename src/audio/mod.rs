@@ -9,6 +9,7 @@ const MOVE_SOUND: &str = "audio/bloop.ogg";
 
 pub(crate) struct Sounds {
     pub(crate) move_sfx: SourceHandle,
+    pub(crate) muted: bool,
 }
 
 fn load_audio(loader: &Loader, world: &World, file: &str) -> SourceHandle {
@@ -21,6 +22,7 @@ pub(crate) fn initialize_audio(world: &mut World) {
 
         Sounds {
             move_sfx: load_audio(&loader, &world, MOVE_SOUND),
+            muted: false,
         }
     });
 }
@@ -35,4 +37,10 @@ pub(crate) fn play_move_sound(
             output.play_once(sound, 1.0);
         }
     }
+}
+
+pub(crate) fn toggle_mute(world: &mut World) {
+    let mut sounds = world.write_resource::<Sounds>();
+
+    sounds.muted = !sounds.muted;
 }

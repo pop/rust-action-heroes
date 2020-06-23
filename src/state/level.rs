@@ -3,6 +3,7 @@ use amethyst::{
     prelude::*,
     renderer::SpriteSheet,
 };
+use crate::audio::toggle_mute;
 use crate::assets::GameLevel;
 use crate::entity::*;
 use crate::state::{LevelProgression, Levels};
@@ -127,6 +128,17 @@ impl SimpleState for GameLevelState {
             }) => {
                 // Go back to the main menu
                 Trans::Pop
+            }
+            StateEvent::Input(InputEvent::KeyPressed {
+                key_code: VirtualKeyCode::M,
+                ..
+            }) => {
+                // Mute audio
+                let mut world = data.world;
+
+                toggle_mute(world);
+
+                Trans::None
             }
             _ => {
                 let world = &data.world;
