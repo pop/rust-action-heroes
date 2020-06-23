@@ -89,7 +89,7 @@ pub(crate) fn make_walls(
     entities
 }
 
-pub(crate) fn make_floor(
+pub(crate) fn make_floors(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
     floor_coordinates: Vec<(Int, Int)>,
@@ -102,7 +102,11 @@ pub(crate) fn make_floor(
         entities.push(
             world
                 .create_entity()
-                .with(Transform::default())
+                .with({
+                    let mut t = Transform::default();
+                    t.prepend_translation_z(-10.0);
+                    t
+                })
                 .with(sprite.clone())
                 .with(Position::new(x, y))
                 .build(),

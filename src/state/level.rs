@@ -1,12 +1,13 @@
+use amethyst::{
+    assets::{AssetStorage, Handle},
+    prelude::*,
+    renderer::SpriteSheet,
+};
 use crate::assets::GameLevel;
 use crate::entity::*;
-use crate::lib::load_sprite_sheet;
 use crate::state::{LevelProgression, Levels};
-use amethyst::assets::Handle;
-use amethyst::assets::AssetStorage;
 use amethyst::ecs::Entity;
 use amethyst::input::{InputEvent, VirtualKeyCode};
-use amethyst::prelude::*;
 use amethyst::ui::UiCreator;
 
 ///
@@ -17,15 +18,17 @@ pub(crate) struct GameLevelState {
     level_handle: Handle<GameLevel>,
     npc_entities: Vec<Entity>,
     ui_handle: Option<Entity>,
+    sprite_sheet_handle: Handle<SpriteSheet>,
 }
 
 impl GameLevelState {
-    pub fn new(level_handle: Handle<GameLevel>) -> Self {
+    pub fn new(level_handle: Handle<GameLevel>, sprite_sheet_handle: Handle<SpriteSheet>) -> Self {
         GameLevelState {
             player_entities: Vec::new(),
             level_handle: level_handle,
             npc_entities: Vec::new(),
             ui_handle: None,
+            sprite_sheet_handle: sprite_sheet_handle,
         }
     }
 }
@@ -37,12 +40,6 @@ impl SimpleState for GameLevelState {
         self.ui_handle =
             Some(world.exec(|mut creator: UiCreator| creator.create("leveltext.ron", ())));
 
-        let sprite_sheet_handle = load_sprite_sheet(
-            world,
-            "texture/evg1_spritesheet.png",
-            "texture/evg1_spritesheet.ron",
-        );
-
         let level: GameLevel = {
             let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
             asset_storage
@@ -53,45 +50,45 @@ impl SimpleState for GameLevelState {
 
         if let Some((x, y)) = level.characters.interact {
             self.player_entities.push(
-                make_interact(world, &sprite_sheet_handle, (x,y))
+                make_interact(world, &self.sprite_sheet_handle, (x,y))
             )
         }
 
         if let Some((x,y)) = level.characters.vertical {
             self.player_entities.push(
-                make_vertical(world, &sprite_sheet_handle, (x,y))
+                make_vertical(world, &self.sprite_sheet_handle, (x,y))
             );
         }
 
         if let Some((x,y)) = level.characters.horizontal {
             self.player_entities.push(
-                make_horizontal(world, &sprite_sheet_handle, (x,y))
+                make_horizontal(world, &self.sprite_sheet_handle, (x,y))
             );
         }
 
         self.npc_entities
-            .extend(make_floor(world, &sprite_sheet_handle, level.floors));
+            .extend(make_floors(world, &self.sprite_sheet_handle, level.floors));
 
         self.npc_entities
-            .extend(make_crates(world, &sprite_sheet_handle, level.crates));
+            .extend(make_crates(world, &self.sprite_sheet_handle, level.crates));
 
         self.npc_entities
-            .extend(make_locks(world, &sprite_sheet_handle, level.locks));
+            .extend(make_locks(world, &self.sprite_sheet_handle, level.locks));
 
         self.npc_entities
-            .extend(make_keys(world, &sprite_sheet_handle, level.keys));
+            .extend(make_keys(world, &self.sprite_sheet_handle, level.keys));
 
         self.npc_entities
-            .extend(make_switches(world, &sprite_sheet_handle, level.switches));
+            .extend(make_switches(world, &self.sprite_sheet_handle, level.switches));
 
         self.npc_entities
-            .extend(make_doors(world, &sprite_sheet_handle, level.doors));
+            .extend(make_doors(world, &self.sprite_sheet_handle, level.doors));
 
         self.npc_entities
-            .extend(make_walls(world, &sprite_sheet_handle, level.walls));
+            .extend(make_walls(world, &self.sprite_sheet_handle, level.walls));
 
         self.npc_entities
-            .push(make_exit(world, &sprite_sheet_handle, level.exit));
+            .push(make_exit(world, &self.sprite_sheet_handle, level.exit));
 
         self.npc_entities
             .push(make_camera(world, &self.level_handle));
@@ -118,7 +115,7 @@ impl SimpleState for GameLevelState {
                 ..
             }) => {
                 // Reload the current level
-                Trans::Switch(Box::new(GameLevelState::new(self.level_handle.clone())))
+                Trans::Switch(Box::new(GameLevelState::new(self.level_handle.clone(), self.sprite_sheet_handle.clone())))
             }
             StateEvent::Input(InputEvent::KeyPressed {
                 key_code: VirtualKeyCode::Escape,
@@ -148,7 +145,7 @@ impl SimpleState for GameLevelState {
                             levels_resource.levels.get(progression_resource.current)
                         {
                             // Progress to the next level
-                            Trans::Switch(Box::new(GameLevelState::new(next_level.clone())))
+                            Trans::Switch(Box::new(GameLevelState::new(next_level.clone(), self.sprite_sheet_handle.clone())))
                         } else {
                             // Reset the level counter becuase we beat all the levels
                             progression_resource.current = 0;

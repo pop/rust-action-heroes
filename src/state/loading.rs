@@ -1,15 +1,20 @@
 use crate::assets::GameLevel;
 use crate::assets::LevelFormat;
 use crate::audio::initialize_audio;
+use crate::lib::load_sprite_sheet;
 use crate::state::{LevelProgression, Levels, MenuState};
 use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
 use amethyst::prelude::*;
 use std::path::{Path, PathBuf};
+use amethyst::renderer::SpriteSheet;
 
 ///
 /// ...
 #[derive(Default)]
-pub(crate) struct LoadingState;
+pub(crate) struct LoadingState {
+    sprite_sheet_progress: ProgressCounter,
+    sprite_sheet_handle: Option<Handle<SpriteSheet>>,
+}
 
 impl LoadingState {
     /// ...
@@ -71,6 +76,14 @@ impl LoadingState {
         dir_list_vec.sort_unstable();
         dir_list_vec
     }
+
+    fn load_sprite_sheet(&self, world: &mut World) -> (Handle<SpriteSheet>, ProgressCounter) {
+        load_sprite_sheet(
+            world,
+            "texture/evg1_spritesheet.png",
+            "texture/evg1_spritesheet.ron",
+        )
+    }
 }
 
 impl SimpleState for LoadingState {
@@ -79,6 +92,7 @@ impl SimpleState for LoadingState {
 
         let mut levels = Levels::default();
         let mut progression = LevelProgression::default();
+
 
         // TODO: I'm pretty sure there's an Amethyst idiomatic way to register "levels" as a source
         // and load from there...
@@ -101,9 +115,19 @@ impl SimpleState for LoadingState {
         world.insert(progression);
 
         initialize_audio(world);
+
+        let sprite_stuff = self.load_sprite_sheet(world);
+        self.sprite_sheet_handle = Some(sprite_stuff.0);
+        self.sprite_sheet_progress = sprite_stuff.1;
     }
 
     fn update(&mut self, _state_data: &mut StateData<GameData>) -> SimpleTrans {
-        Trans::Switch(Box::new(MenuState::default()))
+        // Basically just wait for the sprite sheet to load
+        if self.sprite_sheet_progress.is_complete() {
+            println!("Loading sprite sheet is complete!");
+            if let Some(sprite_sheet_handle) = &self.sprite_sheet_handle {
+                Trans::Switch(Box::new(MenuState::new(sprite_sheet_handle.clone())))
+            } else { Trans::None }
+        } else { Trans::None }
     }
 }

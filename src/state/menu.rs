@@ -4,30 +4,47 @@ use amethyst::input::{is_close_requested, is_key_down};
 use amethyst::prelude::*;
 use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
 use amethyst::winit::VirtualKeyCode;
+use amethyst::renderer::SpriteSheet;
+use amethyst::assets::Handle;
 
 ///
 /// ...
 ///
-#[derive(Default)]
 pub(crate) struct MenuState {
     ui_handle: Option<Entity>,
     start_button: Option<Entity>,
+    sprite_sheet_handle: Handle<SpriteSheet>,
 }
 
 impl MenuState {
+    pub(crate) fn new(sprite_sheet_handle: Handle<SpriteSheet>) -> Self {
+        MenuState {
+            ui_handle: None,
+            start_button: None,
+            sprite_sheet_handle: sprite_sheet_handle,
+        }
+    }
+
     fn start_current_level(&mut self, world: &World) -> SimpleTrans {
+
         let current_level = match world.try_fetch::<LevelProgression>() {
             Some(level_progress) => level_progress.current,
             None => 0,
         };
+
         let levels_resource = world
             .try_fetch::<Levels>()
             .expect("Could not load level handles!");
+
         match levels_resource.progress.get(current_level) {
             Some(progress) => {
                 if progress.is_complete() {
                     match levels_resource.levels.get(current_level) {
-                        Some(level) => Trans::Push(Box::new(GameLevelState::new(level.clone()))),
+                        Some(level) => Trans::Push(
+                            Box::new(
+                                GameLevelState::new(level.clone(), self.sprite_sheet_handle.clone())
+                            )
+                        ),
                         None => Trans::None,
                     }
                 } else {
