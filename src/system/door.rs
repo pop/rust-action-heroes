@@ -17,7 +17,7 @@ pub(crate) struct DoorSystem {
 
 impl DoorSystem {
     pub(crate) fn new(reader: ReaderId<SwitchEvent>) -> Self {
-        DoorSystem { reader: reader }
+        DoorSystem { reader }
     }
 }
 

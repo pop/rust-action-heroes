@@ -18,7 +18,7 @@ pub(crate) struct SpriteSystem {
 
 impl SpriteSystem {
     pub(crate) fn new(transform_reader: ReaderId<TransformedInputEvent>, switch_reader: ReaderId<SwitchEvent>) -> Self {
-        SpriteSystem { transform_reader: transform_reader, switch_reader: switch_reader }
+        SpriteSystem { transform_reader, switch_reader }
     }
 }
 

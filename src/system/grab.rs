@@ -16,7 +16,7 @@ pub(crate) struct GrabSystem {
 
 impl GrabSystem {
     pub(crate) fn new(reader: ReaderId<TransformedInputEvent>) -> Self {
-        GrabSystem { reader: reader }
+        GrabSystem { reader }
     }
 }
 

@@ -2,19 +2,24 @@ use crate::audio::{play_move_sound, Sounds};
 use crate::system::movement_solver::MovementEvent;
 use amethyst::{
     assets::AssetStorage,
+    derive::SystemDesc,
     audio::{output::Output, Source},
-    ecs::{Read, ReadExpect, System},
+    ecs::{Read, ReadExpect, System, SystemData},
     shrev::{EventChannel, ReaderId},
 };
 use std::ops::Deref;
 
+///
+/// ...
+///
+#[derive(SystemDesc)]
 pub(crate) struct MoveSoundSystem {
     reader: ReaderId<MovementEvent>,
 }
 
 impl MoveSoundSystem {
     pub(crate) fn new(reader: ReaderId<MovementEvent>) -> Self {
-        MoveSoundSystem { reader: reader }
+        MoveSoundSystem { reader }
     }
 }
 

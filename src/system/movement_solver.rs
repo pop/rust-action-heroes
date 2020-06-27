@@ -25,7 +25,7 @@ pub(crate) struct MovementSolverSystem {
 
 impl MovementSolverSystem {
     pub(crate) fn new(reader: ReaderId<TransformedInputEvent>) -> Self {
-        MovementSolverSystem { reader: reader }
+        MovementSolverSystem { reader }
     }
 }
 
