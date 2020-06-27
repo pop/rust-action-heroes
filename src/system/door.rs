@@ -1,3 +1,9 @@
+//!
+//! # Door System Stuff
+//!
+//! The only thing here is the DoorSystem struct, so go read about that!
+//!
+
 use crate::{component::Door, system::switches::SwitchEvent};
 use amethyst::{
     derive::SystemDesc,
@@ -6,7 +12,13 @@ use amethyst::{
 };
 
 ///
-/// ...
+/// The Door System listens to `SwitchEvent`. When an `AllSwitchesDown` event is triggered, the system deletes all doors.
+///
+/// Under the hood we do that by tagging all Doors with `component::Door` and iterating over all
+/// doors when we recieve `SwitchEvent::AllSwitchesDown`.
+///
+/// This is a pretty straight forward "listen to event, do simple task" system, which I like.
+/// These types of systems require very little maintenance and become mostly solved quantities.
 ///
 #[derive(SystemDesc)]
 pub(crate) struct DoorSystem {

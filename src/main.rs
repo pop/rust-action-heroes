@@ -1,7 +1,31 @@
 //! # Rust Action Heroes
 //!
-//! A remake of the delightful One Action Heroes gamejam
-//! written in Rust with Amethyst.
+//! Rust Action Heroes is a remake of the delightful [One Action Heroes][oah] gamejam
+//! written in Rust using the wonderful game engine [Amethyst][amethyst].
+//!
+//! Rust Action Heroes is my first attempt at writing a game, so it's pretty shotty!
+//! If you have feedback, please [make an issue on the repo][issue].
+//!
+//! These are the Rust API docs, so if you're interested in _how_ this game is implemented this
+//! will probably help.
+//!
+//! If you are new to Amethyst, check out the [Amethyst Book][amethyst-book] which covers the ECS
+//! architecture, what a System, Component, State, and Entity are.
+//!
+//! ## About this website
+//!
+//! This is sort of like an extended meandering blog-post, so please explore!
+//!
+//! Technically, these are API docs for the Rust Action Heroes codebase, but I'm using it to record
+//! what I've learned about Entity Component System architecture and Amethyst.
+//!
+//! Note that I am using pseudocode for most of my descriptions of ECS, so don't be surprised if
+//! rustc won't compile them. :-P
+//!
+//! [oah]: https://tapehead-co.itch.io/one-action-heroes
+//! [amethyst]: https://amethyst.rs/
+//! [amethyst-book]: https://book.amethyst.rs/stable/
+//! [issue]: https://github.com/pop/rust-action-heroes/issues/
 
 mod assets;
 mod audio;
@@ -12,12 +36,12 @@ mod lib;
 mod state;
 mod system;
 
-use std::{env, time::Duration};
+use std::env;
 
 use amethyst::{
     assets::Processor,
     audio::AudioBundle,
-    core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
+    core::transform::TransformBundle,
     input::{InputBundle, StringBindings},
     prelude::*,
     renderer::{
@@ -37,7 +61,12 @@ use crate::{
 };
 
 ///
-/// ...
+/// Main builds the game object and starts running the game.
+/// The interesting bits are in the system, state, assets, and entity modules!
+///
+/// One gotcha is that to get the game to run on a Linux desktop with Wayland, you need to set the
+/// environment variable `WINIT_UNIX_BACKEND=x11`.
+/// Thankfully we can just set that variable in main before starting the game.
 ///
 fn main() -> amethyst::Result<()> {
     env::set_var("WINIT_UNIX_BACKEND", "x11");
@@ -93,12 +122,7 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(AudioBundle::default())?
         .with(GridSystem::new(), "grid_system", &["mover_system"]);
 
-    let mut game = Application::build(assets_dir, LoadingState::default())?
-        .with_frame_limit(
-            FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
-            60,
-        )
-        .build(game_data)?;
+    let mut game = Application::build(assets_dir, LoadingState::default())?.build(game_data)?;
 
     game.run();
 
