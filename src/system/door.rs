@@ -1,6 +1,6 @@
 use amethyst::{
     derive::SystemDesc,
-    ecs::{Read, Join, System, Entities, SystemData, ReadStorage},
+    ecs::{Entities, Join, Read, ReadStorage, System, SystemData},
     shrev::{EventChannel, ReaderId},
 };
 
@@ -38,9 +38,8 @@ impl<'s> System<'s> for DoorSystem {
                             Err(_error) => (),
                         }
                     }
-                },
+                }
             }
         }
     }
 }
-

@@ -2,8 +2,8 @@ use crate::audio::{play_move_sound, Sounds};
 use crate::system::movement_solver::MovementEvent;
 use amethyst::{
     assets::AssetStorage,
-    derive::SystemDesc,
     audio::{output::Output, Source},
+    derive::SystemDesc,
     ecs::{Read, ReadExpect, System, SystemData},
     shrev::{EventChannel, ReaderId},
 };

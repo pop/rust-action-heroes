@@ -1,15 +1,15 @@
-use amethyst::{
-    assets::{AssetStorage, Handle},
-    prelude::*,
-    renderer::SpriteSheet,
-};
-use crate::audio::toggle_mute;
 use crate::assets::GameLevel;
+use crate::audio::toggle_mute;
 use crate::entity::*;
 use crate::state::{LevelProgression, Levels};
 use amethyst::ecs::Entity;
 use amethyst::input::{InputEvent, VirtualKeyCode};
 use amethyst::ui::UiCreator;
+use amethyst::{
+    assets::{AssetStorage, Handle},
+    prelude::*,
+    renderer::SpriteSheet,
+};
 
 ///
 /// ...
@@ -50,21 +50,18 @@ impl SimpleState for GameLevelState {
         };
 
         if let Some((x, y)) = level.characters.interact {
-            self.player_entities.push(
-                make_interact(world, &self.sprite_sheet_handle, (x,y))
-            )
+            self.player_entities
+                .push(make_interact(world, &self.sprite_sheet_handle, (x, y)))
         }
 
-        if let Some((x,y)) = level.characters.vertical {
-            self.player_entities.push(
-                make_vertical(world, &self.sprite_sheet_handle, (x,y))
-            );
+        if let Some((x, y)) = level.characters.vertical {
+            self.player_entities
+                .push(make_vertical(world, &self.sprite_sheet_handle, (x, y)));
         }
 
-        if let Some((x,y)) = level.characters.horizontal {
-            self.player_entities.push(
-                make_horizontal(world, &self.sprite_sheet_handle, (x,y))
-            );
+        if let Some((x, y)) = level.characters.horizontal {
+            self.player_entities
+                .push(make_horizontal(world, &self.sprite_sheet_handle, (x, y)));
         }
 
         self.npc_entities
@@ -79,8 +76,11 @@ impl SimpleState for GameLevelState {
         self.npc_entities
             .extend(make_keys(world, &self.sprite_sheet_handle, level.keys));
 
-        self.npc_entities
-            .extend(make_switches(world, &self.sprite_sheet_handle, level.switches));
+        self.npc_entities.extend(make_switches(
+            world,
+            &self.sprite_sheet_handle,
+            level.switches,
+        ));
 
         self.npc_entities
             .extend(make_doors(world, &self.sprite_sheet_handle, level.doors));
@@ -116,13 +116,16 @@ impl SimpleState for GameLevelState {
                 ..
             }) => {
                 // Reload the current level
-                Trans::Switch(Box::new(GameLevelState::new(self.level_handle.clone(), self.sprite_sheet_handle.clone())))
+                Trans::Switch(Box::new(GameLevelState::new(
+                    self.level_handle.clone(),
+                    self.sprite_sheet_handle.clone(),
+                )))
             }
             StateEvent::Input(InputEvent::KeyPressed {
                 key_code: VirtualKeyCode::Escape,
                 ..
-            }) |
-            StateEvent::Input(InputEvent::KeyPressed {
+            })
+            | StateEvent::Input(InputEvent::KeyPressed {
                 key_code: VirtualKeyCode::Q,
                 ..
             }) => {
@@ -134,7 +137,7 @@ impl SimpleState for GameLevelState {
                 ..
             }) => {
                 // Mute audio
-                let mut world = data.world;
+                let world = data.world;
 
                 toggle_mute(world);
 
@@ -157,7 +160,10 @@ impl SimpleState for GameLevelState {
                             levels_resource.levels.get(progression_resource.current)
                         {
                             // Progress to the next level
-                            Trans::Switch(Box::new(GameLevelState::new(next_level.clone(), self.sprite_sheet_handle.clone())))
+                            Trans::Switch(Box::new(GameLevelState::new(
+                                next_level.clone(),
+                                self.sprite_sheet_handle.clone(),
+                            )))
                         } else {
                             // Reset the level counter becuase we beat all the levels
                             progression_resource.current = 0;

@@ -9,4 +9,3 @@ pub(crate) struct Switch;
 impl Component for Switch {
     type Storage = NullStorage<Self>;
 }
-

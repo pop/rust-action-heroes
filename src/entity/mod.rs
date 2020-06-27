@@ -1,5 +1,7 @@
 use crate::assets::GameLevel;
-use crate::component::{Exit, Immovable, Holding, Key, Lock, Movable, Name, Named, Position, Switch, Door};
+use crate::component::{
+    Door, Exit, Holding, Immovable, Key, Lock, Movable, Name, Named, Position, Switch,
+};
 use crate::lib::{get_sprite, Int};
 use crate::system::grid::GRID_SIZE;
 use amethyst::{
@@ -183,7 +185,7 @@ pub(crate) fn make_locks(
 pub(crate) fn make_keys(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
-    key_coordinates: Vec<(Int, Int)>
+    key_coordinates: Vec<(Int, Int)>,
 ) -> Vec<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 12);
 
@@ -209,7 +211,7 @@ pub(crate) fn make_keys(
 pub(crate) fn make_switches(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
-    switch_coordinates: Vec<(Int, Int)>
+    switch_coordinates: Vec<(Int, Int)>,
 ) -> Vec<Entity> {
     let sprite = get_sprite(sprite_sheet_handle, 14);
 

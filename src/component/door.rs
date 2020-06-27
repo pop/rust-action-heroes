@@ -9,4 +9,3 @@ pub(crate) struct Door;
 impl Component for Door {
     type Storage = NullStorage<Self>;
 }
-

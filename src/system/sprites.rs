@@ -1,5 +1,8 @@
-use crate::{component::{Holding, Switch}, lib::TransformedInputEvent};
 use crate::system::switches::SwitchEvent;
+use crate::{
+    component::{Holding, Switch},
+    lib::TransformedInputEvent,
+};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
@@ -17,8 +20,14 @@ pub(crate) struct SpriteSystem {
 }
 
 impl SpriteSystem {
-    pub(crate) fn new(transform_reader: ReaderId<TransformedInputEvent>, switch_reader: ReaderId<SwitchEvent>) -> Self {
-        SpriteSystem { transform_reader, switch_reader }
+    pub(crate) fn new(
+        transform_reader: ReaderId<TransformedInputEvent>,
+        switch_reader: ReaderId<SwitchEvent>,
+    ) -> Self {
+        SpriteSystem {
+            transform_reader,
+            switch_reader,
+        }
     }
 }
 
@@ -32,7 +41,10 @@ impl<'s> System<'s> for SpriteSystem {
     );
 
     // TODO: Put sprites in a more formal data structure
-    fn run(&mut self, (input_events, switch_events, holdings, switches, mut sprites): Self::SystemData) {
+    fn run(
+        &mut self,
+        (input_events, switch_events, holdings, switches, mut sprites): Self::SystemData,
+    ) {
         for _ in input_events.read(&mut self.transform_reader) {
             for (holding, sprite) in (&holdings, &mut sprites).join() {
                 // TODO: The "grabbing" and "not_grabbing" sprite number should be a

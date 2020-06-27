@@ -1,11 +1,11 @@
 use crate::state::{GameLevelState, LevelProgression, Levels};
+use amethyst::assets::Handle;
 use amethyst::ecs::Entity;
 use amethyst::input::{is_close_requested, is_key_down};
 use amethyst::prelude::*;
+use amethyst::renderer::SpriteSheet;
 use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
 use amethyst::winit::VirtualKeyCode;
-use amethyst::renderer::SpriteSheet;
-use amethyst::assets::Handle;
 
 ///
 /// ...
@@ -26,7 +26,6 @@ impl MenuState {
     }
 
     fn start_current_level(&mut self, world: &World) -> SimpleTrans {
-
         let current_level = match world.try_fetch::<LevelProgression>() {
             Some(level_progress) => level_progress.current,
             None => 0,
@@ -40,11 +39,10 @@ impl MenuState {
             Some(progress) => {
                 if progress.is_complete() {
                     match levels_resource.levels.get(current_level) {
-                        Some(level) => Trans::Push(
-                            Box::new(
-                                GameLevelState::new(level.clone(), self.sprite_sheet_handle.clone())
-                            )
-                        ),
+                        Some(level) => Trans::Push(Box::new(GameLevelState::new(
+                            level.clone(),
+                            self.sprite_sheet_handle.clone(),
+                        ))),
                         None => Trans::None,
                     }
                 } else {

@@ -38,7 +38,7 @@ pub(crate) fn load_sprite_sheet(
             &mut progress,
             &world.read_resource::<AssetStorage<SpriteSheet>>(),
         ),
-        progress
+        progress,
     )
 }
 

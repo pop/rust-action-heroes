@@ -1,13 +1,13 @@
 /// # Switch System
 ///
-/// Switches 
+/// Switches
 use amethyst::{
     derive::SystemDesc,
     ecs::{Join, ReadStorage, System, SystemData, Write},
-    shrev::{EventChannel},
+    shrev::EventChannel,
 };
 
-use crate::component::{Position, Movable, Switch};
+use crate::component::{Movable, Position, Switch};
 
 pub(crate) enum SwitchEvent {
     AllSwitchesDown,

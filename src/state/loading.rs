@@ -5,8 +5,8 @@ use crate::lib::load_sprite_sheet;
 use crate::state::{LevelProgression, Levels, MenuState};
 use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
 use amethyst::prelude::*;
-use std::path::{Path, PathBuf};
 use amethyst::renderer::SpriteSheet;
+use std::path::{Path, PathBuf};
 
 ///
 /// ...
@@ -93,7 +93,6 @@ impl SimpleState for LoadingState {
         let mut levels = Levels::default();
         let mut progression = LevelProgression::default();
 
-
         // TODO: I'm pretty sure there's an Amethyst idiomatic way to register "levels" as a source
         // and load from there...
         match Path::new("assets/levels").read_dir() {
@@ -127,7 +126,11 @@ impl SimpleState for LoadingState {
             println!("Loading sprite sheet is complete!");
             if let Some(sprite_sheet_handle) = &self.sprite_sheet_handle {
                 Trans::Switch(Box::new(MenuState::new(sprite_sheet_handle.clone())))
-            } else { Trans::None }
-        } else { Trans::None }
+            } else {
+                Trans::None
+            }
+        } else {
+            Trans::None
+        }
     }
 }

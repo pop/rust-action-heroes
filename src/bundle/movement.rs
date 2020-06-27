@@ -4,9 +4,9 @@ use amethyst::{
 
 use crate::lib::TransformedInputEvent;
 // TODO: MovementEvent (and TransformedInputEvent) should go in a `channels` module or something.
+use crate::system;
 use crate::system::movement_solver::MovementEvent;
 use crate::system::switches::SwitchEvent;
-use crate::system;
 
 pub(crate) struct MovementBundle;
 
@@ -77,4 +77,3 @@ impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {
         Ok(())
     }
 }
-
