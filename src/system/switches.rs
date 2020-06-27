@@ -1,3 +1,4 @@
+use crate::component::{Movable, Position, Switch};
 /// # Switch System
 ///
 /// Switches
@@ -6,8 +7,6 @@ use amethyst::{
     ecs::{Join, ReadStorage, System, SystemData, Write},
     shrev::EventChannel,
 };
-
-use crate::component::{Movable, Position, Switch};
 
 pub(crate) enum SwitchEvent {
     AllSwitchesDown,

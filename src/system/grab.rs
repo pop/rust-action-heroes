@@ -1,13 +1,13 @@
-use std::collections::{HashSet, VecDeque};
-
+use crate::{
+    component::{Holding, Name, Named, Position},
+    lib::TransformedInputEvent,
+};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Join, Read, ReadStorage, System, SystemData, WriteStorage},
     shrev::{EventChannel, ReaderId},
 };
-
-use crate::component::{Holding, Name, Named, Position};
-use crate::lib::TransformedInputEvent;
+use std::collections::{HashSet, VecDeque};
 
 #[derive(SystemDesc)]
 pub(crate) struct GrabSystem {

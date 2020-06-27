@@ -1,9 +1,8 @@
+use crate::component::{Key, Lock, Position};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
-
-use crate::component::{Key, Lock, Position};
 
 #[derive(SystemDesc, Default)]
 pub(crate) struct LockSystem;

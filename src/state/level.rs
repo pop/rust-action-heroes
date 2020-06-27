@@ -1,14 +1,17 @@
-use crate::assets::GameLevel;
-use crate::audio::toggle_mute;
-use crate::entity::*;
-use crate::state::{LevelProgression, Levels};
-use amethyst::ecs::Entity;
-use amethyst::input::{InputEvent, VirtualKeyCode};
-use amethyst::ui::UiCreator;
 use amethyst::{
     assets::{AssetStorage, Handle},
+    ecs::Entity,
+    input::{InputEvent, VirtualKeyCode},
     prelude::*,
     renderer::SpriteSheet,
+    ui::UiCreator,
+};
+
+use crate::{
+    assets::GameLevel,
+    audio::toggle_mute,
+    entity::*,
+    state::{LevelProgression, Levels},
 };
 
 ///

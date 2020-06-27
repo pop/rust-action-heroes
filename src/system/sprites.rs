@@ -1,7 +1,7 @@
-use crate::system::switches::SwitchEvent;
 use crate::{
     component::{Holding, Switch},
     lib::TransformedInputEvent,
+    system::switches::SwitchEvent,
 };
 use amethyst::{
     derive::SystemDesc,

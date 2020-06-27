@@ -29,10 +29,12 @@ use amethyst::{
     utils::application_root_dir,
 };
 
-use crate::assets::GameLevel;
-use crate::bundle::MovementBundle;
-use crate::state::LoadingState;
-use crate::system::{GridSystem, LevelSystem, LockSystem, ProcessInputSystem};
+use crate::{
+    assets::GameLevel,
+    bundle::MovementBundle,
+    state::LoadingState,
+    system::{GridSystem, LevelSystem, LockSystem, ProcessInputSystem},
+};
 
 ///
 /// ...

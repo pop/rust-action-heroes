@@ -1,11 +1,9 @@
+use crate::{component::Door, system::switches::SwitchEvent};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Join, Read, ReadStorage, System, SystemData},
     shrev::{EventChannel, ReaderId},
 };
-
-use crate::component::Door;
-use crate::system::switches::SwitchEvent;
 
 ///
 /// ...

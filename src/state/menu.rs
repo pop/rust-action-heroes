@@ -1,11 +1,13 @@
 use crate::state::{GameLevelState, LevelProgression, Levels};
-use amethyst::assets::Handle;
-use amethyst::ecs::Entity;
-use amethyst::input::{is_close_requested, is_key_down};
-use amethyst::prelude::*;
-use amethyst::renderer::SpriteSheet;
-use amethyst::ui::{UiCreator, UiEvent, UiEventType, UiFinder};
-use amethyst::winit::VirtualKeyCode;
+use amethyst::{
+    assets::Handle,
+    ecs::Entity,
+    input::{is_close_requested, is_key_down},
+    prelude::*,
+    renderer::SpriteSheet,
+    ui::{UiCreator, UiEvent, UiEventType, UiFinder},
+    winit::VirtualKeyCode,
+};
 
 ///
 /// ...

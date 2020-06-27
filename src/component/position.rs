@@ -1,7 +1,6 @@
-use std::ops::Add;
-
 use crate::lib::Int;
 use amethyst::ecs::{prelude::DenseVecStorage, Component};
+use std::ops::Add;
 
 ///
 ///

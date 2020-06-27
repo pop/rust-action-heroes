@@ -1,11 +1,9 @@
+use crate::{component::Position, system::movement_solver::MovementEvent};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Read, System, SystemData, WriteStorage},
     shrev::{EventChannel, ReaderId},
 };
-
-use crate::component::Position;
-use crate::system::movement_solver::MovementEvent;
 
 ///
 /// ...

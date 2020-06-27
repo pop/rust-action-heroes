@@ -1,5 +1,7 @@
-use crate::component::{Holding, Immovable, Movable, Name, Named, Position};
-use crate::lib::TransformedInputEvent;
+use crate::{
+    component::{Holding, Immovable, Movable, Name, Named, Position},
+    lib::TransformedInputEvent,
+};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Entity, Join, Read, ReadStorage, System, SystemData, Write},

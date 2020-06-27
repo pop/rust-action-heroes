@@ -1,11 +1,15 @@
-use crate::assets::GameLevel;
-use crate::assets::LevelFormat;
-use crate::audio::initialize_audio;
-use crate::lib::load_sprite_sheet;
-use crate::state::{LevelProgression, Levels, MenuState};
-use amethyst::assets::{AssetStorage, Handle, Loader, ProgressCounter};
-use amethyst::prelude::*;
-use amethyst::renderer::SpriteSheet;
+use crate::{
+    assets::GameLevel,
+    assets::LevelFormat,
+    audio::initialize_audio,
+    lib::load_sprite_sheet,
+    state::{LevelProgression, Levels, MenuState},
+};
+use amethyst::{
+    assets::{AssetStorage, Handle, Loader, ProgressCounter},
+    prelude::*,
+    renderer::SpriteSheet,
+};
 use std::path::{Path, PathBuf};
 
 ///

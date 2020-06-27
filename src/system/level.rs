@@ -1,9 +1,8 @@
+use crate::component::{Exit, Holding, Named, Position};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
-
-use crate::component::{Exit, Holding, Named, Position};
 
 #[derive(SystemDesc, Default)]
 pub(crate) struct LevelSystem;

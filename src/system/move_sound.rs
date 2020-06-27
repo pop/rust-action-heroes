@@ -1,5 +1,7 @@
-use crate::audio::{play_move_sound, Sounds};
-use crate::system::movement_solver::MovementEvent;
+use crate::{
+    audio::{play_move_sound, Sounds},
+    system::movement_solver::MovementEvent,
+};
 use amethyst::{
     assets::AssetStorage,
     audio::{output::Output, Source},

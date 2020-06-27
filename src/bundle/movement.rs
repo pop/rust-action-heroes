@@ -1,12 +1,11 @@
 use amethyst::{
     core::bundle::SystemBundle, ecs::DispatcherBuilder, prelude::*, shrev::EventChannel, Error,
 };
-
-use crate::lib::TransformedInputEvent;
 // TODO: MovementEvent (and TransformedInputEvent) should go in a `channels` module or something.
-use crate::system;
-use crate::system::movement_solver::MovementEvent;
-use crate::system::switches::SwitchEvent;
+use crate::{
+    lib::TransformedInputEvent, system, system::movement_solver::MovementEvent,
+    system::switches::SwitchEvent,
+};
 
 pub(crate) struct MovementBundle;
 

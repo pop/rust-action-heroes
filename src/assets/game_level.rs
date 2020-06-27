@@ -5,9 +5,7 @@ use amethyst::{
     Error,
 };
 use serde::{Deserialize, Serialize};
-use std::cmp::max;
-use std::convert::TryFrom;
-use std::iter::Iterator;
+use std::{cmp::max, convert::TryFrom, iter::Iterator};
 
 pub(crate) type Coordinates = (Int, Int);
 

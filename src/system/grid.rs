@@ -1,11 +1,9 @@
-use crate::lib::Int;
+use crate::{component::Position, lib::Int};
 use amethyst::{
     core::Transform,
     derive::SystemDesc,
     ecs::{Join, ReadStorage, System, SystemData, WriteStorage},
 };
-
-use crate::component::Position;
 
 pub const GRID_SIZE: Int = 9;
 
