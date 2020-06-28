@@ -54,19 +54,22 @@ impl<'s> System<'s> for GrabSystem {
     fn run(&mut self, (channel, positions, mut holdings, nameds): Self::SystemData) {
         for event in channel.read(&mut self.reader) {
             // Only process "Interact" events
-            if event != &TransformedInputEvent::Interact {
-                continue;
-            }
 
             let mut pos = Position::default();
             let mut desired_holding = false;
 
-            // Find the "Interact" character.
+            // Find the "Interact" entity
             // One Action Heroes calls this the "Grabaron"
             for (name, position, holding) in (&nameds, &positions, &holdings).join() {
                 if name.get() == Name::Interact {
                     pos = *position;
-                    desired_holding = !holding.status();
+                    desired_holding = if event == &TransformedInputEvent::Interact {
+                        // Invert the holding status
+                        !holding.status()
+                    } else {
+                        // Catch entities that are currently not holding but should be now
+                        holding.status()
+                    };
                     break;
                 }
             }
@@ -95,9 +98,10 @@ impl<'s> System<'s> for GrabSystem {
             // We shouldn't get into any "some holding" states.
             for (hold, position) in (&mut holdings, &positions).join() {
                 if toggle_holding.contains(&position) {
-                    match desired_holding {
-                        true => hold.set_holding(),
-                        false => hold.set_not_holding(),
+                    if desired_holding == true {
+                        hold.set_holding();
+                    } else {
+                        hold.set_not_holding();
                     }
                 }
             }
@@ -108,6 +112,6 @@ impl<'s> System<'s> for GrabSystem {
 /// I got this code to work early on and completely forgot how it works.
 ///
 /// I love it.
-fn touching(Position { x: x1, y: y1 }: &Position, Position { x: x2, y: y2 }: &Position) -> bool {
+pub(crate) fn touching(Position { x: x1, y: y1 }: &Position, Position { x: x2, y: y2 }: &Position) -> bool {
     (x1 == x2 && (y1 - 1 == *y2 || y1 + 1 == *y2)) || (y1 == y2 && (x1 - 1 == *x2 || x1 + 1 == *x2))
 }

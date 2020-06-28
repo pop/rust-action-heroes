@@ -287,7 +287,7 @@ pub(crate) fn make_keys(
                 .with(Position::new(x, y))
                 .with(Movable::default())
                 .with(Key::default())
-                .with(Holding::new()) // This is gonna be a bug
+                .with(Holding::new())
                 .build(),
         )
     }
@@ -311,7 +311,11 @@ pub(crate) fn make_switches(
         levels.push(
             world
                 .create_entity()
-                .with(Transform::default())
+                .with({
+                    let mut t = Transform::default();
+                    t.prepend_translation_z(-9.0);
+                    t
+                })
                 .with(sprite.clone())
                 .with(Position::new(x, y))
                 .with(Switch::default())
@@ -341,7 +345,6 @@ pub(crate) fn make_doors(
                 .with(Transform::default())
                 .with(sprite.clone())
                 .with(Position::new(x, y))
-                .with(Movable::default())
                 .with(Door::default())
                 .with(Immovable::default())
                 .build(),

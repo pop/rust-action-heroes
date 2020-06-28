@@ -4,7 +4,10 @@
 //! The only thing here is the LockSystem struct, so go read about that!
 //!
 
-use crate::component::{Key, Lock, Position};
+use crate::{
+    component::{Key, Lock, Position},
+    system::grab::touching,
+};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Join, ReadStorage, System, SystemData},
@@ -30,7 +33,7 @@ impl<'s> System<'s> for LockSystem {
     fn run(&mut self, (locks, keys, positions, entities): Self::SystemData) {
         for (_key, key_position, key_entity) in (&keys, &positions, &*entities).join() {
             for (_lock, lock_position, lock_entity) in (&locks, &positions, &*entities).join() {
-                if lock_position == key_position {
+                if touching(lock_position, key_position) {
                     match entities.delete(lock_entity) {
                         _ => (),
                     }
