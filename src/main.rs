@@ -3,7 +3,7 @@
 //! Rust Action Heroes is a remake of the delightful [One Action Heroes][oah] gamejam
 //! written in Rust using the wonderful game engine [Amethyst][amethyst].
 //!
-//! Rust Action Heroes is my first attempt at writing a game, so it's pretty shotty!
+//! Rust Action Heroes is my first attempt at writing a game, so it's pretty shoddy.
 //! If you have feedback, please [make an issue on the repo][issue].
 //!
 //! These are the Rust API docs, so if you're interested in _how_ this game is implemented this
@@ -21,6 +21,28 @@
 //!
 //! Note that I am using pseudocode for most of my descriptions of ECS, so don't be surprised if
 //! rustc won't compile them. :-P
+//!
+//! ## Why One Action Heroes?
+//!
+//! I've wanted to get into making games for a long time, but I've struggled to complete any projects of my own.
+//! Every game I've tried to make is either too ambitious or too ill-defined.
+//! 
+//! One Action Heroes was fun to play, mechanically simple, and was the product of a game-jam so I figured it couldn't take _that_ long to implement.
+//! I had to learn Amethyst along the way, so I knew I wouldn't get it done in 48 hours, but it seemed achievable in a few Saturdays.
+//! 
+//! Thankfully, my theory was correct and the project worked out!
+//! I can finally say I have created a buggy, sketchy, and in most ways worse version of One Action Heroes.
+//! 
+//! But you know what, it was a blast to make and I learned a lot about making games.
+//! I learned a lot in the process and now I feel ready to take on a creative project of my own.
+//!
+//! # Copyright
+//!
+//! The original [One Action Heroes prototype game][oah] was created by Tapehead Games for the Game Maker's Toolkit game jam 2019.
+//!
+//! I am not associated with Tapehead in any way, I just really like their game and got a lot of inspiration from it.
+//!
+//! If/when One Action heroes gets made into a fully fledged game, you should totally buy it on [Taphead's itch.io page][tapehead-games].
 //!
 //! [oah]: https://tapehead-co.itch.io/one-action-heroes
 //! [amethyst]: https://amethyst.rs/
