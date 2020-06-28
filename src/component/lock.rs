@@ -1,7 +1,7 @@
 use amethyst::ecs::{prelude::NullStorage, Component};
 
 ///
-/// Lock Component
+/// Flags an entity as a lock.
 ///
 #[derive(Debug, Default)]
 pub(crate) struct Lock;

@@ -1,7 +1,7 @@
 use amethyst::ecs::{prelude::NullStorage, Component};
 
 ///
-/// Door Component
+/// Flags an entity as a Door.
 ///
 #[derive(Debug, Default)]
 pub(crate) struct Door;

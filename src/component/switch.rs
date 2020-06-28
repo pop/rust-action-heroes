@@ -1,7 +1,7 @@
 use amethyst::ecs::{prelude::NullStorage, Component};
 
 ///
-/// Switch Component
+/// Flags an entity as a door switch.
 ///
 #[derive(Debug, Default)]
 pub(crate) struct Switch;

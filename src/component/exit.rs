@@ -1,7 +1,7 @@
 use amethyst::ecs::{Component, NullStorage};
 
 ///
-/// Exit Component
+/// Flags an entity as the level exit.
 ///
 #[derive(Debug, Default)]
 pub(crate) struct Exit;

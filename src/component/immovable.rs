@@ -1,7 +1,7 @@
 use amethyst::ecs::{prelude::NullStorage, Component};
 
 ///
-/// Immovable Component
+/// Marks an entity as immovable.
 ///
 #[derive(Debug, Default)]
 pub(crate) struct Immovable;

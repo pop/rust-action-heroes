@@ -1,7 +1,7 @@
 use amethyst::ecs::{prelude::*, Component};
 
 ///
-/// Holding Component
+/// Gives an entity the "grabs onto stuff" ability when touching Grabaron.
 ///
 #[derive(Debug, Component)]
 pub(crate) struct Holding(bool);

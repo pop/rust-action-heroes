@@ -1,4 +1,4 @@
 (
   title: "Rust Action heroes",
-  dimensions: Some((500, 500)),
+  dimensions: Some((1280, 720)),
 )

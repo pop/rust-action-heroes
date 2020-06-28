@@ -61,8 +61,7 @@ use crate::{
 };
 
 ///
-/// Main builds the game object and starts running the game.
-/// The interesting bits are in the system, state, assets, and entity modules!
+/// Main builds the game object and starts running the game loop.
 ///
 /// One gotcha is that to get the game to run on a Linux desktop with Wayland, you need to set the
 /// environment variable `WINIT_UNIX_BACKEND=x11`.

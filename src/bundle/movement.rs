@@ -1,3 +1,16 @@
+//!
+//! MovementBundle is an overloaded Bundle which initializes a bunch of Channel-based systems
+//!
+//! All of which require some amount of Channel interaction, but that's about the only unifying
+//! thing.
+//!
+//! There are three channels, and it's not like all of the systems here require writing/reading all
+//! three of them.
+//!
+//! What I'm trying to say is if you think this code should be organized better I also think that
+//! but I haven't gotten around to it.
+//!
+
 use amethyst::{
     core::bundle::SystemBundle, ecs::DispatcherBuilder, prelude::*, shrev::EventChannel, Error,
 };
@@ -7,6 +20,15 @@ use crate::{
     system::switches::SwitchEvent,
 };
 
+///
+/// MovementBundle initializes all systems which require event channels.
+///
+/// I should probably call it the EventfulSystemsBundle or something.
+///
+/// There is some pretty syntax in Amethyst for labeling EventChannel readers as such so I don't
+/// need to create the systems in this bundle, but this was easy enough and I didn't get far in
+/// trying to refactor those out.
+///
 pub(crate) struct MovementBundle;
 
 impl<'a, 'b> SystemBundle<'a, 'b> for MovementBundle {

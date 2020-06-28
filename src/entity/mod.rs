@@ -1,6 +1,47 @@
 //!
 //! Builder functions for creating entities.
 //!
+//! These all follow a repeating pattern:
+//! 1. Given the World, a Sprite Sheet Handle, and Coordinates for the entitiy/entities.
+//! 2. Create an entity in the world with that information.
+//! 3. Each method hard-codes which sprite number that entity has, and the components that entity
+//!    has.
+//!
+//! For my next game I think I'll try to implement some file-based entity specification.
+//! There's a lot of boilerplate that doesn't need to be here and the game wouldn't need to
+//! re-compile every time I change an entity's component list.
+//! Each entity could be specified in RON syntax sorta deal like:
+//!
+//! ```text
+//! # assets/entities/001.ron
+//! Components([
+//!     Transform,
+//!     Movable,
+//!     Sprite(2),
+//!     Position(x, y),
+//!     Named(Name::Horizontal),
+//!     Holding,
+//! ])
+//! ```
+//!
+//! Then the entity-loader would iterate over all files in `assets/entities/*.ron` and build:
+//!
+//! ```
+//! let mut entitybuilder = world.create_entity();
+//! for component in EntitySpec.Components {
+//!     entitybuilder = entitybuilder.with(component);
+//! }
+//! entitybuilder.build();
+//! ```
+//!
+//! And we can trivially do that in parallel (probably) so it wouldn't be too slow.
+//!
+//! The tedium required to write out entity files for hundreds, or even dozens, of entities
+//! wouldn't be fun, but I also plan on writing a GUI game editor for the next game, which should
+//! play nice with this.
+//! I'd just need to figure out some way to serialize/deserialize an entity -- which I assume is
+//! non-trivial.
+//!
 
 use crate::assets::GameLevel;
 use crate::component::{
@@ -13,9 +54,12 @@ use amethyst::{
     core::transform::Transform,
     ecs::Entity,
     prelude::*,
-    renderer::{Camera, SpriteRender, SpriteSheet},
+    renderer::{Camera, SpriteSheet},
 };
 
+///
+/// Creates "Prince horizontival the first"
+///
 pub(crate) fn make_horizontal(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -34,6 +78,9 @@ pub(crate) fn make_horizontal(
         .build()
 }
 
+///
+/// Creates "Duke vert the pure"
+///
 pub(crate) fn make_vertical(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -52,6 +99,9 @@ pub(crate) fn make_vertical(
         .build()
 }
 
+///
+/// Creates "Grabaron the wise"
+///
 pub(crate) fn make_interact(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -70,16 +120,11 @@ pub(crate) fn make_interact(
         .build()
 }
 
-fn make_wall(world: &mut World, sprite: SpriteRender, (x, y): (Int, Int)) -> Entity {
-    world
-        .create_entity()
-        .with(Transform::default())
-        .with(Immovable::default())
-        .with(Position::new(x, y))
-        .with(sprite)
-        .build()
-}
-
+///
+/// Creates all wall entities
+///
+/// Given a vector of coordinates it returns a vector of Entities which are the walls.
+///
 pub(crate) fn make_walls(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -90,11 +135,37 @@ pub(crate) fn make_walls(
     let mut entities: Vec<Entity> = Vec::new();
 
     for (x, y) in wall_coordinates {
-        entities.push(make_wall(world, sprite.clone(), (x, y)));
+        entities.push(
+            world
+                .create_entity()
+                .with(Transform::default())
+                .with(Immovable::default())
+                .with(Position::new(x, y))
+                .with(sprite.clone())
+                .build()
+        );
     }
     entities
 }
 
+///
+/// Makes the floors entities.
+///
+/// Floors are actually pretty boring.
+/// They're just sprites that exist in space.
+/// You can't interact with them, the just sit there.
+///
+/// So lazy.
+///
+/// One interesting thing is that they caused a hilarious bug where sometimes the floor would cover
+/// up another entity because all entities were at the same Z coordinate, so pretty much at random
+/// an entity we care about (like a player or a crate) would be covered up by floor sprites.
+///
+/// The solution to that bug, which I only determined after convincing myself it wasn't some weird
+/// sprite loading bug, was to put sprites at a different Z level so they're much lower than
+/// eveything else.
+/// The game is orthographic so floor tiles don't look far way thankfully.
+///
 pub(crate) fn make_floors(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -121,6 +192,9 @@ pub(crate) fn make_floors(
     entities
 }
 
+///
+/// Makes all crates in the level.
+///
 pub(crate) fn make_crates(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -145,6 +219,9 @@ pub(crate) fn make_crates(
     entities
 }
 
+///
+/// Makes the level exit.
+///
 pub(crate) fn make_exit(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -161,6 +238,9 @@ pub(crate) fn make_exit(
         .build()
 }
 
+///
+/// Makes all the locks in the current level.
+///
 pub(crate) fn make_locks(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -186,6 +266,9 @@ pub(crate) fn make_locks(
     levels
 }
 
+///
+/// Makes all the keys in the level.
+///
 pub(crate) fn make_keys(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -212,6 +295,9 @@ pub(crate) fn make_keys(
     levels
 }
 
+///
+/// Makes all the door switches in the level
+///
 pub(crate) fn make_switches(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -236,6 +322,9 @@ pub(crate) fn make_switches(
     levels
 }
 
+///
+/// Makes all the doors in the level
+///
 pub(crate) fn make_doors(
     world: &mut World,
     sprite_sheet_handle: &Handle<SpriteSheet>,
@@ -262,6 +351,16 @@ pub(crate) fn make_doors(
     levels
 }
 
+///
+/// Initializes the camera in the level.
+///
+/// It creates a camera with 1270x720 dimensions except we divide both of those numbers by 8 since
+/// our sprite are so small.
+///
+/// We also center the camera on based on the level dimenisons, othwerise the level would always
+/// have the bottom left corner on the center of the screen and the 3/4 of the screen would be
+/// empty.
+///
 pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -> Entity {
     let (size_x, size_y) = {
         let asset_storage = world.read_resource::<AssetStorage<GameLevel>>();
@@ -278,7 +377,7 @@ pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -
 
     world
         .create_entity()
-        .with(Camera::standard_2d(100.0, 100.0))
+        .with(Camera::standard_2d(1280.0/8.0, 720.0/8.0))
         .with({
             // I just want to call Transform::from_xyz(x, y, z)...
             let mut transform = Transform::default();

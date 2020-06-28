@@ -3,8 +3,10 @@ use amethyst::ecs::{prelude::DenseVecStorage, Component};
 use std::ops::Add;
 
 ///
+/// Position Component. Places an entity on the play grid.
 ///
-/// Position Component
+/// The most complex component in terms of `impls`.
+/// We have some helper methods and we implement `Add` for ergonomics in a few systems.
 ///
 #[derive(Debug, Component, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub(crate) struct Position {
