@@ -10,3 +10,6 @@ thumbs.db
 
 # not today
 .vscode/
+
+# HTML docs
+html/
