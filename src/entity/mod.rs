@@ -1,3 +1,7 @@
+//!
+//! Builder functions for creating entities.
+//!
+
 use crate::assets::GameLevel;
 use crate::component::{
     Door, Exit, Holding, Immovable, Key, Lock, Movable, Name, Named, Position, Switch,

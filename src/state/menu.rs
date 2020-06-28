@@ -1,3 +1,9 @@
+//!
+//! # The main menu!
+//!
+//! The intesting stuff happens in the MenuState struct, go read that!
+//!
+
 use crate::state::{GameLevelState, LevelProgression, Levels};
 use amethyst::{
     assets::Handle,
@@ -10,7 +16,11 @@ use amethyst::{
 };
 
 ///
-/// ...
+/// Super utilitarian just like I like it
+///
+/// It's pretty bare bones, but this project was more about game mechanics and not about UI stuff.
+///
+/// Very simple UI menu with a start button and some basic instructions.
 ///
 pub(crate) struct MenuState {
     ui_handle: Option<Entity>,

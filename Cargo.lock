@@ -1111,16 +1111,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "evg1"
-version = "0.1.0"
-dependencies = [
- "amethyst",
- "amethyst_input",
- "amethyst_test",
- "serde",
-]
-
-[[package]]
 name = "expat-sys"
 version = "2.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2996,6 +2986,16 @@ dependencies = [
  "blake2b_simd",
  "constant_time_eq",
  "crossbeam-utils 0.7.2",
+]
+
+[[package]]
+name = "rust_action_heroes"
+version = "0.1.0"
+dependencies = [
+ "amethyst",
+ "amethyst_input",
+ "amethyst_test",
+ "serde",
 ]
 
 [[package]]

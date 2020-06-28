@@ -1,3 +1,11 @@
+//!
+//! Game Level Asset
+//!
+//! The GameLevel Asset is a struct containing necessary info to construct a level.
+//!
+//! This module also includes the method used to parse `.level` files into levels.
+//!
+
 use crate::lib::Int;
 use amethyst::{
     assets::{Asset, Format, Handle},
@@ -7,8 +15,15 @@ use amethyst::{
 use serde::{Deserialize, Serialize};
 use std::{cmp::max, convert::TryFrom, iter::Iterator};
 
+///
+/// It's not less characters, but it is easier to remember what coordinates are.
+///
 pub(crate) type Coordinates = (Int, Int);
 
+///
+/// CharacterPlacement tracks which of the playable characters are around and where their
+/// coordinates are at the start of the level.
+///
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct CharacterPlacement {
     pub horizontal: Option<Coordinates>,
@@ -16,6 +31,9 @@ pub(crate) struct CharacterPlacement {
     pub interact: Option<Coordinates>,
 }
 
+///
+/// Tracks all metadata about a level necessary to construct it when the level starts.
+///
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct GameLevel {
     pub dimensions: Coordinates,
@@ -31,11 +49,49 @@ pub(crate) struct GameLevel {
 }
 
 impl Asset for GameLevel {
-    const NAME: &'static str = "evg1::GameLevel";
+    const NAME: &'static str = "rust_action_heroes::GameLevel";
     type Data = Self;
     type HandleStorage = VecStorage<Handle<GameLevel>>;
 }
 
+///
+/// LevelFormat, like RonFormat, is a file format for storing data.
+///
+/// Amethyst requires I implement this to store custom meta-data.
+///
+/// I tried for a long time to store levels in Ron format, but storing an entire level in Ron was
+/// unweildy.
+///
+/// Instead I opted to write my own ascii-art level file format and write a parser for it.
+/// The parser just goes character by character and adds coordinates for different entity types to
+/// the GameLevel struct.
+///
+/// As an added bonus, you can write your own levels for Rust Action heroes pretty easiliy!
+/// * W | w | # -> Wall
+/// * H | h -> Prince horizontival the first
+/// * V | v -> Duke vert the pure
+/// * G | g -> Grabaron the wise
+/// * C | c -> Crate
+/// * E | e -> Exit
+/// * K | k -> Key (for locks)
+/// * L | l -> Locks (for keys)
+/// * S | s -> Switch (for doors)
+/// * D | d -> Door (for switches)
+/// * <space> | <tab> -> Floor
+///
+/// ## Example level
+///
+/// ```text
+/// ######
+/// #g h #
+/// # v s#####
+/// #ksc  lde#
+/// ##########
+/// ```
+///
+/// This has all three playable characters, a crate, a key, a lock, a two switches, a door, and an exit.
+/// Is that level even beatable?
+///
 #[derive(Clone, Copy, Debug, Default)]
 pub(crate) struct LevelFormat;
 

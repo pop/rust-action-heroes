@@ -1,9 +1,24 @@
+//!
+//! # How we progress from level N to N+1
+//!
+//! The only thing here is the LevelSystem struct, so go read about that!
+//!
+
 use crate::component::{Exit, Holding, Named, Position};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
 
+///
+/// The Level System handles completion of a level.
+///
+/// When an entity overlaps with the Exit entity we delete it from the world.
+/// It also handles cleaning up entities that are holding other entities.
+///
+/// Somewhere else we have a check that says "If all the Named entities in this level are deleted,
+/// load the next level.
+///
 #[derive(SystemDesc, Default)]
 pub(crate) struct LevelSystem;
 

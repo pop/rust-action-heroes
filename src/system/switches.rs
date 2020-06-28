@@ -1,17 +1,28 @@
+//!
+//! # How the game knows if all the switches are down
+//!
+//! The only thing here is the SwitchSystem struct, so go read about that!
+//!
+
 use crate::component::{Movable, Position, Switch};
-/// # Switch System
-///
-/// Switches
 use amethyst::{
     derive::SystemDesc,
     ecs::{Join, ReadStorage, System, SystemData, Write},
     shrev::EventChannel,
 };
 
+///
+/// We have this SwitchEven struct in this file for no good reason.
+/// I really should move it...
+///
 pub(crate) enum SwitchEvent {
     AllSwitchesDown,
 }
 
+///
+/// SwitchSystem Writes out the `SwitchEvent::AllSwitchesDown` event when all switches are covered
+/// up; i.e., all switches are "down".
+///
 #[derive(SystemDesc, Default)]
 pub(crate) struct SwitchSystem;
 

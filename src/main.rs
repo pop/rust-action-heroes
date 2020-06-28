@@ -120,7 +120,7 @@ fn main() -> amethyst::Result<()> {
             ],
         )
         .with_bundle(AudioBundle::default())?
-        .with(GridSystem::new(), "grid_system", &["mover_system"]);
+        .with(GridSystem::default(), "grid_system", &["mover_system"]);
 
     let mut game = Application::build(assets_dir, LoadingState::default())?.build(game_data)?;
 

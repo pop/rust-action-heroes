@@ -1,3 +1,9 @@
+//!
+//! # Nobody has time to process raw keyboard input
+//!
+//! The only thing here is the ProcessInputSystem struct, so go read about that!
+//!
+
 use crate::lib::TransformedInputEvent;
 use amethyst::{
     derive::SystemDesc,
@@ -8,7 +14,20 @@ use amethyst::{
 use std::{collections::BTreeSet, iter::FromIterator};
 
 ///
-/// ...
+/// ProcessInputSystem transforms raw(ish) InputHandler inputs into a small set of possible
+/// actions.
+/// i.e., instead of all systems dealing with user input having to match on all possible keybaord
+/// inputs, we match on "Move Up", "Move Down", "Interact", etc.
+///
+/// ProcessInputSystem also handles the "spamming input problem" in turn-based games by remembering
+/// what the current action is and only sending a new signal when the user input changes.
+/// This means that if someone pressed "Up", the game only sends/reads one "Move Up" message, even
+/// though the InputHandler is spamming "Up" once per frame.
+///
+/// The "spamming input problem" could be solved by having some "turn" construct where we read
+/// input for a turn, then reject input until the next turn, but this was easier.
+/// The user is in control of when their turns are, and in this simple game there is no AI to take
+/// a different turn, so the user's turns can happen as fast as they can press keys.
 ///
 #[derive(SystemDesc)]
 pub(crate) struct ProcessInputSystem {
@@ -29,9 +48,6 @@ impl<'s> System<'s> for ProcessInputSystem {
         Write<'s, EventChannel<TransformedInputEvent>>,
     );
 
-    ///
-    /// ...
-    ///
     fn run(&mut self, (input, mut input_event_channel): Self::SystemData) {
         // Figure out which movement the user is requesting
         let movement =

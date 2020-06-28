@@ -1,5 +1,5 @@
 //!
-//! # Systems
+//! # Putting the "S" in ECS
 //!
 //! Systems describe how entities with certain components interact.
 //!

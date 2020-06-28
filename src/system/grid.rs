@@ -1,3 +1,8 @@
+//!
+//! # This grid ain't free!
+//!
+//! The only thing here is the GridSystem struct, so go read about that!
+//!
 use crate::{component::Position, lib::Int};
 use amethyst::{
     core::Transform,
@@ -5,16 +10,21 @@ use amethyst::{
     ecs::{Join, ReadStorage, System, SystemData, WriteStorage},
 };
 
+/// Our sprites are 9x9 pixels, so our grid shift is 9.
+/// If we decide to have bigger sprites this would need to change!
 pub const GRID_SIZE: Int = 9;
 
-#[derive(SystemDesc)]
+///
+/// Grid System handles locking all entities to a grid.
+///
+/// Every entity has the `Position` component which gives it an X and a Y in space.
+/// This system translates those X/Y positions into pixel locations on screen.
+///
+/// It would probably be notably more performant if we made it event based, since nothing really
+/// happens on screen unless the user interacts, but it works!
+///
+#[derive(SystemDesc, Default)]
 pub(crate) struct GridSystem;
-
-impl GridSystem {
-    pub(crate) fn new() -> Self {
-        GridSystem
-    }
-}
 
 impl<'s> System<'s> for GridSystem {
     type SystemData = (WriteStorage<'s, Transform>, ReadStorage<'s, Position>);

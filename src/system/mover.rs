@@ -1,3 +1,9 @@
+//!
+//! # Movement was so complicated it has two systems
+//!
+//! The only thing here is the MoverSystem struct, so go read about that!
+//!
+
 use crate::{component::Position, system::movement_solver::MovementEvent};
 use amethyst::{
     derive::SystemDesc,
@@ -6,7 +12,11 @@ use amethyst::{
 };
 
 ///
-/// ...
+/// MovementSystem works closely with MovementSolverSystem.
+/// It reads MovementEvents and moves entities based on messages in that channel.
+///
+/// Honestly, it's not much to write home about.
+/// The interesting bits are in MovementSolverSystem.
 ///
 #[derive(SystemDesc)]
 pub(crate) struct MovementSystem {

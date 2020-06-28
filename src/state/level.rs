@@ -1,3 +1,9 @@
+//!
+//! # The Game Level State handles loading, reloading, and progressing levels.
+//!
+//! Game Level State is the real heavy lifter here.
+//!
+
 use amethyst::{
     assets::{AssetStorage, Handle},
     ecs::Entity,
@@ -15,7 +21,11 @@ use crate::{
 };
 
 ///
-/// ...
+/// GameLevelState tracks all of the entities in the current level.
+///
+/// This includes playable entities, non-player entities, and UI elements.
+///
+/// When the level completes we fully the level's entities.
 ///
 pub(crate) struct GameLevelState {
     player_entities: Vec<Entity>,

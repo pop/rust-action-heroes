@@ -1,4 +1,6 @@
-# evg1
+# Rust Action Heroes
+
+A shameless ripoff of One Action Heroes written in Rust with Amethyst.
 
 ## How to run
 

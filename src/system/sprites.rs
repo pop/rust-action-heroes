@@ -1,3 +1,9 @@
+//!
+//! # There's a system for managing sprites!
+//!
+//! The only thing here is the SpriteSystem struct, so go read about that!
+//!
+
 use crate::{
     component::{Holding, Switch},
     lib::TransformedInputEvent,
@@ -10,9 +16,11 @@ use amethyst::{
     shrev::{EventChannel, ReaderId},
 };
 
+///
 /// SpriteSystem figures out what a given entity's sprite should be
 ///
 /// Pretty much just toggles the "holding" sprites.
+///
 #[derive(SystemDesc)]
 pub(crate) struct SpriteSystem {
     transform_reader: ReaderId<TransformedInputEvent>,

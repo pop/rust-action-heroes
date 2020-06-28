@@ -1,5 +1,5 @@
 //!
-//! # Door System Stuff
+//! # Doors are opened with keys
 //!
 //! The only thing here is the DoorSystem struct, so go read about that!
 //!

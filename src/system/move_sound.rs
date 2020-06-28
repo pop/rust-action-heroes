@@ -1,3 +1,9 @@
+//!
+//! # "Bloop"
+//!
+//! The only thing here is the DoorSystem struct, so go read about that!
+//!
+
 use crate::{
     audio::{play_move_sound, Sounds},
     system::movement_solver::MovementEvent,
@@ -12,7 +18,10 @@ use amethyst::{
 use std::ops::Deref;
 
 ///
-/// ...
+/// MoveSound System plays a sound when anything moves.
+///
+/// It's got a bug where if multiple entities move, it plays the move sound multiple times over itself.
+/// That's probably trivial to fix; just skip playing the sound after the first time we play it.
 ///
 #[derive(SystemDesc)]
 pub(crate) struct MoveSoundSystem {

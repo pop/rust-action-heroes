@@ -1,9 +1,21 @@
+//!
+//! # How to open locked doors
+//!
+//! The only thing here is the LockSystem struct, so go read about that!
+//!
+
 use crate::component::{Key, Lock, Position};
 use amethyst::{
     derive::SystemDesc,
     ecs::{Entities, Join, ReadStorage, System, SystemData},
 };
 
+///
+/// The Lock System is pretty simple.
+///
+/// If any keys overlap with any locks we consider that "unlocking" the lock and we delete both the
+/// key and the lock from the world.
+///
 #[derive(SystemDesc, Default)]
 pub(crate) struct LockSystem;
 

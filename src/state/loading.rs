@@ -1,3 +1,14 @@
+//!
+//! # Because it'd be awkward if you didn't load something in time
+//!
+//! The initial state in the game is the loading state.
+//!
+//! In theory it transitions to MenuState when all assets are done loading, but in practice we only
+//! load a few assets in the Loading state.
+//! More than we used to -- we used to load spritesheets everytime we loaded a level.
+//! We're not that bad any more, but we still have some room for improvement.
+//!
+
 use crate::{
     assets::GameLevel,
     assets::LevelFormat,
@@ -13,7 +24,13 @@ use amethyst::{
 use std::path::{Path, PathBuf};
 
 ///
-/// ...
+/// Handles loading level files and the sprite sheet.
+///
+/// It could also handle loading audio, but it doesn't.
+///
+/// `on_start` method starts loading items, `update` transitions to `menu` state once all(ish)
+/// assets are loaded.
+///
 #[derive(Default)]
 pub(crate) struct LoadingState {
     sprite_sheet_progress: ProgressCounter,
@@ -21,7 +38,9 @@ pub(crate) struct LoadingState {
 }
 
 impl LoadingState {
-    /// ...
+    ///
+    /// Loads a specific level; returns the handle and progress.
+    ///
     fn load_level(
         &self,
         loader: &Loader,
@@ -39,7 +58,9 @@ impl LoadingState {
         }
     }
 
-    /// ...
+    ///
+    /// Given a list of file paths, loads files and their progresses.
+    ///
     fn load_levels(
         &self,
         loader: &Loader,
@@ -57,7 +78,9 @@ impl LoadingState {
         (levels, progresses)
     }
 
-    /// ...
+    ///
+    /// Finds all the levels we have in `assets/levels/*.level`
+    ///
     fn find_levels(&self, dir_list: std::fs::ReadDir) -> Vec<PathBuf> {
         let mut dir_list_vec: Vec<PathBuf> = Vec::new();
         // So
@@ -81,11 +104,14 @@ impl LoadingState {
         dir_list_vec
     }
 
+    ///
+    /// Load the sprite sheet so we can pass the handle around.
+    ///
     fn load_sprite_sheet(&self, world: &mut World) -> (Handle<SpriteSheet>, ProgressCounter) {
         load_sprite_sheet(
             world,
-            "texture/evg1_spritesheet.png",
-            "texture/evg1_spritesheet.ron",
+            "texture/rust_action_heroes_spritesheet.png",
+            "texture/rust_action_heroes_spritesheet.ron",
         )
     }
 }
