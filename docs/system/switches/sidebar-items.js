@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["SwitchEvent","We have this SwitchEven struct in this file for no good reason. I really should move it..."]],"struct":[["SwitchSystem","SwitchSystem Writes out the `SwitchEvent::AllSwitchesDown` event when all switches are covered up; i.e., all switches are \"down\"."]]});

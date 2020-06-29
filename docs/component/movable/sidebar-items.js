@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Movable","Flags an object as movable."]]});

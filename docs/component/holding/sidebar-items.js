@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Holding","Gives an entity the \"grabs onto stuff\" ability when touching Grabaron."]]});

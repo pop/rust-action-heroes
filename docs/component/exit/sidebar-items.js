@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Exit","Flags an entity as the level exit."]]});

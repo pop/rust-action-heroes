@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Lock","Flags an entity as a lock."]]});

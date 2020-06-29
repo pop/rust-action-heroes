@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MoveSoundSystem","MoveSound System plays a sound when anything moves."]]});

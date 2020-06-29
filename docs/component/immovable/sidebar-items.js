@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Immovable","Marks an entity as immovable."]]});

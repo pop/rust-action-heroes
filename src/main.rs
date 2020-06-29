@@ -48,6 +48,7 @@
 //! [amethyst]: https://amethyst.rs/
 //! [amethyst-book]: https://book.amethyst.rs/stable/
 //! [issue]: https://github.com/pop/rust-action-heroes/issues/
+//! [tapehead-games]: https://tapehead-co.itch.io/
 
 mod assets;
 mod audio;

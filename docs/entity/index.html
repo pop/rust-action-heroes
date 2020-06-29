@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `entity` mod in crate `rust_action_heroes`."><meta name="keywords" content="rust, rustlang, rust-lang, entity"><title>rust_action_heroes::entity - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../rust_action_heroes/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a><p class='location'>Module entity</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>rust_action_heroes</a></p><script>window.sidebarCurrent = {name: 'entity', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/rust_action_heroes/entity/mod.rs.html#1-391' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../index.html'>rust_action_heroes</a>::<wbr><a class="mod" href=''>entity</a></span></h1><div class='docblock'><p>Builder functions for creating entities.</p>
+<p>These all follow a repeating pattern:</p>
+<ol>
+<li>Given the World, a Sprite Sheet Handle, and Coordinates for the entitiy/entities.</li>
+<li>Create an entity in the world with that information.</li>
+<li>Each method hard-codes which sprite number that entity has, and the components that entity
+has.</li>
+</ol>
+<p>For my next game I think I'll try to implement some file-based entity specification.
+There's a lot of boilerplate that doesn't need to be here and the game wouldn't need to
+re-compile every time I change an entity's component list.
+Each entity could be specified in RON syntax sorta deal like:</p>
+<pre><code class="language-text"># assets/entities/001.ron
+Components([
+    Transform,
+    Movable,
+    Sprite(2),
+    Position(x, y),
+    Named(Name::Horizontal),
+    Holding,
+])
+</code></pre>
+<p>Then the entity-loader would iterate over all files in <code>assets/entities/*.ron</code> and build:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entitybuilder</span> <span class="op">=</span> <span class="ident">world</span>.<span class="ident">create_entity</span>();
+<span class="kw">for</span> <span class="ident">component</span> <span class="kw">in</span> <span class="ident">EntitySpec</span>.<span class="ident">Components</span> {
+    <span class="ident">entitybuilder</span> <span class="op">=</span> <span class="ident">entitybuilder</span>.<span class="ident">with</span>(<span class="ident">component</span>);
+}
+<span class="ident">entitybuilder</span>.<span class="ident">build</span>();</pre></div>
+<p>And we can trivially do that in parallel (probably) so it wouldn't be too slow.</p>
+<p>The tedium required to write out entity files for hundreds, or even dozens, of entities
+wouldn't be fun, but I also plan on writing a GUI game editor for the next game, which should
+play nice with this.
+I'd just need to figure out some way to serialize/deserialize an entity -- which I assume is
+non-trivial.</p>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.make_camera.html" title='rust_action_heroes::entity::make_camera fn'>make_camera</a></td><td class='docblock-short'><p>Initializes the camera in the level.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_crates.html" title='rust_action_heroes::entity::make_crates fn'>make_crates</a></td><td class='docblock-short'><p>Makes all crates in the level.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_doors.html" title='rust_action_heroes::entity::make_doors fn'>make_doors</a></td><td class='docblock-short'><p>Makes all the doors in the level</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_exit.html" title='rust_action_heroes::entity::make_exit fn'>make_exit</a></td><td class='docblock-short'><p>Makes the level exit.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_floors.html" title='rust_action_heroes::entity::make_floors fn'>make_floors</a></td><td class='docblock-short'><p>Makes the floors entities.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_horizontal.html" title='rust_action_heroes::entity::make_horizontal fn'>make_horizontal</a></td><td class='docblock-short'><p>Creates &quot;Prince horizontival the first&quot;</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_interact.html" title='rust_action_heroes::entity::make_interact fn'>make_interact</a></td><td class='docblock-short'><p>Creates &quot;Grabaron the wise&quot;</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_keys.html" title='rust_action_heroes::entity::make_keys fn'>make_keys</a></td><td class='docblock-short'><p>Makes all the keys in the level.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_locks.html" title='rust_action_heroes::entity::make_locks fn'>make_locks</a></td><td class='docblock-short'><p>Makes all the locks in the current level.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_switches.html" title='rust_action_heroes::entity::make_switches fn'>make_switches</a></td><td class='docblock-short'><p>Makes all the door switches in the level</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_vertical.html" title='rust_action_heroes::entity::make_vertical fn'>make_vertical</a></td><td class='docblock-short'><p>Creates &quot;Duke vert the pure&quot;</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.make_walls.html" title='rust_action_heroes::entity::make_walls fn'>make_walls</a></td><td class='docblock-short'><p>Creates all wall entities</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "rust_action_heroes";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

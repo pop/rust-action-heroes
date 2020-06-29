@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MovementSystem","MovementSystem works closely with MovementSolverSystem. It reads MovementEvents and moves entities based on messages in that channel."]]});

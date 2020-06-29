@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rust_action_heroes"] = [{"text":"impl Format&lt;<a class=\"struct\" href=\"rust_action_heroes/assets/game_level/struct.GameLevel.html\" title=\"struct rust_action_heroes::assets::game_level::GameLevel\">GameLevel</a>&gt; for <a class=\"struct\" href=\"rust_action_heroes/assets/game_level/struct.LevelFormat.html\" title=\"struct rust_action_heroes::assets::game_level::LevelFormat\">LevelFormat</a>","synthetic":false,"types":["rust_action_heroes::assets::game_level::LevelFormat"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

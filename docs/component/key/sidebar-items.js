@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Key","Flags an entity as a key."]]});

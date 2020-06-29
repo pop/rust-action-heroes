@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["movement","MovementBundle is an overloaded Bundle which initializes a bunch of Channel-based systems"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Door","Flags an entity as a Door."]]});

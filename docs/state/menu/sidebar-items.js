@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MenuState","Super utilitarian just like I like it"]]});

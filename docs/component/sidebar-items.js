@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["door",""],["exit",""],["holding",""],["immovable",""],["key",""],["lock",""],["movable",""],["named",""],["position",""],["switch",""]]});

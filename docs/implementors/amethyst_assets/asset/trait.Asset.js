@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rust_action_heroes"] = [{"text":"impl Asset for <a class=\"struct\" href=\"rust_action_heroes/assets/game_level/struct.GameLevel.html\" title=\"struct rust_action_heroes::assets::game_level::GameLevel\">GameLevel</a>","synthetic":false,"types":["rust_action_heroes::assets::game_level::GameLevel"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

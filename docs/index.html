@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `rust_action_heroes` crate."><meta name="keywords" content="rust, rustlang, rust-lang, rust_action_heroes"><title>rust_action_heroes - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../rust_action_heroes/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate rust_action_heroes</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all rust_action_heroes's items</p></a><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'rust_action_heroes', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/rust_action_heroes/main.rs.html#1-152' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>rust_action_heroes</a></span></h1><div class='docblock'><h1 id="rust-action-heroes" class="section-header"><a href="#rust-action-heroes">Rust Action Heroes</a></h1>
+<p>Rust Action Heroes is a remake of the delightful <a href="https://tapehead-co.itch.io/one-action-heroes">One Action Heroes</a> gamejam
+written in Rust using the wonderful game engine <a href="https://amethyst.rs/">Amethyst</a>.</p>
+<p>Rust Action Heroes is my first attempt at writing a game, so it's pretty shoddy.
+If you have feedback, please <a href="https://github.com/pop/rust-action-heroes/issues/">make an issue on the repo</a>.</p>
+<p>These are the Rust API docs, so if you're interested in <em>how</em> this game is implemented this
+will probably help.</p>
+<p>If you are new to Amethyst, check out the <a href="https://book.amethyst.rs/stable/">Amethyst Book</a> which covers the ECS
+architecture, what a System, Component, State, and Entity are.</p>
+<h2 id="about-this-website" class="section-header"><a href="#about-this-website">About this website</a></h2>
+<p>This is sort of like an extended meandering blog-post, so please explore!</p>
+<p>Technically, these are API docs for the Rust Action Heroes codebase, but I'm using it to record
+what I've learned about Entity Component System architecture and Amethyst.</p>
+<p>Note that I am using pseudocode for most of my descriptions of ECS, so don't be surprised if
+rustc won't compile them. :-P</p>
+<h2 id="why-one-action-heroes" class="section-header"><a href="#why-one-action-heroes">Why One Action Heroes?</a></h2>
+<p>I've wanted to get into making games for a long time, but I've struggled to complete any projects of my own.
+Every game I've tried to make is either too ambitious or too ill-defined.</p>
+<p>One Action Heroes was fun to play, mechanically simple, and was the product of a game-jam so I figured it couldn't take <em>that</em> long to implement.
+I had to learn Amethyst along the way, so I knew I wouldn't get it done in 48 hours, but it seemed achievable in a few Saturdays.</p>
+<p>Thankfully, my theory was correct and the project worked out!
+I can finally say I have created a buggy, sketchy, and in most ways worse version of One Action Heroes.</p>
+<p>But you know what, it was a blast to make and I learned a lot about making games.
+I learned a lot in the process and now I feel ready to take on a creative project of my own.</p>
+<h1 id="copyright" class="section-header"><a href="#copyright">Copyright</a></h1>
+<p>The original <a href="https://tapehead-co.itch.io/one-action-heroes">One Action Heroes prototype game</a> was created by Tapehead Games for the Game Maker's Toolkit game jam 2019.</p>
+<p>I am not associated with Tapehead in any way, I just really like their game and got a lot of inspiration from it.</p>
+<p>If/when One Action heroes gets made into a fully fledged game, you should totally buy it on <a href="https://tapehead-co.itch.io/">Taphead's itch.io page</a>.</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr class='module-item'><td><a class="mod" href="assets/index.html" title='rust_action_heroes::assets mod'>assets</a></td><td class='docblock-short'><p>The really interesting stuff happens in the game_level module!</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="audio/index.html" title='rust_action_heroes::audio mod'>audio</a></td><td class='docblock-short'><p>We make one sound in the whole game</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="bundle/index.html" title='rust_action_heroes::bundle mod'>bundle</a></td><td class='docblock-short'><p>Bundles are collections of resources, components, and systems that should be created together.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="component/index.html" title='rust_action_heroes::component mod'>component</a></td><td class='docblock-short'><p>Putting the C in ECS!</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="entity/index.html" title='rust_action_heroes::entity mod'>entity</a></td><td class='docblock-short'><p>Builder functions for creating entities.</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="lib/index.html" title='rust_action_heroes::lib mod'>lib</a></td><td class='docblock-short'><p>Honestly <code>lib</code> is an anti-pattern, this shouldn't be here...</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="state/index.html" title='rust_action_heroes::state mod'>state</a></td><td class='docblock-short'><p>Loading, Menu, Level</p>
+</td></tr><tr class='module-item'><td><a class="mod" href="system/index.html" title='rust_action_heroes::system mod'>system</a></td><td class='docblock-short'><p>Putting the &quot;S&quot; in ECS</p>
+</td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.main.html" title='rust_action_heroes::main fn'>main</a></td><td class='docblock-short'><p>Main builds the game object and starts running the game loop.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "rust_action_heroes";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

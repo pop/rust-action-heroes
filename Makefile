@@ -1,10 +1,10 @@
-docs:
-	rm -rf html
+docs: src
+	rm -rf docs
 	cargo doc --no-deps
-	mkdir html
-	cp -rf target/doc/* html/
-	mv -f html/rust_action_heroes/* html/
-	rmdir html/rust_action_heroes
+	mkdir docs
+	cp -rf target/doc/* docs/
+	mv -f docs/rust_action_heroes/* docs/
+	rmdir docs/rust_action_heroes
 
 clean:
 	cargo clean

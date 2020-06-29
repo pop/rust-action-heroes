@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MovementBundle","MovementBundle initializes all systems which require event channels."]]});

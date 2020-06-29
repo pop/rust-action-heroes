@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["GRID_SIZE","Our sprites are 9x9 pixels, so our grid shift is 9. If we decide to have bigger sprites this would need to change!"]],"struct":[["GridSystem","Grid System handles locking all entities to a grid."]]});
