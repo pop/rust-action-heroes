@@ -373,6 +373,15 @@ pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -
         level.dimensions
     };
 
+    let x_cam_dim: f32 = {
+        let initial: f32 = (16 * size_x).into();
+        initial * 1.4
+    };
+    let y_cam_dim: f32 = {
+        let initial: f32 = (9 * size_y).into();
+        initial * 1.4
+    };
+
     let (x_adjust, y_adjust): (f32, f32) = (
         (size_x * GRID_SIZE / 2).into(),
         (size_y * GRID_SIZE / 2).into(),
@@ -380,7 +389,7 @@ pub(crate) fn make_camera(world: &mut World, level_handle: &Handle<GameLevel>) -
 
     world
         .create_entity()
-        .with(Camera::standard_2d(1280.0/8.0, 720.0/8.0))
+        .with(Camera::standard_2d(x_cam_dim, y_cam_dim))
         .with({
             // I just want to call Transform::from_xyz(x, y, z)...
             let mut transform = Transform::default();
