@@ -1,5 +1,7 @@
 # Rust Action Heroes
 
+![screenshot](screenshot.png)
+
 Rust Action Heroes is a remake of the delightful [One Action Heroes][oah] game-jam written in Rust using the wonderful game engine [Amethyst][amethyst].
 
 Rust Action Heroes is my first attempt at writing a game, so it's pretty shoddy.
